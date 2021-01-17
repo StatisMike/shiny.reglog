@@ -9,9 +9,10 @@ Authors@R:
            comment = c(ORCID = "https://orcid.org/0000-0002-8426-3654"))
 Description: Package creates UI modules for Login, Register and Password Reset boxes and server module for reading and writing user database contained within googlesheet on googledrive. Creates automatic e-mail messages after registration and for resetting password procedure. Currently supports English language (default) and Polish. The authentication system created with shiny.reglog is optional unless the developer wishes otherwise: user don't neet to be logged-in to access your application, but when logged-in the username can be used to read and write relational databases.
 Depends:
-	shiny,
-	dplyr
+
 Imports:
+	shiny,
+	dplyr,
 	emayili,
 	googlesheets4,
 	scrypt
