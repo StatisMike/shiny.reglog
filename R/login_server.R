@@ -22,8 +22,9 @@
 }
 
 #### main server module of the package ####
-
-#' Shiny server module for the login/registration system
+#' @title Login system module
+#' @name login_server
+#' @description Shiny server module for the login/registration system
 #'
 #' This function creates a server module to handle other modules of the system: \code{login_UI()}, \code{password_reset_UI()} and \code{register_UI}
 #'
@@ -59,12 +60,6 @@
 #' @seealso [login_UI()] for the login window in UI
 #' @seealso [password_reset_UI()] for the password reset window in UI
 #' @seealso [register_UI] for the registration window in UI
-#'
-#' @import shiny
-#' @import dplyr
-#' @import emayili
-#' @import googlesheets4
-#' @import scrypt
 #'
 #' @examples
 #' # simple dashboard with login and register functionality
@@ -113,6 +108,16 @@
 #'
 #'  shinyApp(ui = UI, server = server)
 #' @export
+#' @import shiny
+NULL
+#' @import dplyr
+NULL
+#' @import emayili
+NULL
+#' @import googlesheets4
+NULL
+#' @import scrypt
+NULL
 
 login_server <- function(id = "login_system",
                          gsheet_file,
@@ -130,8 +135,8 @@ login_server <- function(id = "login_system",
       #### first active_user reactiveVal definition ####
 
       reactive_db <- reactiveValues(
-        active_user = case_when(lang == "eng" ~ "Not logged",
-                                lang == "pl" ~ "Nie zalogowano"),
+        active_user = dplyr::case_when(lang == "eng" ~ "Not logged",
+                                       lang == "pl" ~ "Nie zalogowano"),
 
         user_db = googlesheets4::read_sheet(ss = gsheet_file,
                                             sheet = "user_db") %>%
@@ -164,12 +169,12 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "Username not found",
-                                          lang == "pl" ~ "Nie znaleziono użytkownika"),
-                        p(case_when(lang == "eng" ~ "If the account was registered before, please check if user ID was typed correctly.",
-                                    lang == "pl" ~ "Jeżeli konto zostało założone, prosze sprawdzić poprawność wprowadzonej nazwy użytkownika")),
-                        p(case_when(lang == "eng" ~ "If you haven't registered yet, please register new account.",
-                                    lang == "pl" ~ "Jeżeli jeszcze nie utworzono konta, proszę się zarejestrować.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "Username not found",
+                                                 lang == "pl" ~ "Nie znaleziono użytkownika"),
+                        p(dplyr::case_when(lang == "eng" ~ "If the account was registered before, please check if user ID was typed correctly.",
+                                           lang == "pl" ~ "Jeżeli konto zostało założone, prosze sprawdzić poprawność wprowadzonej nazwy użytkownika")),
+                        p(dplyr::case_when(lang == "eng" ~ "If you haven't registered yet, please register new account.",
+                                           lang == "pl" ~ "Jeżeli jeszcze nie utworzono konta, proszę się zarejestrować.")),
                         footer = modalButton("OK"))
           )
 
@@ -178,10 +183,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "Wrong password",
-                                          lang == "pl" ~ "Nieprawidłowe hasło"),
-                        p(case_when(lang == "eng" ~ "Typed password doesn't match one in our database. Try again or reset the password.",
-                                    lang == "pl" ~ "Wprowadzone hasło jest inne niż powiązane z nazwą użytkownika. Spróbuj wprowadzić je ponownie lub zresetować hasło")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "Wrong password",
+                                                 lang == "pl" ~ "Nieprawidłowe hasło"),
+                        p(dplyr::case_when(lang == "eng" ~ "Typed password doesn't match one in our database. Try again or reset the password.",
+                                           lang == "pl" ~ "Wprowadzone hasło jest inne niż powiązane z nazwą użytkownika. Spróbuj wprowadzić je ponownie lub zresetować hasło")),
                         footer = modalButton("OK")
             )
           )
@@ -189,10 +194,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "User logged in",
-                                          lang == "pl" ~ "Zalogowano użytkownika"),
-                        p(case_when(lang == "eng" ~ "User is logged in succesfully",
-                                    lang == "pl" ~ "Użytkownik został poprawnie zalogowany")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "User logged in",
+                                                 lang == "pl" ~ "Zalogowano użytkownika"),
+                        p(dplyr::case_when(lang == "eng" ~ "User is logged in succesfully",
+                                           lang == "pl" ~ "Użytkownik został poprawnie zalogowany")),
                         footer = modalButton("OK")
             )
           )
@@ -214,10 +219,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "User ID not found",
-                                          lang == "pl" ~ "Nazwa użytkownika nie odnaleziona"),
-                        p(case_when(lang == "eng" ~ "Specified user ID haven't been found in our database. Check if you typed it correctly. If the account wasn't created yet, please register new account.",
-                                    lang == "pl" ~ "Nie odnaleziono takiej nazwy użytkownika w naszej bazie danych. Proszę sprawdzić czy nazwa została wprowadzona prawidłowo. Jeżeli konto nie zostało wcześniej utworzone, proszę je najpierw zarejestrować.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "User ID not found",
+                                                 lang == "pl" ~ "Nazwa użytkownika nie odnaleziona"),
+                        p(dplyr::case_when(lang == "eng" ~ "Specified user ID haven't been found in our database. Check if you typed it correctly. If the account wasn't created yet, please register new account.",
+                                           lang == "pl" ~ "Nie odnaleziono takiej nazwy użytkownika w naszej bazie danych. Proszę sprawdzić czy nazwa została wprowadzona prawidłowo. Jeżeli konto nie zostało wcześniej utworzone, proszę je najpierw zarejestrować.")),
                         footer = modalButton("OK"))
           )
 
@@ -225,10 +230,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "Reset code have been send",
-                                          lang == "pl" ~ "Kod resetujący został wysłany"),
-                        p(case_when(lang == "eng" ~ "Reset code have been send to e-mail that you provided during registration. It will be valid for next 24 hours to reset your password.",
-                                    lang == "pl" ~ "Kod resetujący został wysłany na adres e-mail podany podczas rejestracji. Będzie aktywny przez 24h i przez ten czas można go użyć do zresetowania hasła.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "Reset code have been send",
+                                                 lang == "pl" ~ "Kod resetujący został wysłany"),
+                        p(dplyr::case_when(lang == "eng" ~ "Reset code have been send to e-mail that you provided during registration. It will be valid for next 24 hours to reset your password.",
+                                           lang == "pl" ~ "Kod resetujący został wysłany na adres e-mail podany podczas rejestracji. Będzie aktywny przez 24h i przez ten czas można go użyć do zresetowania hasła.")),
                         footer = modalButton("OK"))
           )
 
@@ -238,20 +243,20 @@ login_server <- function(id = "login_system",
             emayili::to(temp$user_mail) %>%
             emayili::from(gmail_user) %>%
             emayili::subject(paste(appname,
-                                   case_when(lang == "eng" ~ "password reset code",
-                                             lang == "pl" ~ "kod resetujący hasło"),
+                                   dplyr::case_when(lang == "eng" ~ "password reset code",
+                                                    lang == "pl" ~ "kod resetujący hasło"),
                                    sep = " - ")) %>%
             emayili::html(paste0("<p>",
-                                 case_when(lang == "eng" ~ "In order to reset your password the necessary code has been generated and is available below. Paste it into the application and reset your password.",
-                                           lang == "pl" ~ "Kod wymagany do zresetowania twojego hasła został wygenerowany i jest dostępny poniżej. Wklej go w odpowiednie pole w aplikacji i zresetuj hasło"),"</p><p>",
-                                 case_when(lang == "eng" ~ "Reset code: ",
-                                           lang == "pl" ~ "Kod resetujący: "),
+                                 dplyr::case_when(lang == "eng" ~ "In order to reset your password the necessary code has been generated and is available below. Paste it into the application and reset your password.",
+                                                  lang == "pl" ~ "Kod wymagany do zresetowania twojego hasła został wygenerowany i jest dostępny poniżej. Wklej go w odpowiednie pole w aplikacji i zresetuj hasło"),"</p><p>",
+                                 dplyr::case_when(lang == "eng" ~ "Reset code: ",
+                                                  lang == "pl" ~ "Kod resetujący: "),
                                  reset_code, "</p><p>",
-                                 case_when(lang == "eng" ~ "If you didn't generate that code, check if anyone unauthorized have access to your e-mail inbox. If not, disregard this message.",
-                                           lang == "pl" ~ "Jeżeli nie wygenerowałeś kodu, sprawdź czy ktokolwiek nieupoważniony ma dostęp do twojej skrzynki e-mail. Jeżeli nie, nie zwracaj uwagi na tę wiadomość."),
+                                 dplyr::case_when(lang == "eng" ~ "If you didn't generate that code, check if anyone unauthorized have access to your e-mail inbox. If not, disregard this message.",
+                                                  lang == "pl" ~ "Jeżeli nie wygenerowałeś kodu, sprawdź czy ktokolwiek nieupoważniony ma dostęp do twojej skrzynki e-mail. Jeżeli nie, nie zwracaj uwagi na tę wiadomość."),
                                  "</p><p>",
-                                 case_when(lang == "eng" ~ "This message was generated automatically.</p>",
-                                           lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie.</p>")))
+                                 dplyr::case_when(lang == "eng" ~ "This message was generated automatically.</p>",
+                                                  lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie.</p>")))
 
           smtp <- emayili::server(
             host = "smtp.gmail.com",
@@ -295,10 +300,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "Reset code not found",
-                                          lang == "pl" ~ "Nie odnaleziono kodu resetującego"),
-                        p(case_when(lang == "eng" ~ "There is no active password reset code for specified account. The code is only active for 24 hours after generating. Check if the account ID in box above have been typed properly or if the code was generated within 24 hours.",
-                                    lang == "pl" ~ "Nie odnaleziono aktywnego kodu resetującego hasło dla określonego hasła. Utworzony kod jest aktywny jedynie przez 24 godziny. Proszę sprawdzić, czy nazwa użytkownika została wpisana poprawnie w polu powyżej oraz czy kod został wygenerowany w ciągu ostatnic 24 godzin.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "Reset code not found",
+                                                 lang == "pl" ~ "Nie odnaleziono kodu resetującego"),
+                        p(dplyr::case_when(lang == "eng" ~ "There is no active password reset code for specified account. The code is only active for 24 hours after generating. Check if the account ID in box above have been typed properly or if the code was generated within 24 hours.",
+                                           lang == "pl" ~ "Nie odnaleziono aktywnego kodu resetującego hasło dla określonego hasła. Utworzony kod jest aktywny jedynie przez 24 godziny. Proszę sprawdzić, czy nazwa użytkownika została wpisana poprawnie w polu powyżej oraz czy kod został wygenerowany w ciągu ostatnic 24 godzin.")),
                         footer = modalButton("OK"))
 
           )
@@ -306,10 +311,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "Reset code is not correct",
-                                          lang == "pl" ~ "Wpisany kod jest niepoprawny"),
-                        p(case_when(lang == "eng" ~ "Provided reset code isn't correct. Check if the code have been copied or typed correctly.",
-                                    lang == "pl" ~ "Wpisany kod resetujący nie jest poprawny. Sprawdź czy został on skopiowany lub wpisany odpowiednio.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "Reset code is not correct",
+                                                 lang == "pl" ~ "Wpisany kod jest niepoprawny"),
+                        p(dplyr::case_when(lang == "eng" ~ "Provided reset code isn't correct. Check if the code have been copied or typed correctly.",
+                                           lang == "pl" ~ "Wpisany kod resetujący nie jest poprawny. Sprawdź czy został on skopiowany lub wpisany odpowiednio.")),
                         footer = modalButton("OK"))
           )
 
@@ -317,19 +322,19 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "Reset the password",
-                                          lang == "pl" ~ "Zresetuj hasło"),
-                        p(case_when(lang == "eng" ~ "Provided reset code is valid. You can now set the new password in the form below.",
-                                    lang == "pl" ~ "Wprowadzony kod resetujący jest poprawny. Możesz teraz ustawić nowe hasło korzystając z poniższego formularza.")),
-                        passwordInput(session$ns("resetpass1"), case_when(lang == "eng" ~ "New password",
-                                                                          lang == "pl" ~ "Nowe hasło")),
-                        passwordInput(session$ns("resetpass2"), case_when(lang == "eng" ~ "Repeat new password",
-                                                                          lang == "pl" ~ "Powtórz nowe hasło")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "Reset the password",
+                                                 lang == "pl" ~ "Zresetuj hasło"),
+                        p(dplyr::case_when(lang == "eng" ~ "Provided reset code is valid. You can now set the new password in the form below.",
+                                           lang == "pl" ~ "Wprowadzony kod resetujący jest poprawny. Możesz teraz ustawić nowe hasło korzystając z poniższego formularza.")),
+                        passwordInput(session$ns("resetpass1"), dplyr::case_when(lang == "eng" ~ "New password",
+                                                                                 lang == "pl" ~ "Nowe hasło")),
+                        passwordInput(session$ns("resetpass2"), dplyr::case_when(lang == "eng" ~ "Repeat new password",
+                                                                                 lang == "pl" ~ "Powtórz nowe hasło")),
                         htmlOutput(session$ns("resetpass_modal_err")),
                         footer = list(
                           actionButton(session$ns("resetpass_modal_bttn"),
-                                       case_when(lang == "eng" ~ "Confirm new password",
-                                                 lang == "pl" ~ "Potwierdź nowe hasło")),
+                                       dplyr::case_when(lang == "eng" ~ "Confirm new password",
+                                                        lang == "pl" ~ "Potwierdź nowe hasło")),
                           modalButton("OK"))
 
             )
@@ -345,21 +350,21 @@ login_server <- function(id = "login_system",
         if(.check_user_login_pass(input$resetpass1) == F){
 
           output$resetpass_modal_err <- renderText({
-            case_when(lang == "eng" ~ "Password is not valid. Valid password must consists of 8~20 alphanumeric characters",
-                      lang == "pl" ~ "Hasło jest nieprawidłowe. Prawidłowe hasło musi składać się z 8~20 liter i/lub cyfr")
+            dplyr::case_when(lang == "eng" ~ "Password is not valid. Valid password must consists of 8~20 alphanumeric characters",
+                             lang == "pl" ~ "Hasło jest nieprawidłowe. Prawidłowe hasło musi składać się z 8~20 liter i/lub cyfr")
           })
         } else if(input$resetpass1 != input$resetpass2){
 
           output$resetpass_modal_err <- renderText({
-            case_when(lang == "eng" ~ "Entered passwords are not identical. Try again.",
-                      lang == "pl" ~ "Podane hasła nie są identyczne. Spróbuj ponownie.")
+            dplyr::case_when(lang == "eng" ~ "Entered passwords are not identical. Try again.",
+                             lang == "pl" ~ "Podane hasła nie są identyczne. Spróbuj ponownie.")
           })
 
         } else {
 
           output$resetpass_modal_err <- renderText({
-            case_when(lang == "eng" ~ "Password changed succesfully. You can use it to log-in on your account.",
-                      lang == "pl" ~ "Hasło poprawnie zmienione. Możesz użyć go, aby zalogować się na zwoje konto.")
+            dplyr::case_when(lang == "eng" ~ "Password changed succesfully. You can use it to log-in on your account.",
+                             lang == "pl" ~ "Hasło poprawnie zmienione. Możesz użyć go, aby zalogować się na zwoje konto.")
 
           })
 
@@ -401,10 +406,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "User ID non-unique",
-                                          lang == "pl" ~ "Istniejąca nazwa"),
-                        p(case_when(lang == "eng" ~ "There is an user with that ID in our database. If you have already made an account, try to log-in or reset your password. If you haven't, then please user another user ID.",
-                                    lang == "pl" ~ "Istnieje już użytkownik o takiej nazwie. Jeżeli stworzono wcześniej konto, proszę spróbować się zalogować lub zresetować hasło. Jeżeli nie tworzono wcześniej konta, proszę użyć innej nazwy użytkownika")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "User ID non-unique",
+                                                 lang == "pl" ~ "Istniejąca nazwa"),
+                        p(dplyr::case_when(lang == "eng" ~ "There is an user with that ID in our database. If you have already made an account, try to log-in or reset your password. If you haven't, then please user another user ID.",
+                                           lang == "pl" ~ "Istnieje już użytkownik o takiej nazwie. Jeżeli stworzono wcześniej konto, proszę spróbować się zalogować lub zresetować hasło. Jeżeli nie tworzono wcześniej konta, proszę użyć innej nazwy użytkownika")),
                         footer = modalButton("OK"))
           )
 
@@ -412,10 +417,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "User ID non-valid",
-                                          lang == "pl" ~ "Nieprawidłowa nazwa"),
-                        p(case_when(lang == "eng" ~ "User ID is not valid. User ID must constists of 8~20 aphanumeric characters.",
-                                    lang == "pl" ~ "Nazwa użytkownika jest nieprawidłowa. Powinna składać się z 8~20 liter i/lub cyfr.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "User ID non-valid",
+                                                 lang == "pl" ~ "Nieprawidłowa nazwa"),
+                        p(dplyr::case_when(lang == "eng" ~ "User ID is not valid. User ID must constists of 8~20 aphanumeric characters.",
+                                           lang == "pl" ~ "Nazwa użytkownika jest nieprawidłowa. Powinna składać się z 8~20 liter i/lub cyfr.")),
                         footer = modalButton("OK"))
 
           )
@@ -424,10 +429,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "E-mail not valid",
-                                          lang == "pl" ~ "Niepoprawny adres e-mail"),
-                        p(case_when(lang == "eng" ~ "Provided e-mail addres isn't valid. Please check if it is correctly typed.",
-                                    lang == "pl" ~ "Adres e-mail nie jest poprawny. Proszę sprawdzić, czy został dobrze wpisany.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "E-mail not valid",
+                                                 lang == "pl" ~ "Niepoprawny adres e-mail"),
+                        p(dplyr::case_when(lang == "eng" ~ "Provided e-mail addres isn't valid. Please check if it is correctly typed.",
+                                           lang == "pl" ~ "Adres e-mail nie jest poprawny. Proszę sprawdzić, czy został dobrze wpisany.")),
                         footer = modalButton("OK"))
           )
 
@@ -435,10 +440,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "Non-valid password",
-                                          lang == "pl" ~ "Nieprawidłowe hasło"),
-                        p(case_when(lang == "eng" ~ "Password is not valid. It must constists of 8~20 aphanumeric characters.",
-                                    lang == "pl" ~ "Hasło jest nieprawidłowe. Powinna składać się z 8~20 liter i/lub cyfr.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "Non-valid password",
+                                                 lang == "pl" ~ "Nieprawidłowe hasło"),
+                        p(dplyr::case_when(lang == "eng" ~ "Password is not valid. It must constists of 8~20 aphanumeric characters.",
+                                           lang == "pl" ~ "Hasło jest nieprawidłowe. Powinna składać się z 8~20 liter i/lub cyfr.")),
                         footer = modalButton("OK"))
 
           )
@@ -446,10 +451,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "Passwords don't match",
-                                          lang == "pl" ~ "Hasła nie są identyczne"),
-                        p(case_when(lang == "eng" ~ "Provided passwords don't match. Repeated password must be exactly the same as the first one.",
-                                    lang == "pl" ~ "Wpisane hasła nie zgadzają się. Powtórzone hasło musi być dokładnie takie samo jak pierwsze.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "Passwords don't match",
+                                                 lang == "pl" ~ "Hasła nie są identyczne"),
+                        p(dplyr::case_when(lang == "eng" ~ "Provided passwords don't match. Repeated password must be exactly the same as the first one.",
+                                           lang == "pl" ~ "Wpisane hasła nie zgadzają się. Powtórzone hasło musi być dokładnie takie samo jak pierwsze.")),
                         footer = modalButton("OK"))
 
           )
@@ -458,10 +463,10 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = case_when(lang == "eng" ~ "User registered",
-                                          lang == "pl" ~ "Zarejestrowano użytkownika"),
-                        p(case_when(lang == "eng" ~ "User have been registered succesfully. You should receive an e-mail on account you provided confirming your registration.",
-                                    lang == "pl" ~ "Użytkownik został zarejestrowany. Na podany podczas rejestracji adres e-mail powinna dotrzeć wiadomość potwierdzająca rejestrację.")),
+            modalDialog(title = dplyr::case_when(lang == "eng" ~ "User registered",
+                                                 lang == "pl" ~ "Zarejestrowano użytkownika"),
+                        p(dplyr::case_when(lang == "eng" ~ "User have been registered succesfully. You should receive an e-mail on account you provided confirming your registration.",
+                                           lang == "pl" ~ "Użytkownik został zarejestrowany. Na podany podczas rejestracji adres e-mail powinna dotrzeć wiadomość potwierdzająca rejestrację.")),
                         footer = modalButton("OK"))
 
           )
@@ -481,21 +486,21 @@ login_server <- function(id = "login_system",
             emayili::to(temp_user_data$user_mail) %>%
             emayili::from(gmail_user) %>%
             emayili::subject(paste(appname,
-                                   case_when(lang == "eng" ~ "confirmation of registration",
-                                             lang == "pl" ~ "potwierdzenie rejestracji"),
+                                   dplyr::case_when(lang == "eng" ~ "confirmation of registration",
+                                                    lang == "pl" ~ "potwierdzenie rejestracji"),
                                    sep = " - ")) %>%
             emayili::html(paste0(
               "<p>",
-              case_when(lang == "eng" ~ "Thank you for registering an account in our application.",
-                        lang == "pl" ~ "Dziękujemy za zarejestrowanie konta w naszej aplikacji."),"</p><p>",
-              case_when(lang == "eng" ~ "Your user ID: ",
-                        lang == "pl" ~ "Twoja nazwa użytkownika: "),
+              dplyr::case_when(lang == "eng" ~ "Thank you for registering an account in our application.",
+                               lang == "pl" ~ "Dziękujemy za zarejestrowanie konta w naszej aplikacji."),"</p><p>",
+              dplyr::case_when(lang == "eng" ~ "Your user ID: ",
+                               lang == "pl" ~ "Twoja nazwa użytkownika: "),
               temp_user_data$user_id, "</p><p>",
-              case_when(lang == "eng" ~ "You can always visit our application at: ",
-                        lang == "pl" ~ "Możesz odwiedzić naszą aplikację pod adresem: "),
+              dplyr::case_when(lang == "eng" ~ "You can always visit our application at: ",
+                               lang == "pl" ~ "Możesz odwiedzić naszą aplikację pod adresem: "),
               appaddress, "</p><p>",
-              case_when(lang == "eng" ~ "This message was generated automatically.",
-                        lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie")  ))
+              dplyr::case_when(lang == "eng" ~ "This message was generated automatically.",
+                               lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie")  ))
 
           smtp <- emayili::server(
             host = "smtp.gmail.com",

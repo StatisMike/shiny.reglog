@@ -2,18 +2,7 @@
 % Please edit documentation in R/login_server.R
 \name{login_server}
 \alias{login_server}
-\title{Shiny server module for the login/registration system}
-\usage{
-login_server(
-  id = "login_system",
-  gsheet_file,
-  gmail_user,
-  gmail_password,
-  appname,
-  appaddress,
-  lang = "eng"
-)
-}
+\title{Login system module}
 \arguments{
 \item{id}{the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.}
 
@@ -39,9 +28,10 @@ user_db, containing the user database loaded from googlesheets
 reset_db, containing the reset code database loaded from googlesheets
 }
 \description{
+Shiny server module for the login/registration system
+
 This function creates a server module to handle other modules of the system: \code{login_UI()}, \code{password_reset_UI()} and \code{register_UI}
-}
-\details{
+
 It uses database contained in googlesheet file on your gdrive to read and write data of the users. You need to create a googlesheet containing at least two sheets with specific columns:
 
 user_db with columns named: "timestamp", "user_id", "user_mail" and "user_pass"

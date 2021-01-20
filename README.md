@@ -12,8 +12,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 ## 1\. Introduction
 
 The user authentication in Shiny applications can be very useful.
-Mainly, user can login to read and write some results of their session
-into relational database.
+Mainly, user can login to read/write some results of their session
+from/into relational database.
 
 This package contains modules to use in your Shiny application allowing
 you to automatically insert boxes for login, register and password reset
@@ -25,7 +25,7 @@ Currently the package is minimal working prototype. In the future I plan
 to widen the usability:
 
 1.  more localizations for user database locations than googlesheet
-2.  customizations of database (fe: authorisation levels)
+2.  customization of database (fe: authorization levels)
 3.  widen the requirements for user ID and password
 
 ## 2\. Installation
@@ -72,8 +72,8 @@ of R.
 <!-- end list -->
 
 2.  Configure googlesheets4 package to use out-of-band auth. For more
-    information about it visit [googlesheets4
-    documentation](https://googlesheets4.tidyverse.org/)
+    information about the procedure visit [googlesheets4
+    documentation](https://googlesheets4.tidyverse.org/) and this [gargle article](https://gargle.r-lib.org/articles/non-interactive-auth.html)(as googlesheets4 package uses gargle for authentication.)
 
 ## 4\. Information about functions
 
