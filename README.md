@@ -9,11 +9,11 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-## 1\. Introduction
+## 1. Introduction
 
 The user authentication in Shiny applications can be very useful.
-Mainly, user can login to read/write some results of their session
-from/into relational database.
+Mainly, user can login to read and write some results of their session
+into relational database.
 
 This package contains modules to use in your Shiny application allowing
 you to automatically insert boxes for login, register and password reset
@@ -25,57 +25,52 @@ Currently the package is minimal working prototype. In the future I plan
 to widen the usability:
 
 1.  more localizations for user database locations than googlesheet
-2.  customization of database (fe: authorization levels)
+2.  customizations of database (fe: authorisation levels)
 3.  widen the requirements for user ID and password
 
-## 2\. Installation
+## 2. Installation
 
 You can install this version of shiny.reglog from GitHub with:
 
 ``` r
-
 install.packages("devtools")
 devtools::install_github("StatisMike/shiny.reglog")
 ```
 
-## 3\. Setup
+## 3. Setup
 
 To use the contents of this package, you need to take some steps outside
 of R.
 
 1.  Create a valid googlesheet in your googledrive storage space.
-    
+
     Created googlesheet should consists of at least two sheets, as this
     version of shiny.reglog uses them (though the googlesheet can
     contain as many extra sheets as you want). The required sheets need
     to be as follows:
 
-<!-- end list -->
-
-  - user\_db sheet with four columns, named: timestamp, user\_id,
+-   user\_db sheet with four columns, named: timestamp, user\_id,
     user\_mail and user\_pass
-    
+
     ![user\_db sheet](img/user_db.png)
 
-  - reset\_db sheet with three columns, named: timestamp, user\_id,
+-   reset\_db sheet with three columns, named: timestamp, user\_id,
     reset\_code
-    
+
     ![reset\_db sheet](img/reset_db.png)
 
-  - During that step you can also copy the ID of your spreadsheet. It
+-   During that step you can also copy the ID of your spreadsheet. It
     will be needed for login\_server() module, and you can get it from
     the URL of spreadsheet. ID is the character string in the blurred
     portion on the image below:
-    
+
     ![spreadsheet ID](img/ss_id.png)
 
-<!-- end list -->
-
 2.  Configure googlesheets4 package to use out-of-band auth. For more
-    information about the procedure visit [googlesheets4
-    documentation](https://googlesheets4.tidyverse.org/) and this [gargle article](https://gargle.r-lib.org/articles/non-interactive-auth.html)(as googlesheets4 package uses gargle for authentication.)
+    information about it visit [googlesheets4
+    documentation](https://googlesheets4.tidyverse.org/)
 
-## 4\. Information about functions
+## 4. Information about functions
 
 All functions generates text (input labels, descriptions, authomatic
 e-mail). You can control the language of displayed text with ‘lang’
@@ -160,54 +155,59 @@ login_server(id = "login_system",
 
 #### 4.2.1. Arguments
 
-  - *id* argument defaults to “login\_system”. You can use different
+-   *id* argument defaults to “login\_system”. You can use different
     name, but keep it consistent for all functions
-  - *gsheet\_file* is the character string containing your googlesheets
+-   *gsheet\_file* is the character string containing your googlesheets
     ID. Its location is described in Setup section of this document
-  - *gmail\_user* is the character string of your gmail address that you
+-   *gmail\_user* is the character string of your gmail address that you
     wish the application to use for automatic e-mails
-  - *gmail\_password* is the character string of your gmail account
+-   *gmail\_password* is the character string of your gmail account
     password
-  - *appname* is the character string with title of your application
-  - *appaddress* is the character string with URL address of your
+-   *appname* is the character string with title of your application
+-   *appaddress* is the character string with URL address of your
     application for your users to navigate from their confirmation mail
-  - *lang* argument defaults to “eng”. It changes the language of your
+-   *lang* argument defaults to “eng”. It changes the language of your
     modules. Currently only one other option is available: “pl” for
     Polish.
 
 #### 4.2.2. Value
 
-login\_server() function creates reactiveValues object containing three
-dataframes.
+login\_server() function creates list object containing three reactive
+variables.
 
-  - *active\_user* after log-in contains logged user row from the
+-   *active\_user* after log-in contains logged user row from the
     database, consisting of *timestamp* (the date of account
     creation/password reset), *user\_id* (the character string of user
     ID), *user\_mail* (the character string of user e-mail address),
     *user\_pass* (the character string of hashed user password). If the
-    user is not logged in, the *active\_user* value is “not\_logged”
-  - *user\_db* contains the whole user database loaded from googlesheets
+    user is not logged in, the *active\_user* value is “Not logged”
+    (“Nie zalogowano” if in Polish). So it’s the class character when
+    not logged in, and class data.frame when logged in.
+-   *user\_db* contains the whole user database loaded from googlesheets
     file - filtered for one row for every user\_id (only the most
     recently created row)
-  - *reset\_db* contains the whole reset\_db loaded from googlesheets -
+-   *reset\_db* contains the whole reset\_db loaded from googlesheets -
     filtered as above
 
-You can use it’s output mainly to access the active\_user data
+You can use it’s output mainly to access the active\_user data, though
+the user\_db and reset\_db are added if you should need them externally
+from the module.
 
 ``` r
-
 # save the output in the server function of you application
 
-reactive_db <- login_server()
+reactive_db <- login_server(...)
 
 # to access user ID you can use
 
-reactive_db$active_user$user_id
+reactive_db$active_user()$user_id
 
-# though remember to check if the active_user value isn't "user_logged"
+# though remember to firstly check if the active_user value isn't "Not logged"/"Nie zalogowano" (class character)
+
+req(class(reactive_db$active_user()) != "character")
 ```
 
-## 5\. Example
+## 5. Example
 
 This is the code for ShinyApp presented in images above.
 
@@ -255,7 +255,7 @@ shinyApp(ui = UI,
          server = server)
 ```
 
-## 6\. User feedback
+## 6. User feedback
 
 As it is package in very early development, please give any feedback
 after using it. Maybe you have some suggestions or you faced some errors

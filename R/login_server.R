@@ -72,8 +72,9 @@
 #' sidebar = dashboardSidebar(
 #'   sidebarMenu(
 #'       menuItem("Login", tabName = "login"),
-#'           menuItem("Reset password", tabName = "resetpass"),
-#'               menuItem("Register", tabName = "register"))
+#'       menuItem("Reset password", tabName = "resetpass"),
+#'       menuItem("Register", tabName = "register"),
+#'       menuItem("User data, tabName = "user_data))
 #'               ),
 #'
 #' body = dashboardBody(
@@ -83,7 +84,9 @@
 #'        tabItem("resetpass",
 #'           fluidPage(password_reset_UI())),
 #'        tabItem("register",
-#'           fluidPage(register_UI()))
+#'           fluidPage(register_UI())),
+#'        tabItem("user_data",
+#'           fluidPage())
 #'              )
 #'        )
 #'  )
@@ -102,6 +105,20 @@
 #'                               appname = "Login_test",
 #'                               appaddress = "logintest.com")
 #'
+#' # reading value from reactive_db
+#'
+#'   output$user_data <- renderText({
+#'
+#'              if(class(reactive_db$active_user()) == "character"){
+#'
+#'              reactive_db$active_user()[1]
+#'
+#'              } else {
+#'
+#'              paste("User logged:", reactive_db$active_user()[2])
+#'
+#'       }
+#'    })
 #'  }
 #'
 #' # shinyApp initialization
@@ -515,9 +532,12 @@ login_server <- function(id = "login_system",
 
       })
 
+      return(list(
+        active_user = reactive({ reactive_db$active_user }),
+        user_db = reactive({ reactive_db$user_db }),
+        reset_db = reactive({ reactive_db$reset_db })
+      ))
+
     }
   )
-
-  return(reactive(reactive_db))
-
 }

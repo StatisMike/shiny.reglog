@@ -134,24 +134,26 @@ login_server(id = "login_system",
 
 #### 4.2.2. Value
 
-login_server() function creates reactiveValues object containing three dataframes.
+login_server() function creates list object containing three reactive variables.
 
-+ *active_user* after log-in contains logged user row from the database, consisting of *timestamp* (the date of account creation/password reset), *user_id* (the character string of user ID), *user_mail* (the character string of user e-mail address), *user_pass* (the character string of hashed user password). If the user is not logged in, the *active_user* value is "not_logged"
++ *active_user* after log-in contains logged user row from the database, consisting of *timestamp* (the date of account creation/password reset), *user_id* (the character string of user ID), *user_mail* (the character string of user e-mail address), *user_pass* (the character string of hashed user password). If the user is not logged in, the *active_user* value is "Not logged" ("Nie zalogowano" if in Polish). So it's the class character when not logged in, and class data.frame when logged in.
 + *user_db* contains the whole user database loaded from googlesheets file - filtered for one row for every user_id (only the most recently created row)
 + *reset_db* contains the whole reset_db loaded from googlesheets - filtered as above
 
-You can use it's output mainly to access the active_user data
+You can use it's output mainly to access the active_user data, though the user_db and reset_db are added if you should need them externally from the module.
 
 ```{r active_user example, eval = FALSE}
 # save the output in the server function of you application
 
-reactive_db <- login_server()
+reactive_db <- login_server(...)
 
 # to access user ID you can use
 
-reactive_db$active_user$user_id
+reactive_db$active_user()$user_id
 
-# though remember to check if the active_user value isn't "user_logged"
+# though remember to firstly check if the active_user value isn't "Not logged"/"Nie zalogowano" (class character)
+
+req(class(reactive_db$active_user()) != "character")
 
 ```
 
