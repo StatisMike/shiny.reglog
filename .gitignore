@@ -1,3 +1,8 @@
 .Rproj.user
 shiny.reglog.Rproj
 .Rhistory
+.RData
+test_database.sqlite
+test_shinybase
+test_shinydashboard
+test.sqlite
