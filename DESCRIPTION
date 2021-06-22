@@ -1,6 +1,6 @@
 Package: shiny.reglog
-Title: Optional Login and Registration Module System for Shiny
-Version: 0.0.1.1000
+Title: Optional Login and Registration Module System for ShinyApps
+Version: 0.0.2.0
 Authors@R: 
     person(given = "Michał",
            family = "Kosiński",
@@ -11,14 +11,16 @@ Description: Package creates UI modules for Login, Register and Password Reset b
 Imports:
 	shiny,
 	dplyr,
-	emayili,
-	googlesheets4,
 	scrypt
 Suggests:
-	shinydashboard
+	shinydashboard,
+	googledrive,
+	googlesheets4,
+	gmailr,
+	emayili
 License: 
 	MIT
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1.9000
+RoxygenNote: 7.1.1.9001

@@ -2,103 +2,165 @@
 % Please edit documentation in R/login_server.R
 \name{login_server}
 \alias{login_server}
-\title{Login system module}
+\title{Login server module}
+\usage{
+login_server(
+  id = "login_system",
+  db_method,
+  mail_method,
+  appname,
+  appaddress,
+  lang = "en",
+  gsheet_file,
+  sqlite_db,
+  gmailr_user,
+  emayili_user,
+  emayili_password,
+  emayili_host,
+  emayili_port
+)
+}
 \arguments{
 \item{id}{the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.}
 
-\item{gsheet_file}{the ID of your googlesheet holding the database. It is contained within URL adress of your googlesheet}
+\item{db_method}{the character string containing chosen database container, either: \code{"gsheet"} (needing installation of \code{googlesheets4} package) or \code{"sqlite"} (needing installation of \code{DBI} and \code{RSQLite} packages)}
 
-\item{gmail_user}{the gmail e-mail address which will be used by application to send automatic messages to your users}
+\item{mail_method}{the character string containing chosen method of sending emails, either: \code{"gmailr"} (needing installation of \code{gmailr} package) \code{"emayili"} (needing installation of \code{emayili} package)}
 
-\item{gmail_password}{the password to gmail account specified above}
+\item{appname}{the character string containing the name of your application (used in automatic e-mails for information purposes)}
 
-\item{appname}{the character value containing name of your application (it will be used in automatic e-mails for information purposes)}
+\item{appaddress}{the character value containing the web address of your application (used in automatic e-mails for information purposes)}
 
-\item{appaddress}{the character value containing the web address of your application (it will be used in automatic e-mails for information purposes)}
+\item{lang}{specifies the app used language. Defaults to "en" for English. Package also supports "pl" for Polish}
 
-\item{lang}{specifies the app used language. Defaults to "eng" for English. Package also supports "pl" for Polish}
+\item{gsheet_file}{the ID of your googlesheet holding the database. It is contained within URL address of your googlesheet (for: \code{db_method = "gsheet"})}
+
+\item{sqlite_db}{the path to your SQLite database (for: \code{db_method = "sqlite"})}
+
+\item{gmailr_user}{your gmail address (for: \code{db_method = "gmailr"})}
+
+\item{emayili_user}{your email address, also used as login to your email account (for: \code{db_method = "emayili"})}
+
+\item{emayili_password}{password to your email account (for: \code{db_method = "emayili"})}
+
+\item{emayili_host}{host of your email box (for: \code{db_method = "emayili"})}
+
+\item{emayili_port}{port of your email box (for: \code{db_method = "emayili"})}
 }
 \value{
 reactiveValues() object with three elements:
 
-active_user, containing either "not_logged" before log-in or row of the user data from database after log-in (timestamp, user_id, user_mail, user_pass)
+\code{is_logged}, containing boolean describing authorization status
 
-user_db, containing the user database loaded from googlesheets
+\code{user_id}, containing the logged user identification name. When not logged, it contains the timestamp of session start
 
-reset_db, containing the reset code database loaded from googlesheets
+\code{user_mail}, containing the logged user mail. When not logged, it is empty character string of nchar() value 0: ("")
 }
 \description{
-Shiny server module for the login/registration system
+Shiny server module for the optional login/registration system
 
 This function creates a server module to handle other modules of the system: \code{login_UI()}, \code{password_reset_UI()} and \code{register_UI}
 
-It uses database contained in googlesheet file on your gdrive to read and write data of the users. You need to create a googlesheet containing at least two sheets with specific columns:
-
-user_db with columns named: "timestamp", "user_id", "user_mail" and "user_pass"
-
-reset_db with columns named: "timestamp", "user_id", "reset_code"
-
-You need to also authorize access to your google drive package outside of the function (fe: using googlesheets4:gs_auth) - in the global.R or in the beginning of app.R file.
-
-The module logic creates a reactiveValues() object with loaded database of users and reset codes. It allows to cut the reading from database to only one read per loading of the app - unfortunately it makes the app run slowly if the database of users gets very long.
+It uses database contained in googlesheet file on your gdrive or sqlite database locally to read and write data of the users. You need to create a googlesheet or sqlite database containing at least two sheets/tables with specific columns:
+\itemize{
+\item user_db with columns named: \code{timestamp}, \code{user_id}, \code{user_mail} and \code{user_pass}
+\item reset_db with columns named: \code{timestamp}, \code{user_id}, \code{reset_code}
+}
+}
+\details{
+The module logic creates a \code{reactiveValues()} object with loaded database of users and reset codes stored in \code{session$userData}. It allows to cut the reading from database to only one read per loading of the app - unfortunately it makes the app run slowly if the database of users gets very long.
 
 Registration of new account mails the confirmation e-mail to the end user on provided e-mail.
 
-Provided e-mail is needed for password reset: 10 digits code is generated and mailed to the user to confirm his or her identity. Reset code remains valid for 24h.
+Provided e-mail is needed for password reset: 10 digits code is generated and mailed to the user to confirm its identity. Reset code remains valid for 24 hours.
+\subsection{Authorization}{
+\itemize{
+\item When using db_method of "gsheet" you need to authorize access to your google drive outside of the functions (using \code{googlesheets4:gs_auth} with default scopes: \code{"https://www.googleapis.com/auth/spreadsheets"})
+\item When using mail_method of "emayili" you need to allow "less secure apps" to use your mailbox
+\item When using mail_method of "gmailr" you need to authorize access to your gmail box by creating Oauth2 App on 'Google Cloud Platform' and passing it to \code{gmailr::gm_auth_configure} and allowing scopes: \code{"https://www.googleapis.com/auth/gmail.send"}
+}
+}
 
-Both passwords and reset_codes are hashed with the help of \code{scrypt} package for the extra security.
+\subsection{Security}{
+\itemize{
+\item Both passwords and reset codes are hashed with the help of \code{scrypt} package for the extra security
+\item gmailr mail_method seems to be more secure if you intend to use gmail account to send emails. emayili is suggested only when using other mailboxes
+}
+}
 }
 \examples{
-# simple dashboard with login and register functionality
-# UI containing login_UI, password_reset_UI and register_UI as different tabs
+#### example of db_method = "sqlite" and mail_method = "emayili"
 
-UI <- dashboardPage(
+# gmailR and googlesheets configuration should be contained in external .R file, restricted to shiny user
 
-header = dashboardHeader(title = "Test for login modules"),
+library(shiny)
+library(shiny.reglog)
 
-sidebar = dashboardSidebar(
-  sidebarMenu(
-      menuItem("Login", tabName = "login"),
-          menuItem("Reset password", tabName = "resetpass"),
-              menuItem("Register", tabName = "register"))
-              ),
+# Define UI containing shiny.reglog modules
+ui <- fluidPage(
 
-body = dashboardBody(
-   tabItems(
-       tabItem("login",
-          fluidPage(login_UI())),
-       tabItem("resetpass",
-          fluidPage(password_reset_UI())),
-       tabItem("register",
-          fluidPage(register_UI()))
-             )
-       )
- )
+    headerPanel(title = "shiny.reglog test"),
 
-# server authorizing gdrive access and including the login_server function
+    tabsetPanel(
+        tabPanel("Values", 
+                 # table of returned data for active user
+                 dataTableOutput("active_user_values"),
+                 # table of session$userData$reactive_db$user_db loaded at the start of session
+                 dataTableOutput("user_db"),
+                 # table of session$userData$reactive_db$reset_db loaded at the start of session
+                 dataTableOutput("reset_db")
+        ),
+        tabPanel("Login", login_UI()),
+        tabPanel("Register", register_UI()),
+        tabPanel("Reset Password", password_reset_UI())
+    )
+)
 
-server <- function(input, output, session){
+server <- function(input, output, session) {
+    
+    # login server with specified methods for database and mailing
+    # to run it you need to replace placeholders with your details and 
+    # cofigure it for your needs
+    
+    auth <- login_server(
+        db_method = "sqlite",
+        mail_method = "emayili",
+        appname = "shiny.reglog test",
+        appaddress = "not-on-net.com",
+        sqlite_db = "test.sqlite",
+        emayili_user = "your_email_address",
+        emayili_password = "your_email_password",
+        emayili_port = "your_email_box_port",
+        emayili_host = "your_email_box_host"
+    )
+    
+    # table of values returned by login_server
+    
+    output$active_user_values <- renderDataTable({
+        data.frame(is_logged = auth$is_logged,
+                   user_id = auth$user_id,
+                   user_mail = auth$user_mail
+        )
+    })
+    
+    # tibbles contained within session$userData$reactive_db
+    
+    output$user_db <- renderDataTable(
+        session$userData$reactive_db$user_db
+    )
+    
+    output$reset_db <- renderDataTable(
+        session$userData$reactive_db$reset_db
+    )
+}
 
-  googlesheets4::gs4_auth()
-
-# the reactive_db is reactiveValues() object to access your data in the app
-
-  reactive_db <- login_server(gsheet_file = "your_spreadsheet_id",
-                              gmail_user = "my_mail@gmail.com",
-                              gmail_password = "my_password",
-                              appname = "Login_test",
-                              appaddress = "logintest.com")
-
- }
-
-# shinyApp initialization
-
- shinyApp(ui = UI, server = server)
+# Run the application 
+shinyApp(ui = ui, server = server)
 }
 \seealso{
 \code{\link[=login_UI]{login_UI()}} for the login window in UI
 
 \code{\link[=password_reset_UI]{password_reset_UI()}} for the password reset window in UI
 
-\link{register_UI} for the registration window in UI
+\code{\link[=register_UI]{register_UI()}} for the registration window in UI
 }
