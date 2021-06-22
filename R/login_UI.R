@@ -8,7 +8,7 @@
 #' It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{password_reset_UI()} and \code{register_UI()} for full potential.
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
-#' @param lang specifies the app used language. Defaults to "eng" for English. Package also supports "pl" for Polish
+#' @param lang specifies the app used language. Defaults to "en" for English. Package also supports "pl" for Polish
 #'
 #' @return NONE
 #'
@@ -18,20 +18,20 @@
 #'
 
 login_UI <- function(id = "login_system",
-                     lang = "eng") {
+                     lang = "en") {
 
   ns <- NS(id)
 
   div(h1("Login"),
       textInput(ns("login_user_id"),
-                dplyr::case_when(lang == "eng" ~ "User ID",
+                dplyr::case_when(lang == "en" ~ "User ID",
                                  lang == "pl" ~ "Nazwa użytkownika")
       ),
       passwordInput(ns("password_login"),
-                    dplyr::case_when(lang == "eng" ~ "Password",
+                    dplyr::case_when(lang == "en" ~ "Password",
                                      lang == "pl"~ "Hasło")),
       actionButton(ns("login_button"),
-                   dplyr::case_when(lang == "eng" ~ "Log-in",
+                   dplyr::case_when(lang == "en" ~ "Log-in",
                                     lang == "pl" ~ "Zaloguj")))
 }
 
@@ -45,7 +45,7 @@ login_UI <- function(id = "login_system",
 #' It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{login_UI()} and \code{register_UI()} for full potential.
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
-#' @param lang specifies the app used language. Defaults to "eng" for English. Package also supports "pl" for Polish
+#' @param lang specifies the app used language. Defaults to "en" for English. Package also supports "pl" for Polish
 #'
 #' @return NONE
 #'
@@ -54,31 +54,30 @@ login_UI <- function(id = "login_system",
 #' @export
 
 password_reset_UI <- function(id = "login_system",
-                              lang = "eng") {
+                              lang = "en") {
 
   ns <- NS(id)
 
   div(
-    h1(dplyr::case_when(lang == "eng" ~ "Reset you password",
+    h1(dplyr::case_when(lang == "en" ~ "Reset you password",
                         lang == "pl" ~ "Resetowanie hasła")),
-    p(dplyr::case_when(lang == "eng" ~ "To reset your password, type in your user ID and press the 'Send code' button. The code to reset your password will be send to e-mail that you provided during registration. Message should arrive in few minutes.",
+    p(dplyr::case_when(lang == "en" ~ "To reset your password, type in your user ID and press the 'Send code' button. The code to reset your password will be send to e-mail that you provided during registration. Message should arrive in few minutes.",
                        lang == "pl" ~ "Aby zresetować hasło, wprowadź swoją nazwę użytkownika i wciśnij przycisk 'Wyślij kod'. Kod do zresetowania hasła zostanie wysłany na e-mail podany podczas rejestracji. Wiadomość powinna dotrzeć w ciągu kilku minut")),
     textInput(ns("resetpass_user_ID"),
-              dplyr::case_when(lang == "eng" ~ "User ID",
+              dplyr::case_when(lang == "en" ~ "User ID",
                                lang == "pl" ~ "Nazwa użytkownika")),
     actionButton(ns("resetpass_send"),
-                 dplyr::case_when(lang == "eng" ~ "Send code",
+                 dplyr::case_when(lang == "en" ~ "Send code",
                                   lang == "pl" ~ "Wyślij kod")),
-    p(dplyr::case_when(lang == "eng" ~ "After getting the e-mail type the received code in the box below and press the 'Confirm code' button. The code will be active for 24 hours.",
+    p(dplyr::case_when(lang == "en" ~ "After getting the e-mail type the received code in the box below and press the 'Confirm code' button. The code will be active for 24 hours.",
                        lang == "pl" ~ "Po otrzymaniu wiadomości wprowadź otrzymany kod w pole poniżej i wciśnij przycisk 'Potwierdź kod'. Kod będzie aktywny przez 24 godziny.")),
     textInput(ns("resetpass_code"),
-              dplyr::case_when(lang == "eng" ~ "Received code",
+              dplyr::case_when(lang == "en" ~ "Received code",
                                lang == "pl" ~ "Otrzymany kod")),
     actionButton(ns("resetpass_code_bttn"),
-                 dplyr::case_when(lang == "eng" ~ "Confirm code",
+                 dplyr::case_when(lang == "en" ~ "Confirm code",
                                   lang == "pl" ~ "Potwierdź kod"))
   )
-
 }
 
 #### UI module for registration ####
@@ -91,7 +90,7 @@ password_reset_UI <- function(id = "login_system",
 #' It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{login_UI()} and \code{password_reset_UI()} for full potential.
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
-#' @param lang specifies the app used language. Defaults to "eng" for English. Package also supports "pl" for Polish
+#' @param lang specifies the app used language. Defaults to "en" for English. Package also supports "pl" for Polish
 #'
 #' @return NONE
 #'
@@ -100,28 +99,28 @@ password_reset_UI <- function(id = "login_system",
 #' @export
 
 register_UI <- function(id = "login_system",
-                        lang = "eng"){
+                        lang = "en"){
 
   ns <- NS(id)
 
   div(
-    h1(dplyr::case_when(lang == "eng" ~ "Registration form",
+    h1(dplyr::case_when(lang == "en" ~ "Registration form",
                         lang == "pl" ~ "Formularz rejestracyjny")),
-    p(dplyr::case_when(lang == "eng" ~ "In the form below you can register a new account. Choose an user ID, provide a valid e-mail adress and choose a password for your account.",
+    p(dplyr::case_when(lang == "en" ~ "In the form below you can register a new account. Choose an user ID, provide a valid e-mail adress and choose a password for your account.",
                        lang == "pl" ~ "W poniższym formularzu można zarejetrować nowe konto. Wybierz nazwę użytkownika, podaj poprawny adres e-mail i wybierz hasło dla swojego konta"),
-      tags$ul(tags$li(dplyr::case_when(lang == "eng" ~ "User ID and password should constist of 8~20 alphanumeric characters",
+      tags$ul(tags$li(dplyr::case_when(lang == "en" ~ "User ID and password should constist of 8~20 alphanumeric characters",
                                        lang == "pl" ~ "Nazwa użytkownika i hasło powinny składać się z 8~20 liter i/lub cyfr")),
-              tags$li(dplyr::case_when(lang == "eng" ~ "You should have access to provided e-mail address. After registration you will receive confirmation e-mail. Moreover, if you ever forget your password you can reset it with your e-mail.",
+              tags$li(dplyr::case_when(lang == "en" ~ "You should have access to provided e-mail address. After registration you will receive confirmation e-mail. Moreover, if you ever forget your password you can reset it with your e-mail.",
                                        lang == "pl" ~ "Podany adres e-mail powinien dla ciebie dostępny. Po rejestracji otrzymasz wiadomość potwierdzającą. Co więcej, jeżeli kiedykolwiek zapomnisz swojego hasła, możesz je zresetować poprzez e-mail.")))),
-    textInput(ns("register_user_ID"), dplyr::case_when(lang == "eng" ~ "User ID",
+    textInput(ns("register_user_ID"), dplyr::case_when(lang == "en" ~ "User ID",
                                                        lang == "pl" ~ "Nazwa użytkownika")),
-    textInput(ns("register_email"), dplyr::case_when(lang == "eng" ~ "E-mail address",
+    textInput(ns("register_email"), dplyr::case_when(lang == "en" ~ "E-mail address",
                                                      lang == "pl" ~ "Adres e-mail")),
-    passwordInput(ns("register_pass1"), dplyr::case_when(lang == "eng" ~ "Your password",
+    passwordInput(ns("register_pass1"), dplyr::case_when(lang == "en" ~ "Your password",
                                                          lang == "pl" ~ "Twoje hasło")),
-    passwordInput(ns("register_pass2"), dplyr::case_when(lang == "eng" ~ "Repeat your password",
+    passwordInput(ns("register_pass2"), dplyr::case_when(lang == "en" ~ "Repeat your password",
                                                          lang == "pl" ~ "Powtórz swoje hasło")),
-    actionButton(ns("register_bttn"), dplyr::case_when(lang == "eng" ~ "Register",
+    actionButton(ns("register_bttn"), dplyr::case_when(lang == "en" ~ "Register",
                                                        lang == "pl" ~ "Zarejestruj"))
 
   )

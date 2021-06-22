@@ -4,12 +4,12 @@
 \alias{register_UI}
 \title{Shiny UI module for registration box}
 \usage{
-register_UI(id = "login_system", lang = "eng")
+register_UI(id = "login_system", lang = "en")
 }
 \arguments{
 \item{id}{the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.}
 
-\item{lang}{specifies the app used language. Defaults to "eng" for English. Package also supports "pl" for Polish}
+\item{lang}{specifies the app used language. Defaults to "en" for English. Package also supports "pl" for Polish}
 }
 \value{
 NONE
