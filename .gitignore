@@ -6,3 +6,4 @@ test_database.sqlite
 test_shinybase
 test_shinydashboard
 test.sqlite
+cache
