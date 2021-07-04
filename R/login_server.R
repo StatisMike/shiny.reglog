@@ -13,19 +13,18 @@
   grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>", as.character(x), ignore.case=TRUE)
 }
 
+#### helper functions for server - SQLite and gsheet databases ####
 # SQLite get user data
 
 .sqlite_get_db <- function(sqlite_db){
   
   sq_db <- DBI::dbConnect(RSQLite::SQLite(), dbname = sqlite_db)
   
-  user_db <- dplyr::tbl(sq_db, "user_db") %>%
-    collect() %>%
-    mutate(timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
+  user_db <- dplyr::collect(dplyr::tbl(sq_db, "user_db"))
+  user_db <- dplyr::mutate(user_db, timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
   
-  reset_db <- dplyr::tbl(sq_db, "reset_db") %>%
-    collect() %>%
-    mutate(timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
+  reset_db <- dplyr::collect(dplyr::tbl(sq_db, "reset_db")) 
+  reset_db <- dplyr::mutate(reset_db, timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
   
   DBI::dbDisconnect(sq_db)
   
@@ -39,19 +38,17 @@
 
 .gsheet_get_db <- function(gsheet_db){
   
-  user_db = googlesheets4::read_sheet(ss = gsheet_db,
-                                      sheet = "user_db") %>%
-    dplyr::arrange(dplyr::desc(timestamp)) %>%
-    dplyr::group_by(user_id) %>%
-    dplyr::slice_head() %>%
-    dplyr::ungroup()
+  user_db <- googlesheets4::read_sheet(ss = gsheet_db, sheet = "user_db")
+  user_db <- dplyr::arrange(user_db, dplyr::desc(timestamp))
+  user_db <- dplyr::group_by(user_db, user_id)
+  user_db <- dplyr::slice_head(user_db)
+  user_db <- dplyr::ungroup(user_db)
   
-  reset_db = googlesheets4::read_sheet(ss = gsheet_db,
-                                       sheet = "reset_db") %>%
-    dplyr::arrange(dplyr::desc(timestamp)) %>%
-    dplyr::group_by(user_id) %>%
-    dplyr::slice_head() %>%
-    dplyr::ungroup()
+  reset_db <- googlesheets4::read_sheet(ss = gsheet_db, sheet = "reset_db")
+  reset_db <- dplyr::arrange(reset_db, dplyr::desc(timestamp))
+  reset_db <- dplyr::group_by(reset_db, user_id)
+  reset_db <- dplyr::slice_head(reset_db)
+  reset_db <- dplyr::ungroup(reset_db)
   
   return(
     list(user_db = user_db,
@@ -65,9 +62,11 @@
   
   sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
   
-  RSQLite::dbSendQuery(sq_db,
-                       "INSERT OR REPLACE INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass);",
-                       temp_row)
+  new_query <-RSQLite::dbSendQuery(sq_db,
+                                   "INSERT OR REPLACE INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass);",
+                                   temp_row)
+  
+  RSQLite::dbClearResult(new_query)
   
   RSQLite::dbDisconnect(sq_db)
   
@@ -79,10 +78,12 @@
   
   sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
   
-  RSQLite::dbSendQuery(sq_db,
-                       "INSERT INTO reset_db (timestamp, user_id, reset_code) VALUES (:timestamp, :user_id, :reset_code)
-                       ON CONFLICT (user_id) DO UPDATE SET reset_code = :reset_code;",
-                       temp_row)
+  res_query <- RSQLite::dbSendQuery(sq_db,
+                                    "INSERT INTO reset_db (timestamp, user_id, reset_code) VALUES (:timestamp, :user_id, :reset_code)
+                                    ON CONFLICT (user_id) DO UPDATE SET reset_code = :reset_code;",
+                                    temp_row)
+  
+  RSQLite::dbClearResult(res_query)
   
   RSQLite::dbDisconnect(sq_db)
 }
@@ -93,16 +94,29 @@
   
   sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
   
-  RSQLite::dbSendQuery(sq_db,
-                       "INSERT INTO user_db (timestamp, user_mail, user_id, user_pass) 
+  pass_query <- RSQLite::dbSendQuery(sq_db,
+                                     "INSERT INTO user_db (timestamp, user_mail, user_id, user_pass) 
                                      VALUES (:timestamp, :user_mail, :user_id, :user_pass)
-                                ON CONFLICT(user_id) DO UPDATE SET user_pass = :user_pass;",
-                       temp_row)
+                                     ON CONFLICT(user_id) DO UPDATE SET user_pass = :user_pass;",
+                                     temp_row)
+  
+  RSQLite::dbClearResult(pass_query)
   
   RSQLite::dbDisconnect(sq_db)
   
 }
 
+#### helper functions for server - blank multiple inputs
+
+.blank_textInputs <- function(inputs, session){
+  for(input in inputs){
+    
+    updateTextInput(session,
+                    inputId = input,
+                    value = "")
+    
+  }
+}
 
 #### main server module of the package - googlesheets version ####
 #' @title Login server module
@@ -165,7 +179,6 @@
 #' @export
 #' @import shiny
 NULL
-#' @importFrom dplyr %>%
 #' 
 #' @example examples/shinybase_sqlite_emayili/app.R
 
@@ -256,12 +269,15 @@ login_server <- function(id = "login_system",
       
       observeEvent(input$login_button, {
         
-        temp_data <- session$userData$reactive_db$user_db %>%
-          dplyr::filter(user_id == input$login_user_id) %>%
-          dplyr::arrange(dplyr::desc(timestamp)) %>%
-          dplyr::group_by(user_id) %>%
-          dplyr::slice_head() %>%
-          dplyr::ungroup()
+        on.exit(.blank_textInputs(inputs = c("login_user_id", "password_login"),
+                                  session = session))
+        
+        temp_data_init <- session$userData$reactive_db$user_db
+        temp_data_filtered <- dplyr::filter(temp_data_init, user_id == input$login_user_id)
+        temp_data_arranged <- dplyr::arrange(temp_data_filtered, dplyr::desc(timestamp))
+        temp_data_grouped <- dplyr::group_by(temp_data_arranged, user_id)
+        temp_data_sliced <- dplyr::slice_head(temp_data_grouped)
+        temp_data <- dplyr::ungroup(temp_data_sliced)
         
         if(nrow(temp_data) == 0){
           
@@ -274,6 +290,9 @@ login_server <- function(id = "login_system",
                         p(dplyr::case_when(lang == "en" ~ "If you haven't registered yet, please register new account.",
                                            lang == "pl" ~ "Jeżeli jeszcze nie utworzono konta, proszę się zarejestrować.")),
                         footer = modalButton("OK"))
+            
+            
+            
           )
           
         } else if(scrypt::verifyPassword(as.character(temp_data$user_pass[1]),
@@ -314,8 +333,8 @@ login_server <- function(id = "login_system",
       
       observeEvent(input$resetpass_send, {
         
-        temp <- session$userData$reactive_db$user_db %>%
-          dplyr::filter(user_id == input$resetpass_user_ID)
+        temp_init <- session$userData$reactive_db$user_db
+        temp <- dplyr::filter(temp_init, user_id == input$resetpass_user_ID)
         
         if(nrow(temp) == 0){
           
@@ -343,47 +362,51 @@ login_server <- function(id = "login_system",
           
           if(mail_method == "gmailr"){
             
-            reset_mail <- gmailr::gm_mime() %>%
-              gmailr::gm_to(temp$user_mail) %>%
-              gmailr::gm_from(gmailr_user) %>%
-              gmailr::gm_subject(paste(appname,
-                                       dplyr::case_when(lang == "en" ~ "password reset code",
-                                                        lang == "pl" ~ "kod resetujący hasło"),
-                                       sep = " - ")) %>%
-              gmailr::gm_html_body(paste0("<p>",
-                                          dplyr::case_when(lang == "en" ~ "In order to reset your password the necessary code has been generated and is available below. Paste it into the application and reset your password.",
-                                                           lang == "pl" ~ "Kod wymagany do zresetowania twojego hasła został wygenerowany i jest dostępny poniżej. Wklej go w odpowiednie pole w aplikacji i zresetuj hasło"),"</p><p>",
-                                          dplyr::case_when(lang == "en" ~ "Reset code: ",
-                                                           lang == "pl" ~ "Kod resetujący: "),
-                                          reset_code, "</p><p>",
-                                          dplyr::case_when(lang == "en" ~ "If you didn't generate that code, check if anyone unauthorized have access to your e-mail inbox. If not, disregard this message.",
-                                                           lang == "pl" ~ "Jeżeli nie wygenerowałeś kodu, sprawdź czy ktokolwiek nieupoważniony ma dostęp do twojej skrzynki e-mail. Jeżeli nie, nie zwracaj uwagi na tę wiadomość."),
-                                          "</p><p>",
-                                          dplyr::case_when(lang == "en" ~ "This message was generated automatically.</p>",
-                                                           lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie.</p>")))
+            reset_mail_init <- gmailr::gm_mime()
+            reset_mail_w_to <- gmailr::gm_to(reset_mail_init, temp$user_mail)
+            reset_mail_w_from <- gmailr::gm_from(reset_mail_w_to, gmailr_user)
+            reset_mail_w_sub <- gmailr::gm_subject(reset_mail_w_from,
+                                                   paste(appname,
+                                                         dplyr::case_when(lang == "en" ~ "password reset code",
+                                                                          lang == "pl" ~ "kod resetujący hasło"),
+                                                         sep = " - "))
+            reset_mail <- gmailr::gm_html_body(reset_mail_w_sub,
+                                               paste0("<p>",
+                                                      dplyr::case_when(lang == "en" ~ "In order to reset your password the necessary code has been generated and is available below. Paste it into the application and reset your password.",
+                                                                       lang == "pl" ~ "Kod wymagany do zresetowania twojego hasła został wygenerowany i jest dostępny poniżej. Wklej go w odpowiednie pole w aplikacji i zresetuj hasło"),"</p><p>",
+                                                      dplyr::case_when(lang == "en" ~ "Reset code: ",
+                                                                       lang == "pl" ~ "Kod resetujący: "),
+                                                      reset_code, "</p><p>",
+                                                      dplyr::case_when(lang == "en" ~ "If you didn't generate that code, check if anyone unauthorized have access to your e-mail inbox. If not, disregard this message.",
+                                                                       lang == "pl" ~ "Jeżeli nie wygenerowałeś kodu, sprawdź czy ktokolwiek nieupoważniony ma dostęp do twojej skrzynki e-mail. Jeżeli nie, nie zwracaj uwagi na tę wiadomość."),
+                                                      "</p><p>",
+                                                      dplyr::case_when(lang == "en" ~ "This message was generated automatically.</p>",
+                                                                       lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie.</p>")))
             
             gmailr::gm_send_message(reset_mail)
             
           } else if(mail_method == "emayili"){
             
-            reset_mail <- emayili::envelope() %>%
-              emayili::to(temp$user_mail) %>%
-              emayili::from(emayili_user) %>%
-              emayili::subject(paste(appname,
-                                     dplyr::case_when(lang == "en" ~ "password reset code",
-                                                      lang == "pl" ~ "kod resetujący hasło"),
-                                     sep = " - ")) %>%
-              emayili::html(paste0("<p>",
-                                   dplyr::case_when(lang == "en" ~ "In order to reset your password the necessary code has been generated and is available below. Paste it into the application and reset your password.",
-                                                    lang == "pl" ~ "Kod wymagany do zresetowania twojego hasła został wygenerowany i jest dostępny poniżej. Wklej go w odpowiednie pole w aplikacji i zresetuj hasło"),"</p><p>",
-                                   dplyr::case_when(lang == "en" ~ "Reset code: ",
-                                                    lang == "pl" ~ "Kod resetujący: "),
-                                   reset_code, "</p><p>",
-                                   dplyr::case_when(lang == "en" ~ "If you didn't generate that code, check if anyone unauthorized have access to your e-mail inbox. If not, disregard this message.",
-                                                    lang == "pl" ~ "Jeżeli nie wygenerowałeś kodu, sprawdź czy ktokolwiek nieupoważniony ma dostęp do twojej skrzynki e-mail. Jeżeli nie, nie zwracaj uwagi na tę wiadomość."),
-                                   "</p><p>",
-                                   dplyr::case_when(lang == "en" ~ "This message was generated automatically.</p>",
-                                                    lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie.</p>")))
+            reset_mail_init <- emayili::envelope()
+            reset_mail_w_to <- emayili::to(reset_mail_init, temp$user_mail)
+            reset_mail_w_from <- emayili::from(reset_mail_w_to, emayili_user)
+            reset_mail_w_sub <- emayili::subject(reset_mail_w_from,
+                                                 paste(appname,
+                                                       dplyr::case_when(lang == "en" ~ "password reset code",
+                                                                        lang == "pl" ~ "kod resetujący hasło"),
+                                                       sep = " - "))
+            reset_mail <- emayili::html(reset_mail_w_sub, 
+                                        paste0("<p>",
+                                               dplyr::case_when(lang == "en" ~ "In order to reset your password the necessary code has been generated and is available below. Paste it into the application and reset your password.",
+                                                                lang == "pl" ~ "Kod wymagany do zresetowania twojego hasła został wygenerowany i jest dostępny poniżej. Wklej go w odpowiednie pole w aplikacji i zresetuj hasło"),"</p><p>",
+                                               dplyr::case_when(lang == "en" ~ "Reset code: ",
+                                                                lang == "pl" ~ "Kod resetujący: "),
+                                               reset_code, "</p><p>",
+                                               dplyr::case_when(lang == "en" ~ "If you didn't generate that code, check if anyone unauthorized have access to your e-mail inbox. If not, disregard this message.",
+                                                                lang == "pl" ~ "Jeżeli nie wygenerowałeś kodu, sprawdź czy ktokolwiek nieupoważniony ma dostęp do twojej skrzynki e-mail. Jeżeli nie, nie zwracaj uwagi na tę wiadomość."),
+                                               "</p><p>",
+                                               dplyr::case_when(lang == "en" ~ "This message was generated automatically.</p>",
+                                                                lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie.</p>")))
             
             smtp <- emayili::server(
               host = emayili_host,
@@ -400,12 +423,12 @@ login_server <- function(id = "login_system",
                                     "user_id" = input$resetpass_user_ID,
                                     "reset_code" = scrypt::hashPassword(reset_code))
           
-          session$userData$reactive_db$reset_db <- rbind(session$userData$reactive_db$reset_db,
-                                                         temp_row) %>%
-            dplyr::arrange(desc(timestamp)) %>%
-            dplyr::group_by(user_id) %>%
-            dplyr::slice_head() %>%
-            dplyr::ungroup()
+          reset_data_init <- rbind(session$userData$reactive_db$reset_db, temp_row)
+          reset_data_arranged <- dplyr::arrange(reset_data_init, desc(timestamp))
+          reset_data_grouped <- dplyr::group_by(reset_data_arranged, user_id)
+          reset_data_sliced <- dplyr::slice_head(reset_data_grouped)
+          
+          session$userData$reactive_db$reset_db <- dplyr::ungroup(reset_data_sliced)
           
           if(db_method == "gsheet"){
             
@@ -427,11 +450,11 @@ login_server <- function(id = "login_system",
       
       observeEvent(input$resetpass_code_bttn, {
         
-        temp_data <- session$userData$reactive_db$reset_db %>%
-          dplyr::filter(user_id == input$resetpass_user_ID) %>%
-          dplyr::arrange(desc(timestamp)) %>%
-          dplyr::slice_head() %>%
-          dplyr::filter((Sys.time() - timestamp) < lubridate::period(24, units = "hours"))
+        temp_data_init <- session$userData$reactive_db$reset_db
+        temp_data_filtered <- dplyr::filter(temp_data_init, user_id == input$resetpass_user_ID)
+        temp_data_arranged <- dplyr::arrange(temp_data_filtered, desc(timestamp))
+        temp_data_sliced <- dplyr::slice_head(temp_data_arranged)
+        temp_data <- dplyr::filter(temp_data_sliced, (Sys.time() - timestamp) < lubridate::period(24, units = "hours"))
         
         if(nrow(temp_data) == 0){
           
@@ -505,23 +528,31 @@ login_server <- function(id = "login_system",
             
           })
           
-          mail <- session$userData$reactive_db$user_db %>%
-            dplyr::filter(user_id == input$resetpass_user_ID) %>%
-            dplyr::arrange(desc(timestamp)) %>%
-            dplyr::slice_head() %>%
-            dplyr::select(user_mail)
+          mail_init <- session$userData$reactive_db$user_db
+          mail_filtered <- dplyr::filter(mail_init, user_id == input$resetpass_user_ID)
+          mail_arranged <- dplyr::arrange(mail_filtered, desc(timestamp))
+          mail_sliced <- dplyr::slice_head(mail_arranged)
+          mail <- dplyr::select(mail_sliced, user_mail)
           
           temp_row <- dplyr::tibble(timestamp = Sys.time(),
                                     user_id = input$resetpass_user_ID,
                                     user_mail = as.character(mail),
                                     user_pass = scrypt::hashPassword(input$resetpass1))
           
-          session$userData$reactive_db$user_db <- rbind(session$userData$reactive_db$user_db,
-                                                        temp_row) %>%
-            dplyr::arrange(desc(timestamp)) %>%
-            dplyr::group_by(user_id) %>%
-            dplyr::slice_head() %>%
-            dplyr::ungroup()
+          temp_data <- rbind(session$userData$reactive_db$user_db, temp_row)
+          temp_data_arranged <- dplyr::arrange(temp_data, desc(timestamp))
+          temp_data_grouped <- dplyr::group_by(temp_data_arranged, user_id)
+          temp_data_sliced <- dplyr::slice_head(temp_data_grouped)
+          
+          session$userData$reactive_db$user_db <- dplyr::ungroup(temp_data_sliced)
+          
+          .blank_textInputs(inputs = c("resetpass_user_ID", "resetpass_code", "resetpass1", "resetpass2"),
+                            session = session)
+          
+          updateActionButton(inputId = "resetpass_modal_bttn",
+                             icon = icon("thumbs-up"))
+          
+          
           
           if(db_method == "gsheet"){
             
@@ -543,10 +574,13 @@ login_server <- function(id = "login_system",
       
       observeEvent(input$register_bttn, {
         
-        temp_data <- session$userData$reactive_db$user_db %>%
-          dplyr::filter(user_id == input$register_user_ID)
+        temp_data <- dplyr::filter(session$userData$reactive_db$user_db,
+                                   user_id == input$register_user_ID)
         
         if(nrow(temp_data >= 1)){
+          
+          on.exit(.blank_textInputs(inputs = c("register_pass1", "register_pass2"),
+                                    session = session))
           
           showModal(
             
@@ -558,6 +592,9 @@ login_server <- function(id = "login_system",
           )
           
         } else if(.check_user_login_pass(input$register_user_ID) == F){
+          
+          on.exit(.blank_textInputs(inputs = c("register_pass1", "register_pass2"),
+                                    session = session))
           
           showModal(
             
@@ -571,6 +608,9 @@ login_server <- function(id = "login_system",
           
         }else if(.check_user_mail(input$register_email) == F){
           
+          on.exit(.blank_textInputs(inputs = c("register_pass1", "register_pass2"),
+                                    session = session))
+          
           showModal(
             
             modalDialog(title = dplyr::case_when(lang == "en" ~ "E-mail not valid",
@@ -581,6 +621,9 @@ login_server <- function(id = "login_system",
           )
           
         }else if(.check_user_login_pass(input$register_pass1) == F){
+          
+          on.exit(.blank_textInputs(inputs = c("register_pass1", "register_pass2"),
+                                    session = session))
           
           showModal(
             
@@ -593,6 +636,9 @@ login_server <- function(id = "login_system",
           )
         } else if(input$register_pass1 != input$register_pass2){
           
+          on.exit(.blank_textInputs(inputs = c("register_pass1", "register_pass2"),
+                                    session = session))
+          
           showModal(
             
             modalDialog(title = dplyr::case_when(lang == "en" ~ "Passwords don't match",
@@ -604,6 +650,9 @@ login_server <- function(id = "login_system",
           )
           
         } else {
+          
+          on.exit(.blank_textInputs(inputs = c("register_user_ID", "register_email", "register_pass1", "register_pass2"),
+                                    session = session))
           
           showModal(
             
@@ -637,25 +686,28 @@ login_server <- function(id = "login_system",
           
           if(mail_method == "emayili"){
             
-            confirmation_mail <- emayili::envelope() %>%
-              emayili::to(temp_row$user_mail) %>%
-              emayili::from(emayili_user) %>%
-              emayili::subject(paste(appname,
-                                     dplyr::case_when(lang == "en" ~ "confirmation of registration",
-                                                      lang == "pl" ~ "potwierdzenie rejestracji"),
-                                     sep = " - ")) %>%
-              emayili::html(paste0(
-                "<p>",
-                dplyr::case_when(lang == "en" ~ "Thank you for registering an account in our application.",
-                                 lang == "pl" ~ "Dziękujemy za zarejestrowanie konta w naszej aplikacji."),"</p><p>",
-                dplyr::case_when(lang == "en" ~ "Your user ID: ",
-                                 lang == "pl" ~ "Twoja nazwa użytkownika: "),
-                temp_row$user_id, "</p><p>",
-                dplyr::case_when(lang == "en" ~ "You can always visit our application at: ",
-                                 lang == "pl" ~ "Możesz odwiedzić naszą aplikację pod adresem: "),
-                appaddress, "</p><p>",
-                dplyr::case_when(lang == "en" ~ "This message was generated automatically.",
-                                 lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie")  ))
+            confirmation_mail_init <- emayili::envelope()
+            confirmation_mail_w_to <- emayili::to(confirmation_mail_init, temp_row$user_mail)
+            confirmation_mail_w_from <- emayili::from(confirmation_mail_w_to, emayili_user)
+            confirmation_mail_w_sub <- emayili::subject(confirmation_mail_w_from,
+                                                        paste(appname,
+                                                              dplyr::case_when(lang == "en" ~ "confirmation of registration",
+                                                                               lang == "pl" ~ "potwierdzenie rejestracji"),
+                                                              sep = " - "))
+            
+            confirmation_mail <- emayili::html(confirmation_mail_w_sub, 
+                                               paste0(
+                                                 "<p>",
+                                                 dplyr::case_when(lang == "en" ~ "Thank you for registering an account in our application.",
+                                                                  lang == "pl" ~ "Dziękujemy za zarejestrowanie konta w naszej aplikacji."),"</p><p>",
+                                                 dplyr::case_when(lang == "en" ~ "Your user ID: ",
+                                                                  lang == "pl" ~ "Twoja nazwa użytkownika: "),
+                                                 temp_row$user_id, "</p><p>",
+                                                 dplyr::case_when(lang == "en" ~ "You can always visit our application at: ",
+                                                                  lang == "pl" ~ "Możesz odwiedzić naszą aplikację pod adresem: "),
+                                                 appaddress, "</p><p>",
+                                                 dplyr::case_when(lang == "en" ~ "This message was generated automatically.",
+                                                                  lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie")  ))
             
             smtp <- emayili::server(
               host = emayili_host,
@@ -668,25 +720,27 @@ login_server <- function(id = "login_system",
             
           } else {
             
-            confirmation_mail <- gmailr::gm_mime() %>%
-              gmailr::gm_to(temp_row$user_mail) %>%
-              gmailr::gm_from(gmailr_user) %>%
-              gmailr::gm_subject(paste(appname,
-                                       dplyr::case_when(lang == "en" ~ "confirmation of registration",
-                                                        lang == "pl" ~ "potwierdzenie rejestracji"),
-                                       sep = " - ")) %>%
-              gmailr::gm_html_body(paste0(
-                "<p>",
-                dplyr::case_when(lang == "en" ~ "Thank you for registering an account in our application.",
-                                 lang == "pl" ~ "Dziękujemy za zarejestrowanie konta w naszej aplikacji."),"</p><p>",
-                dplyr::case_when(lang == "en" ~ "Your user ID: ",
-                                 lang == "pl" ~ "Twoja nazwa użytkownika: "),
-                temp_row$user_id, "</p><p>",
-                dplyr::case_when(lang == "en" ~ "You can always visit our application at: ",
-                                 lang == "pl" ~ "Możesz odwiedzić naszą aplikację pod adresem: "),
-                appaddress, "</p><p>",
-                dplyr::case_when(lang == "en" ~ "This message was generated automatically.",
-                                 lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie")  ))
+            confirmation_mail_init <- gmailr::gm_mime()
+            confirmation_mail_w_to <- gmailr::gm_to(confirmation_mail_init, temp_row$user_mail)
+            confirmation_mail_w_from <- gmailr::gm_from(confirmation_mail_w_to, gmailr_user)
+            confirmation_mail_w_sub <- gmailr::gm_subject(confirmation_mail_w_from, 
+                                                          paste(appname,
+                                                                dplyr::case_when(lang == "en" ~ "confirmation of registration",
+                                                                                 lang == "pl" ~ "potwierdzenie rejestracji"),
+                                                                sep = " - "))
+            confirmation_mail <- gmailr::gm_html_body(confirmation_mail_w_sub, 
+                                                      paste0(
+                                                        "<p>",
+                                                        dplyr::case_when(lang == "en" ~ "Thank you for registering an account in our application.",
+                                                                         lang == "pl" ~ "Dziękujemy za zarejestrowanie konta w naszej aplikacji."),"</p><p>",
+                                                        dplyr::case_when(lang == "en" ~ "Your user ID: ",
+                                                                         lang == "pl" ~ "Twoja nazwa użytkownika: "),
+                                                        temp_row$user_id, "</p><p>",
+                                                        dplyr::case_when(lang == "en" ~ "You can always visit our application at: ",
+                                                                         lang == "pl" ~ "Możesz odwiedzić naszą aplikację pod adresem: "),
+                                                        appaddress, "</p><p>",
+                                                        dplyr::case_when(lang == "en" ~ "This message was generated automatically.",
+                                                                         lang == "pl" ~ "Ta wiadomość została wygenerowana automatycznie")  ))
             
             gmailr::gm_send_message(confirmation_mail)
             
