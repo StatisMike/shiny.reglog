@@ -202,6 +202,8 @@ login_server <- function(id = "login_system",
     id,
     function(input, output, session){
       
+      txt <- use_language(lang)
+      
       #### checking for packages for handling databases
       
       if(db_method == "gsheet"){
