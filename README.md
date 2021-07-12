@@ -158,7 +158,8 @@ widen the requirements - especially for passwords.
 Provided password is saved in hashed form - using the
 `scrypt::hashPassword` function.
 
-![register\_UI()](https://statismike.github.io/gallery/shiny.reglog/1_register.gif)
+[![Register UI - click for
+gif!](https://statismike.github.io/gallery/shiny.reglog/1_register.png)](https://statismike.github.io/gallery/shiny.reglog/1_register.gif)
 
 #### 4.1.2. login\_UI
 
@@ -166,7 +167,8 @@ The login box contains inputs for user ID and password. After pushing
 the “Login” button, it check validity of inputs and logins user.
 Produces modal dialog detailing results.
 
-![login](https://statismike.github.io/gallery/shiny.reglog/2_login.gif)
+[![Login UI - click for
+gif!](https://statismike.github.io/gallery/shiny.reglog/2_login.png)](https://statismike.github.io/gallery/shiny.reglog/2_login.gif)
 
 #### 4.1.3. password\_reset\_UI
 
@@ -184,8 +186,8 @@ inputbox below and push next button. The validity of inputted code in
 relation to user ID is then checked. If correct, the new modal dialog
 opens to input the new password.
 
-![password reset
-UI](https://statismike.github.io/gallery/shiny.reglog/3_reset1.gif)
+[![Reset UI - click for
+gif!](https://statismike.github.io/gallery/shiny.reglog/3_reset1.png)](https://statismike.github.io/gallery/shiny.reglog/3_reset1.gif)
 
 The user need to provide new password and repeat it to check for any
 typos. After pushing the “Confirm new password” button, below input
@@ -193,8 +195,8 @@ boxes a message is rendered to give feedback to the user - if the
 password was changed successfully. After that, the user can close modal
 dialog with “OK” button.
 
-![reset code modal
-dialog](https://statismike.github.io/gallery/shiny.reglog/4_reset2.gif)
+[![Reset modal dialog - click for
+gif!](https://statismike.github.io/gallery/shiny.reglog/4_reset2.png)](https://statismike.github.io/gallery/shiny.reglog/4_reset2.gif)
 
 ### 4.2. Server function
 

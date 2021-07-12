@@ -2,6 +2,8 @@
 
 # gmailR and googlesheets configuration should be contained in external .R file, restricted to shiny user
 
+if(interactive()){
+
 source("authorization-scheme.R")
 
 library(shiny)
@@ -65,3 +67,5 @@ server <- function(input, output, session) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
+}

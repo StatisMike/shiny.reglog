@@ -1,9 +1,9 @@
 Package: shiny.reglog
 Title: Optional Login and Registration Module System for ShinyApps
-Version: 0.0.2.0
+Version: 0.1.0.0
 Authors@R: 
-    person(given = "Michał",
-           family = "Kosiński",
+    person(given = "Michal",
+           family = "Kosinski",
            role = c("aut", "cre"),
            email = "kosinski.mich@gmail.com",
            comment = c(ORCID = "https://orcid.org/0000-0002-8426-3654"))
@@ -12,7 +12,10 @@ Imports:
 	shiny,
 	dplyr,
 	scrypt,
-	R6
+	R6,
+	DBI,
+	RSQLite,
+	lubridate
 Suggests:
 	shinydashboard,
 	googledrive,
@@ -20,7 +23,7 @@ Suggests:
 	gmailr,
 	emayili
 License: 
-	MIT
+	MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
