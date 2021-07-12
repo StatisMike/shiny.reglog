@@ -20,6 +20,7 @@
   
   sq_db <- DBI::dbConnect(RSQLite::SQLite(), dbname = sqlite_db)
   
+  
   user_db <- dplyr::collect(dplyr::tbl(sq_db, "user_db"))
   user_db <- dplyr::mutate(user_db, timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
   
@@ -179,6 +180,8 @@
 #' @export
 #' @import shiny
 NULL
+#' @import DBI
+#' @import RSQLite
 #' 
 #' @example examples/shinybase_sqlite_emayili/app.R
 
@@ -202,7 +205,7 @@ login_server <- function(id = "login_system",
     id,
     function(input, output, session){
       
-      # txt <- use_language(lang)
+      txt <- use_language(lang)
       
       #### checking for packages for handling databases
       
@@ -368,9 +371,8 @@ login_server <- function(id = "login_system",
                                                       reset_code, 
                                                       "</p><p>",
                                                       txt$get("reset_mail_3"),
-                                                      "</p><p>",
-                                                      txt$get("mail_automatic"),
-                                                      "</p>")
+                                                      "</p><hr>",
+                                                      txt$get("mail_automatic"))
                                                )
             
             gmailr::gm_send_message(reset_mail)
@@ -392,9 +394,8 @@ login_server <- function(id = "login_system",
                                                reset_code, 
                                                "</p><p>",
                                                txt$get("reset_mail_3"),
-                                               "</p><p>",
-                                               txt$get("mail_automatic"),
-                                               "</p>")
+                                               "</p><hr>",
+                                               txt$get("mail_automatic"))
                                         )
             
             smtp <- emayili::server(
@@ -413,7 +414,7 @@ login_server <- function(id = "login_system",
                                     "reset_code" = scrypt::hashPassword(reset_code))
           
           reset_data_init <- rbind(session$userData$reactive_db$reset_db, temp_row)
-          reset_data_arranged <- dplyr::arrange(reset_data_init, desc(timestamp))
+          reset_data_arranged <- dplyr::arrange(reset_data_init, dplyr::desc(timestamp))
           reset_data_grouped <- dplyr::group_by(reset_data_arranged, user_id)
           reset_data_sliced <- dplyr::slice_head(reset_data_grouped)
           
@@ -441,7 +442,7 @@ login_server <- function(id = "login_system",
         
         temp_data_init <- session$userData$reactive_db$reset_db
         temp_data_filtered <- dplyr::filter(temp_data_init, user_id == input$resetpass_user_ID)
-        temp_data_arranged <- dplyr::arrange(temp_data_filtered, desc(timestamp))
+        temp_data_arranged <- dplyr::arrange(temp_data_filtered, dplyr::desc(timestamp))
         temp_data_sliced <- dplyr::slice_head(temp_data_arranged)
         temp_data <- dplyr::filter(temp_data_sliced, (Sys.time() - timestamp) < lubridate::period(24, units = "hours"))
         
@@ -507,7 +508,7 @@ login_server <- function(id = "login_system",
           
           mail_init <- session$userData$reactive_db$user_db
           mail_filtered <- dplyr::filter(mail_init, user_id == input$resetpass_user_ID)
-          mail_arranged <- dplyr::arrange(mail_filtered, desc(timestamp))
+          mail_arranged <- dplyr::arrange(mail_filtered, dplyr::desc(timestamp))
           mail_sliced <- dplyr::slice_head(mail_arranged)
           mail <- dplyr::select(mail_sliced, user_mail)
           
@@ -517,7 +518,7 @@ login_server <- function(id = "login_system",
                                     user_pass = scrypt::hashPassword(input$resetpass1))
           
           temp_data <- rbind(session$userData$reactive_db$user_db, temp_row)
-          temp_data_arranged <- dplyr::arrange(temp_data, desc(timestamp))
+          temp_data_arranged <- dplyr::arrange(temp_data, dplyr::desc(timestamp))
           temp_data_grouped <- dplyr::group_by(temp_data_arranged, user_id)
           temp_data_sliced <- dplyr::slice_head(temp_data_grouped)
           
@@ -669,9 +670,9 @@ login_server <- function(id = "login_system",
                                                  "</p><p>",
                                                  txt$get("reg_mail_3"),
                                                  appaddress, 
-                                                 "</p><p>",
-                                                 txt$get("mail_automatic"),
-                                                 "</p>"))
+                                                 "</p><hr>",
+                                                 txt$get("mail_automatic"))
+            )
             
             smtp <- emayili::server(
               host = emayili_host,
@@ -701,9 +702,9 @@ login_server <- function(id = "login_system",
                                                         "</p><p>",
                                                         txt$get("reg_mail_3"),
                                                         appaddress, 
-                                                        "</p><p>",
-                                                        txt$get("mail_automatic"),
-                                                        "</p>"))
+                                                        "</p><hr>",
+                                                        txt$get("mail_automatic"))
+            )
             
             gmailr::gm_send_message(confirmation_mail)
             

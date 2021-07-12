@@ -8,6 +8,7 @@
 #' It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{password_reset_UI()} and \code{register_UI()} for full potential.
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
+#' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
 #'
 #' @return NONE
 #'
@@ -16,10 +17,13 @@
 #' @export
 #'
 
-login_UI <- function(id = "login_system") {
+login_UI <- function(id = "login_system",
+                     lang = "en") {
 
   ns <- NS(id)
 
+  txt <- use_language(lang)
+  
   div(h1("Login"),
       textInput(ns("login_user_id"),
                 label = txt$get("user_id")
@@ -43,15 +47,19 @@ login_UI <- function(id = "login_system") {
 #' It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{login_UI()} and \code{register_UI()} for full potential.
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
-#'
+#' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
+#' 
 #' @return NONE
 #'
 #' @seealso login_server() for more details and example
 #'
 #' @export
 
-password_reset_UI <- function(id = "login_system") {
+password_reset_UI <- function(id = "login_system",
+                              lang = "en") {
 
+  txt <- use_language(lang)
+  
   ns <- NS(id)
 
   div(
@@ -82,6 +90,7 @@ password_reset_UI <- function(id = "login_system") {
 #' It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{login_UI()} and \code{password_reset_UI()} for full potential.
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
+#' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
 #'
 #' @return NONE
 #'
@@ -89,9 +98,12 @@ password_reset_UI <- function(id = "login_system") {
 #'
 #' @export
 
-register_UI <- function(id = "login_system"){
+register_UI <- function(id = "login_system",
+                        lang = "en"){
 
   ns <- NS(id)
+  
+  txt <- use_language(lang)
 
   div(
     h1(txt$get("register_ui_1")),
