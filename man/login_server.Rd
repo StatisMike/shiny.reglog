@@ -31,7 +31,7 @@ login_server(
 
 \item{appaddress}{the character value containing the web address of your application (used in automatic e-mails for information purposes)}
 
-\item{lang}{specifies the app used language. Defaults to "en" for English. Package also supports "pl" for Polish}
+\item{lang}{specifies the app used language. Accepts "en" or "pl". Defaults to "en"}
 
 \item{gsheet_file}{the ID of your googlesheet holding the database. It is contained within URL address of your googlesheet (for: \code{db_method = "gsheet"})}
 
@@ -91,7 +91,8 @@ Provided e-mail is needed for password reset: 10 digits code is generated and ma
 \examples{
 #### example of db_method = "sqlite" and mail_method = "emayili"
 
-# gmailR and googlesheets configuration should be contained in external .R file, restricted to shiny user
+# gmailR and googlesheets configuration should be contained 
+# in external .R file, restricted to shiny user
 
 library(shiny)
 library(shiny.reglog)
