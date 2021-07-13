@@ -1,3 +1,8 @@
+# NOT RUN {
+## Only run this example in interactive R sessions
+
+if(interactive()){
+
 #### example of db_method = "sqlite" and mail_method = "emayili"
 
 # gmailR and googlesheets configuration should be contained 
@@ -66,3 +71,7 @@ server <- function(input, output, session) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
+}
+
+# }

@@ -1,29 +1,30 @@
 Package: shiny.reglog
 Title: Optional Login and Registration Module System for ShinyApps
-Version: 0.1.0.0
+Version: 0.2.0.0
 Authors@R: 
     person(given = "Michal",
            family = "Kosinski",
            role = c("aut", "cre"),
            email = "kosinski.mich@gmail.com",
            comment = c(ORCID = "https://orcid.org/0000-0002-8426-3654"))
-Description: Package creates UI modules for Login, Register and Password Reset boxes and server module for reading and writing user database contained within googlesheet on googledrive. Creates automatic e-mail messages after registration and for resetting password procedure. Currently supports English language (default) and Polish. The authentication system created with shiny.reglog is optional unless the developer wishes otherwise: user don't neet to be logged-in to access your application, but when logged-in the username can be used to read and write relational databases.
+Description: Package creates UI modules for Login, Register and Password Reset boxes and server module for reading and writing user database contained within googlesheet or sqlite file. Creates automatic e-mail messages after registration and for resetting password procedure. Currently supports English language (default) and Polish. The authentication system created with shiny.reglog is designed to be optional: user don't neet to be logged-in to access your application, but when logged-in the user data can be used to read from and write to relational databases.
 Imports:
 	shiny,
 	dplyr,
+	dbplyr,
 	scrypt,
 	R6,
 	DBI,
+	googlesheets4,
 	RSQLite,
 	lubridate
 Suggests:
 	shinydashboard,
 	googledrive,
-	googlesheets4,
 	gmailr,
 	emayili
 License: 
-	MIT + file LICENSE
+	GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
