@@ -89,6 +89,11 @@ Provided e-mail is needed for password reset: 10 digits code is generated and ma
 }
 }
 \examples{
+# NOT RUN {
+## Only run this example in interactive R sessions
+
+if(interactive()){
+
 #### example of db_method = "sqlite" and mail_method = "emayili"
 
 # gmailR and googlesheets configuration should be contained 
@@ -157,6 +162,10 @@ server <- function(input, output, session) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
+}
+
+# }
 }
 \seealso{
 \code{\link[=login_UI]{login_UI()}} for the login window in UI

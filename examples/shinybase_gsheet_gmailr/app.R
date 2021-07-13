@@ -1,8 +1,11 @@
+# NOT RUN {
+## Only run this example in interactive R sessions
+
+if(interactive()){
+
 #### example of db_method = "gsheets" and mail_method = "gmailr"
 
 # gmailR and googlesheets configuration should be contained in external .R file, restricted to shiny user
-
-if(interactive()){
 
 source("authorization-scheme.R")
 
@@ -69,3 +72,4 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 
 }
+# }

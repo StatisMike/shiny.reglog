@@ -1,4 +1,5 @@
-# gmailR and googlesheets configure
+# NOT RUN {
+## Only run this example in interactive R sessions
 
 if(interactive()){
 
@@ -103,3 +104,5 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 
 }
+
+# }
