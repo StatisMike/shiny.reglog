@@ -2,25 +2,23 @@
 % Please edit documentation in R/database_creation.R
 \name{create_gsheet_db}
 \alias{create_gsheet_db}
-\title{Function to create new empty googlesheet database}
+\title{Function to create new empty 'googlesheet' database}
 \usage{
 create_gsheet_db(name = NULL)
 }
 \arguments{
-\item{name}{specify name for googlesheet. Defaults to random name.}
+\item{name}{specify name for 'googlesheet' file. Defaults to random name.}
 }
 \value{
-id of the googlesheet. After creation you need to provide it to \code{login_server()}.
+id of the 'googlesheet' file. After creation you need to provide it to \code{login_server()}.
 }
 \description{
-Function to create new empty googlesheet database
+Function to create new empty 'googlesheet' database
 }
 \examples{
 if(googlesheets4::gs4_has_token()){
 
 gsheet.id <- create_gsheet_db()
-
-shiny.reglog:::.gsheet_get_db(gsheet.id)
 
 # you can then pass 'gsheet.id' to you 'login_server' call
 #

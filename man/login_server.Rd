@@ -23,9 +23,9 @@ login_server(
 \arguments{
 \item{id}{the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.}
 
-\item{db_method}{the character string containing chosen database container, either: \code{"gsheet"} (needing installation of \code{googlesheets4} package) or \code{"sqlite"} (needing installation of \code{DBI} and \code{RSQLite} packages)}
+\item{db_method}{the character string containing chosen database container, either: \code{"gsheet"} (needing installation of 'googlesheets4' package) or \code{"sqlite"} (needing installation of 'DBI' and 'RSQLite' packages)}
 
-\item{mail_method}{the character string containing chosen method of sending emails, either: \code{"gmailr"} (needing installation of \code{gmailr} package) \code{"emayili"} (needing installation of \code{emayili} package)}
+\item{mail_method}{the character string containing chosen method of sending emails, either: \code{"gmailr"} (needing installation of 'gmailr' package) \code{"emayili"} (needing installation of 'emayili' package)}
 
 \item{appname}{the character string containing the name of your application (used in automatic e-mails for information purposes)}
 
@@ -33,9 +33,9 @@ login_server(
 
 \item{lang}{specifies the app used language. Accepts "en" or "pl". Defaults to "en"}
 
-\item{gsheet_file}{the ID of your googlesheet holding the database. It is contained within URL address of your googlesheet (for: \code{db_method = "gsheet"})}
+\item{gsheet_file}{the ID of your 'googlesheet' file holding the database. It is contained within URL address of your googlesheet (for: \code{db_method = "gsheet"})}
 
-\item{sqlite_db}{the path to your SQLite database (for: \code{db_method = "sqlite"})}
+\item{sqlite_db}{the path to your 'SQLite' database (for: \code{db_method = "sqlite"})}
 
 \item{gmailr_user}{your gmail address (for: \code{db_method = "gmailr"})}
 
@@ -61,11 +61,7 @@ Shiny server module for the optional login/registration system
 
 This function creates a server module to handle other modules of the system: \code{login_UI()}, \code{password_reset_UI()} and \code{register_UI}
 
-It uses database contained in googlesheet file on your gdrive or sqlite database locally to read and write data of the users. You need to create a googlesheet or sqlite database containing at least two sheets/tables with specific columns:
-\itemize{
-\item user_db with columns named: \code{timestamp}, \code{user_id}, \code{user_mail} and \code{user_pass}
-\item reset_db with columns named: \code{timestamp}, \code{user_id}, \code{reset_code}
-}
+It uses database contained in 'googlesheet' file on your 'gdrive' or 'SQLite' database locally to read and write data of the users. You need to create a 'googlesheet' or 'SQLite' using \code{create_gsheet_db()} or \code{create_sqlite_db()} respectively.
 }
 \details{
 The module logic creates a \code{reactiveValues()} object with loaded database of users and reset codes stored in \code{session$userData}. It allows to cut the reading from database to only one read per loading of the app - unfortunately it makes the app run slowly if the database of users gets very long.
@@ -75,16 +71,16 @@ Registration of new account mails the confirmation e-mail to the end user on pro
 Provided e-mail is needed for password reset: 10 digits code is generated and mailed to the user to confirm its identity. Reset code remains valid for 24 hours.
 \subsection{Authorization}{
 \itemize{
-\item When using db_method of "gsheet" you need to authorize access to your google drive outside of the functions (using \code{googlesheets4:gs_auth} with default scopes: \code{"https://www.googleapis.com/auth/spreadsheets"})
+\item When using db_method of "gsheet" you need to authorize access to your google drive outside of the functions (using \code{googlesheets4:gs_auth()} with default scopes: \code{"https://www.googleapis.com/auth/spreadsheets"})
 \item When using mail_method of "emayili" you need to allow "less secure apps" to use your mailbox
-\item When using mail_method of "gmailr" you need to authorize access to your gmail box by creating Oauth2 App on 'Google Cloud Platform' and passing it to \code{gmailr::gm_auth_configure} and allowing scopes: \code{"https://www.googleapis.com/auth/gmail.send"}
+\item When using mail_method of "gmailr" you need to authorize access to your gmail box by creating Oauth2 App on 'Google Cloud Platform' and passing it to \code{gmailr::gm_auth_configure()} and allowing scopes: \code{"https://www.googleapis.com/auth/gmail.send"}
 }
 }
 
 \subsection{Security}{
 \itemize{
-\item Both passwords and reset codes are hashed with the help of \code{scrypt} package for the extra security
-\item gmailr mail_method seems to be more secure if you intend to use gmail account to send emails. emayili is suggested only when using other mailboxes
+\item Both passwords and reset codes are hashed with the help of 'scrypt' package for the extra security
+\item gmailr mail_method seems to be more secure if you intend to use 'gmail' account to send emails. 'emayili' is suggested only when using other mailboxes.
 }
 }
 }
@@ -95,9 +91,6 @@ Provided e-mail is needed for password reset: 10 digits code is generated and ma
 if(interactive()){
 
 #### example of db_method = "sqlite" and mail_method = "emayili"
-
-# gmailR and googlesheets configuration should be contained 
-# in external .R file, restricted to shiny user
 
 library(shiny)
 library(shiny.reglog)

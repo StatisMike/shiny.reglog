@@ -119,29 +119,25 @@
   }
 }
 
-#### main server module of the package - googlesheets version ####
+#### main server module of the package ####
 #' @title Login server module
 #' @name login_server
 #' @description Shiny server module for the optional login/registration system
 #'
 #' This function creates a server module to handle other modules of the system: \code{login_UI()}, \code{password_reset_UI()} and \code{register_UI}
 #'
-#' It uses database contained in googlesheet file on your gdrive or sqlite database locally to read and write data of the users. You need to create a googlesheet or sqlite database containing at least two sheets/tables with specific columns:
-#'
-#' - user_db with columns named: \code{timestamp}, \code{user_id}, \code{user_mail} and \code{user_pass}
-#' 
-#' - reset_db with columns named: \code{timestamp}, \code{user_id}, \code{reset_code}
+#' It uses database contained in 'googlesheet' file on your 'gdrive' or 'SQLite' database locally to read and write data of the users. You need to create a 'googlesheet' or 'SQLite' using \code{create_gsheet_db()} or \code{create_sqlite_db()} respectively.
 #' 
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
-#' @param db_method the character string containing chosen database container, either: \code{"gsheet"} (needing installation of \code{googlesheets4} package) or \code{"sqlite"} (needing installation of \code{DBI} and \code{RSQLite} packages)
-#' @param mail_method the character string containing chosen method of sending emails, either: \code{"gmailr"} (needing installation of \code{gmailr} package) \code{"emayili"} (needing installation of \code{emayili} package)
+#' @param db_method the character string containing chosen database container, either: \code{"gsheet"} (needing installation of 'googlesheets4' package) or \code{"sqlite"} (needing installation of 'DBI' and 'RSQLite' packages)
+#' @param mail_method the character string containing chosen method of sending emails, either: \code{"gmailr"} (needing installation of 'gmailr' package) \code{"emayili"} (needing installation of 'emayili' package)
 #' @param appname the character string containing the name of your application (used in automatic e-mails for information purposes)
 #' @param appaddress the character value containing the web address of your application (used in automatic e-mails for information purposes)
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
 #' 
-#' @param gsheet_file the ID of your googlesheet holding the database. It is contained within URL address of your googlesheet (for: \code{db_method = "gsheet"})
-#' @param sqlite_db the path to your SQLite database (for: \code{db_method = "sqlite"})
+#' @param gsheet_file the ID of your 'googlesheet' file holding the database. It is contained within URL address of your googlesheet (for: \code{db_method = "gsheet"})
+#' @param sqlite_db the path to your 'SQLite' database (for: \code{db_method = "sqlite"})
 #' 
 #' @param gmailr_user your gmail address (for: \code{db_method = "gmailr"})
 #' @param emayili_user your email address, also used as login to your email account (for: \code{db_method = "emayili"})
@@ -164,14 +160,14 @@
 #' 
 #' ## Authorization
 #' 
-#' - When using db_method of "gsheet" you need to authorize access to your google drive outside of the functions (using \code{googlesheets4:gs_auth} with default scopes: \code{"https://www.googleapis.com/auth/spreadsheets"})
+#' - When using db_method of "gsheet" you need to authorize access to your google drive outside of the functions (using \code{googlesheets4:gs_auth()} with default scopes: \code{"https://www.googleapis.com/auth/spreadsheets"})
 #' - When using mail_method of "emayili" you need to allow "less secure apps" to use your mailbox
-#' - When using mail_method of "gmailr" you need to authorize access to your gmail box by creating Oauth2 App on 'Google Cloud Platform' and passing it to \code{gmailr::gm_auth_configure} and allowing scopes: \code{"https://www.googleapis.com/auth/gmail.send"}
+#' - When using mail_method of "gmailr" you need to authorize access to your gmail box by creating Oauth2 App on 'Google Cloud Platform' and passing it to \code{gmailr::gm_auth_configure()} and allowing scopes: \code{"https://www.googleapis.com/auth/gmail.send"}
 #' 
 #' ## Security
 #' 
-#' - Both passwords and reset codes are hashed with the help of \code{scrypt} package for the extra security
-#' - gmailr mail_method seems to be more secure if you intend to use gmail account to send emails. emayili is suggested only when using other mailboxes
+#' - Both passwords and reset codes are hashed with the help of 'scrypt' package for the extra security
+#' - gmailr mail_method seems to be more secure if you intend to use 'gmail' account to send emails. 'emayili' is suggested only when using other mailboxes.
 #'
 #' @seealso [login_UI()] for the login window in UI
 #' @seealso [password_reset_UI()] for the password reset window in UI
@@ -213,7 +209,7 @@ login_server <- function(id = "login_system",
         
         if(length(find.package("googlesheets4", quiet = T)) == 0){
           
-          stop("To use this method for database storage, please install googlesheets4 package: install.packages('googlesheets4')")
+          stop("To use this method for database storage, please install 'googlesheets4' package: install.packages('googlesheets4')")
           
         }
         
@@ -221,7 +217,7 @@ login_server <- function(id = "login_system",
         
         if(length(find.package("RSQLite", quiet = T)) + length(find.package("DBI", quiet = T)) != 2){
           
-          stop("To use this method for database storage, please install DBI and RSQLite packages: install.packages('DBI', 'RSQLite')")
+          stop("To use this method for database storage, please install 'DBI' and 'RSQLite' packages: install.packages('DBI', 'RSQLite')")
         }
       } else {stop("Valid methods for databases are 'sqlite' or 'gsheet'")}
       #### checking for mail sending method ####
@@ -229,13 +225,13 @@ login_server <- function(id = "login_system",
       if(mail_method == "emayili"){
         
         if(length(find.package("emayili", quiet = T)) == 0){
-          stop("To use this email method, please install emayili package: install.packages('emayili')")
+          stop("To use this email method, please install 'emayili' package: install.packages('emayili')")
         }
         
       } else if(mail_method == "gmailr"){
         
         if(length(find.package("gmailr", quiet = T)) == 0){
-          stop("To use this email method, please install gmailr package: install.packages('gmailr')")
+          stop("To use this email method, please install 'gmailr' package: install.packages('gmailr')")
         }
         
       } else{stop("Valid mailing methods are 'gmailr' or 'emayili'")} 

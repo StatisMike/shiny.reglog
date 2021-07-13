@@ -2,22 +2,20 @@
 % Please edit documentation in R/database_creation.R
 \name{create_sqlite_db}
 \alias{create_sqlite_db}
-\title{Function to create new empty sqlite database}
+\title{Function to create new empty 'SQLite' database}
 \usage{
 create_sqlite_db(output_file)
 }
 \arguments{
-\item{output_file}{path to new sqlite database. After creation you need to provide it to \code{login_server()}}
+\item{output_file}{path to new 'SQLite' database. After creation you need to provide it to \code{login_server()}}
 }
 \description{
-Function to create new empty sqlite database
+Function to create new empty 'SQLite' database
 }
 \examples{
 sqlite.path <- tempfile(fileext = "sqlite")
 
 create_sqlite_db(sqlite.path)
-
-shiny.reglog:::.sqlite_get_db(sqlite.path)
 
 # you can then pass 'sqlite.path' to you 'login_server' call
 #

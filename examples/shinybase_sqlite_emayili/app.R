@@ -5,9 +5,6 @@ if(interactive()){
 
 #### example of db_method = "sqlite" and mail_method = "emayili"
 
-# gmailR and googlesheets configuration should be contained 
-# in external .R file, restricted to shiny user
-
 library(shiny)
 library(shiny.reglog)
 

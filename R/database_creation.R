@@ -1,6 +1,6 @@
-#' Function to create new empty sqlite database
+#' Function to create new empty 'SQLite' database
 #' 
-#' @param output_file path to new sqlite database. After creation you need to provide it to \code{login_server()}
+#' @param output_file path to new 'SQLite' database. After creation you need to provide it to \code{login_server()}
 #' @importFrom DBI dbConnect 
 #' @importFrom RSQLite SQLite dbExecute dbDisconnect
 #' 
@@ -35,10 +35,10 @@ create_sqlite_db <- function(output_file){
 }
 
 
-#' Function to create new empty googlesheet database
+#' Function to create new empty 'googlesheet' database
 #' 
-#' @param name specify name for googlesheet. Defaults to random name.
-#' @return id of the googlesheet. After creation you need to provide it to \code{login_server()}.
+#' @param name specify name for 'googlesheet' file. Defaults to random name.
+#' @return id of the 'googlesheet' file. After creation you need to provide it to \code{login_server()}.
 #' @import googlesheets4
 #' 
 #' @export
