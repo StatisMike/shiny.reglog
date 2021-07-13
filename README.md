@@ -25,8 +25,7 @@ you to automatically insert boxes for login, register and password reset
 procedure. It currently supports two methods for database containers:
 
 -   googlesheets for easy of use (via `googlesheets4` package)
--   SQLite database for security and faster use, though basic
-    understaning of SQL queries is required (via `DBI` and `RSQLite`
+-   SQLite database for security and faster use (via `DBI` and `RSQLite`
     packages)
 
 Both registration and password reset procedures require confirmation
@@ -42,12 +41,8 @@ Currently the package went into stable state, as it have potential of
 growth without danger of breaking changes. In the future I plan to widen
 the usability:
 
-1.  Easier access for adding other language support for contributors
-    rather than hard-coding them into main module codes
-2.  Some kind of admin / levels of authorization for users
-3.  Passphrase for SQLite database
-4.  Automated initial creation of googlesheet4 and SQLite database for
-    usage with modules
+1.  Some kind of admin / levels of authorization for users
+2.  Passphrase for SQLite database
 
 ## 2. Installation
 
@@ -60,34 +55,21 @@ devtools::install_github("StatisMike/shiny.reglog")
 
 ## 3. Setup
 
-To use the contents of this package, you need to take some steps outside
-of R. The setup varies with the chosen methods for implementation.
+To use the contents of this package, can use helper functions included
+in the package.
 
 ### 3.1 Googlesheet database method
 
-1.  Create a valid googlesheet in your googledrive storage space.
+1.  Create googlesheet file on your googledrive to support database:
 
-    Created googlesheet should consists of at least two sheets, as this
-    version of shiny.reglog uses them (though the googlesheet can
-    contain as many extra sheets as you want). The required sheets need
-    to be as follows:
+``` r
+# create googlesheet and gather its id for later usage
+# you can also specify optional 'name' argument for custom gsheet name
 
--   user\_db sheet with four columns, named: timestamp, user\_id,
-    user\_mail and user\_pass
+gsheet_id <- create_gsheet_db()
 
-    ![user\_db sheet](img/user_db.png)
-
--   reset\_db sheet with three columns, named: timestamp, user\_id,
-    reset\_code
-
-    ![reset\_db sheet](img/reset_db.png)
-
--   During that step you can also copy the ID of your spreadsheet. It
-    will be needed for login\_server() module, and you can get it from
-    the URL of spreadsheet. ID is the character string in the blurred
-    portion on the image below:
-
-    ![spreadsheet ID](img/ss_id.png)
+# save you gsheet_id - you need to provide it later to login_server()
+```
 
 2.  Configure googlesheets4 package to use out-of-band auth. For more
     information about it visit [googlesheets4
@@ -95,33 +77,14 @@ of R. The setup varies with the chosen methods for implementation.
 
 ### 3.2 SQLite database method
 
-Create an SQLite database that your Shiny App will have access to. After
-installation of `DBI` and `RSQlite` packages which are needed for using
-this method, it can be made from the R console itself.
+Create an SQLite database that your Shiny App will have access to.
 
 ``` r
-#firstly, creating a connection will automatically create SQLite file
+# create SQLite database and gather its filepath for later usage
 
-conn <- DBI::dbConnect(RSQLite::SQLite(), "path_to_your_db.sqlite")
+create_sqlite_db("path/to/db.sqlite")
 
-# create user_db table
-RSQLite::dbExecute(conn,
-                   "CREATE TABLE user_db (
-                   timestamp INTEGER,
-                   user_id TEXT PRIMARY KEY,
-                   user_mail TEXT,
-                   user_pass TEXT
-                   );")
-
-# create reset_db table
-RSQLite::dbExecute(conn,
-                   "CREATE TABLE reset_db (
-                   timestamp INTEGER,
-                   user_id TEXT PRIMARY KEY,
-                   reset_code TEXT")
-
-# remember to disconnect after using database!
-RSQLite::dbDisconnect(conn)
+# you need to provide 'path/to/db.sqlite' later to login_server()
 ```
 
 ## 4. Information about functions
