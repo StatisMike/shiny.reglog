@@ -14,48 +14,7 @@
 }
 
 #### helper functions for server - SQLite and gsheet databases ####
-# SQLite get user data
 
-.sqlite_get_db <- function(sqlite_db){
-  
-  sq_db <- DBI::dbConnect(RSQLite::SQLite(), dbname = sqlite_db)
-  
-  
-  user_db <- dplyr::collect(dplyr::tbl(sq_db, "user_db"))
-  user_db <- dplyr::mutate(user_db, timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
-  
-  reset_db <- dplyr::collect(dplyr::tbl(sq_db, "reset_db")) 
-  reset_db <- dplyr::mutate(reset_db, timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
-  
-  DBI::dbDisconnect(sq_db)
-  
-  return(
-    list(user_db = user_db,
-         reset_db = reset_db)
-  )
-}
-
-# gsheet get user data
-
-.gsheet_get_db <- function(gsheet_db){
-  
-  user_db <- googlesheets4::read_sheet(ss = gsheet_db, sheet = "user_db")
-  user_db <- dplyr::arrange(user_db, dplyr::desc(timestamp))
-  user_db <- dplyr::group_by(user_db, user_id)
-  user_db <- dplyr::slice_head(user_db)
-  user_db <- dplyr::ungroup(user_db)
-  
-  reset_db <- googlesheets4::read_sheet(ss = gsheet_db, sheet = "reset_db")
-  reset_db <- dplyr::arrange(reset_db, dplyr::desc(timestamp))
-  reset_db <- dplyr::group_by(reset_db, user_id)
-  reset_db <- dplyr::slice_head(reset_db)
-  reset_db <- dplyr::ungroup(reset_db)
-  
-  return(
-    list(user_db = user_db,
-         reset_db = reset_db)
-  )
-}
 
 # SQLite new user
 
@@ -64,7 +23,8 @@
   sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
   
   new_query <-RSQLite::dbSendQuery(sq_db,
-                                   "INSERT OR REPLACE INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass);",
+                                   "INSERT INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass)
+                         ON CONFLICT (user_id) DO UPDATE SET user_pass = :user_pass;",
                                    temp_row)
   
   RSQLite::dbClearResult(new_query)
@@ -240,7 +200,7 @@ login_server <- function(id = "login_system",
       
       active_user <- reactiveValues(
         is_logged = FALSE,
-        user_id = Sys.time(),
+        user_id = paste("Anon", as.character(Sys.time()), sep = "_"),
         user_mail = ""
       )
       
@@ -250,11 +210,11 @@ login_server <- function(id = "login_system",
           
           if(db_method == "gsheet"){ 
             
-            .gsheet_get_db(gsheet_file)
+            gsheet_get_db(gsheet_file)
             
           } else if (db_method == "sqlite"){
             
-            .sqlite_get_db(sqlite_db)
+            sqlite_get_db(sqlite_db)
             
           }}
         

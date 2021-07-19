@@ -1,3 +1,6 @@
+# Idea for creation the `texts` R6 object taken inspired by `shinymanager`
+# package. Thanks for their great code!
+
 pkgEnv <- new.env()
 
 pkgEnv$label_en = list(
@@ -186,13 +189,6 @@ texts <- R6::R6Class(
     labels = pkgEnv$label_en
   )
 )
-
-#' Function for language creation
-#' 
-#' @name use_language
-#' 
-#' @param lan give language
-#' @export
 
 use_language <- function(lan = "en") {
   txt <- texts$new()

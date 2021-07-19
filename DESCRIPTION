@@ -1,6 +1,6 @@
 Package: shiny.reglog
 Title: Optional Login and Registration Module System for ShinyApps
-Version: 0.2.0.2
+Version: 0.3.0
 Authors@R: 
     person(given = "Michal",
            family = "Kosinski",
@@ -11,7 +11,6 @@ Description: Package creates UI modules for Login, Register and Password Reset b
 Imports:
 	shiny,
 	dplyr,
-	dbplyr,
 	scrypt,
 	R6,
 	DBI,
