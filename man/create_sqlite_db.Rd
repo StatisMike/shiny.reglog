@@ -4,12 +4,14 @@
 \alias{create_sqlite_db}
 \title{Function to create new 'SQLite' database}
 \usage{
-create_sqlite_db(output_file, credentials = NULL)
+create_sqlite_db(output_file, credentials = NULL, credentials_pass_hashed)
 }
 \arguments{
 \item{output_file}{path to new 'SQLite' database. After creation you need to provide it to \code{login_server()}}
 
 \item{credentials}{you can pass credentials data to create already populated tables. Provide list containing \code{user_db} and \code{reset_db}}
+
+\item{credentials_pass_hashed}{specify if you put in some credentials data. Are the passwords already hashed with 'scrypt' package? Takes TRUE (if hashed) or FALSE (if not hashed and need hashing)}
 }
 \description{
 Function to create new 'SQLite' database
