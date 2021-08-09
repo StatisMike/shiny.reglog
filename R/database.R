@@ -1,26 +1,18 @@
 .db_filtering <- function(credentials, credentials_pass_hashed){
-  
-  user_db <- credentials$user_db
+
+  user_db <- credentials
   user_db <- dplyr::arrange(user_db, dplyr::desc(timestamp))
   user_db <- dplyr::group_by(user_db, user_id)
   user_db <- dplyr::slice_head(user_db)
   user_db <- dplyr::ungroup(user_db)
-  
+
   if(!credentials_pass_hashed){
     user_db$user_pass <- sapply(user_db$user_pass, scrypt::hashPassword)
   }
-  
-  reset_db <- credentials$reset_db
-  reset_db <- dplyr::arrange(reset_db, dplyr::desc(timestamp))
-  reset_db <- dplyr::group_by(reset_db, user_id)
-  reset_db <- dplyr::slice_head(reset_db)
-  reset_db <- dplyr::ungroup(reset_db)
-  
-  list(user_db = user_db, 
-       reset_db = reset_db)
-  
-}
 
+  return(user_db)
+ 
+}
 
 #' Function to create new 'SQLite' database
 #' 
@@ -36,21 +28,15 @@
 #' 
 
 create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_hashed){
-  
+
   conn <- DBI::dbConnect(RSQLite::SQLite(), output_file)
-  
+
   on.exit(DBI::dbDisconnect(conn))
-  
+
   if(!is.null(credentials)){
-    
-    if(!is.list(credentials) || !all(c("user_db", "reset_db") %in% names(credentials))){
-      stop("Object referenced in `credentials` argument should be a list containing data.frames named: `user_db` and `reset_db`")
-    }
-    if(!all(c("timestamp", "user_id", "user_mail", "user_pass") %in% names(credentials$user_db))){
-      stop("Table named `user_db` must contain columns: `timestamp`, `user_id`, `user_mail` and `user_pass`")
-    }
-    if(!all(c("timestamp", "user_id", "user_mail", "user_pass") %in% names(credentials$user_db))){
-      stop("Table named `reset_db` must contain columns: `timestamp`, `user_id` and `reset_code`")
+
+    if (!all(c("timestamp", "user_id", "user_mail", "user_pass") %in% names(credentials))) {
+      stop("Table provided in 'credentials' argument must contain columns: `timestamp`, `user_id`, `user_mail` and `user_pass`")
     }
     
     cred_db <- .db_filtering(credentials, credentials_pass_hashed)
@@ -68,11 +54,11 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
                    );")
   
   if(!is.null(credentials)){
-    
-    for(n in 1:nrow(cred_db$user_db)){
-    
-    temp_row <- cred_db$user_db[n,]
-    
+
+    for(n in 1:nrow(cred_db)){
+
+    temp_row <- cred_db[n,]
+
     query <- RSQLite::dbSendQuery(conn,
                          "INSERT INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass)
                          ON CONFLICT (user_id) DO UPDATE SET user_pass = :user_pass;",
@@ -80,32 +66,16 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
     
     RSQLite::dbClearResult(query)
     }
-    
+
   }
-  
+
   # create reset_db table
   RSQLite::dbExecute(conn,
                      "CREATE TABLE reset_db (
                    timestamp INTEGER,
                    user_id TEXT PRIMARY KEY,
                    reset_code TEXT);")
-  
-  if(!is.null(credentials)){
-    
-    for(n in 1:nrow(cred_db$reset_db)){
-      
-      temp_row <- cred_db$reset_db[n,]
-      
-      query <- RSQLite::dbSendQuery(conn,
-                           "INSERT INTO reset_db (timestamp, user_id, reset_code) VALUES (:timestamp, :user_id, :reset_code)
-                            ON CONFLICT (user_id) DO UPDATE SET reset_code = :reset_code;",
-                           temp_row)
-      
-      RSQLite::dbClearResult(query)
-    }
-    
-  }
-  
+
 }
 
 
@@ -122,27 +92,21 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
 #' @example examples/create_gsheet_db.R
 
 create_gsheet_db <- function(name = NULL, credentials = NULL, credentials_pass_hashed){
-  
+
   if(!is.null(credentials)){
-    
-    if(!is.list(credentials) || !all(c("user_db", "reset_db") %in% names(credentials))){
-      stop("Object referenced in `credentials` argument should be a list containing data.frames named: `user_db` and `reset_db`")
-    }
-    if(!all(c("timestamp", "user_id", "user_mail", "user_pass") %in% names(credentials$user_db))){
+
+    if (!all(c("timestamp", "user_id", "user_mail", "user_pass") %in% names(credentials))) {
       stop("Table named `user_db` must contain columns: `timestamp`, `user_id`, `user_mail` and `user_pass`")
     }
-    if(!all(c("timestamp", "user_id", "user_mail", "user_pass") %in% names(credentials$user_db))){
-      stop("Table named `reset_db` must contain columns: `timestamp`, `user_id` and `reset_code`")
-    }
-    
+
   cred_db <- .db_filtering(credentials, credentials_pass_hashed)
     
   }
-  
+
   if(is.null(name)){
     name <- googlesheets4::gs4_random()
   }
-  
+
   sheets <- list(
     user_db = data.frame(
       timestamp = Sys.time(),
@@ -156,28 +120,22 @@ create_gsheet_db <- function(name = NULL, credentials = NULL, credentials_pass_h
       reset_code = ""
     )[-1,]
   )
-  
+
   id <- googlesheets4::gs4_create(
     name = name,
     sheets = sheets
   )
-  
+
   if(!is.null(credentials)){
-    
+
     googlesheets4::sheet_append(ss = id,
                                 sheet = "user_db",
-                                data = cred_db$user_db)
-    
-    googlesheets4::sheet_append(ss = id,
-                                sheet = "reset_db",
-                                data = cred_db$reset_db)
-    
+                                data = cred_db)
+
   }
-  
-  
-  
+
   return(id)
-  
+
 }
 
 #' Function to read SQLite shiny.reglog database
