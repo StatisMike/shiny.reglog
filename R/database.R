@@ -45,13 +45,15 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
 
   # create user_db table
   
-  RSQLite::dbExecute(conn,
-                   "CREATE TABLE user_db (
+  query <- RSQLite::dbSendQuery(conn,
+                                "CREATE TABLE user_db (
                    timestamp INTEGER,
                    user_id TEXT PRIMARY KEY,
                    user_mail TEXT,
                    user_pass TEXT
                    );")
+  
+  RSQLite::dbClearResult(query)
   
   if(!is.null(credentials)){
 
@@ -70,11 +72,13 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
   }
 
   # create reset_db table
-  RSQLite::dbExecute(conn,
+  query <- RSQLite::dbSendQuery(conn,
                      "CREATE TABLE reset_db (
                    timestamp INTEGER,
                    user_id TEXT PRIMARY KEY,
                    reset_code TEXT);")
+  
+  RSQLite::dbClearResult(query)
 
 }
 
@@ -158,10 +162,12 @@ sqlite_get_db <- function(sqlite_db){
   
   sq_db <- DBI::dbConnect(RSQLite::SQLite(), dbname = sqlite_db)
   
-  user_db <- dplyr::collect(dplyr::tbl(sq_db, "user_db"))
+  user_db <- DBI::dbGetQuery(sq_db,
+                             "SELECT * FROM user_db")
   user_db <- dplyr::mutate(user_db, timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
   
-  reset_db <- dplyr::collect(dplyr::tbl(sq_db, "reset_db")) 
+  reset_db <- DBI::dbGetQuery(sq_db,
+                             "SELECT * FROM reset_db")
   reset_db <- dplyr::mutate(reset_db, timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
   
   DBI::dbDisconnect(sq_db)
