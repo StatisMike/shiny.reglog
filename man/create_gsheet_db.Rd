@@ -4,10 +4,14 @@
 \alias{create_gsheet_db}
 \title{Function to create new empty 'googlesheet' database}
 \usage{
-create_gsheet_db(name = NULL)
+create_gsheet_db(name = NULL, credentials = NULL, credentials_pass_hashed)
 }
 \arguments{
 \item{name}{specify name for 'googlesheet' file. Defaults to random name.}
+
+\item{credentials}{you can pass credentials data to create already populated tables. Provide list containing \code{user_db} and \code{reset_db}}
+
+\item{credentials_pass_hashed}{mandatory when putting some credentials data. Are the passwords already hashed with 'scrypt' package? Takes TRUE (if hashed) or FALSE (if not hashed and need hashing)}
 }
 \value{
 id of the 'googlesheet' file. After creation you need to provide it to \code{login_server()}.
