@@ -82,6 +82,7 @@ gsheet_id <- create_gsheet_db()
 # save you gsheet_id - you need to provide it later to login_server()
 ```
 
+
 2.  Configure googlesheets4 package to use out-of-band auth. For more
     information about it visit [googlesheets4
     documentation](https://googlesheets4.tidyverse.org/)
@@ -96,6 +97,34 @@ Create an SQLite database that your Shiny App will have access to.
 create_sqlite_db("path/to/db.sqlite")
 
 # you need to provide 'path/to/db.sqlite' later to login_server()
+```
+
+### 3.3 Database with existing credentials data
+
+You can also use both above functions to create credentials database
+with existing credentials data:
+
+``` r
+# example of credentials data
+credentials <- data.frame(
+  timestamp = Sys.time(),
+  user_id = "shinyreglog",
+  user_mail = "statismike@gmail.com",
+  user_pass = "statismike"
+)
+
+# create database
+gsheet_id <- create_gsheet_db(
+  name = "shiny.reglog_test",
+  credentials = credentials,
+  credentials_pass_hashed = F #true if the passwords are already hashed
+  )
+  
+create_sqlite_db(
+  output_file = "test.sqlite",
+  credentials = credentials,
+  credentials_pass_hashed = F
+  )
 ```
 
 ## 4. Information about functions
