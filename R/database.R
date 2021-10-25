@@ -17,7 +17,7 @@
 #' Function to create new 'SQLite' database
 #' 
 #' @param output_file path to new 'SQLite' database. After creation you need to provide it to \code{login_server()}
-#' @param credentials you can pass credentials data to create already populated tables. Provide list containing \code{user_db} and \code{reset_db}
+#' @param credentials you can pass credentials data to create already populated tables. Provide data.frame object containing variables: timestamp, user_id, user_mail and user_pass. If there are multiple records with the same user_id, the most recent will be kept only.
 #' @param credentials_pass_hashed specify if you put in some credentials data. Are the passwords already hashed with 'scrypt' package? Takes TRUE (if hashed) or FALSE (if not hashed and need hashing)
 #' @importFrom DBI dbConnect 
 #' @importFrom RSQLite SQLite dbExecute dbDisconnect
@@ -45,13 +45,14 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
 
   # create user_db table
   
-  query <- RSQLite::dbSendQuery(conn,
-                                "CREATE TABLE user_db (
-                   timestamp INTEGER,
-                   user_id TEXT PRIMARY KEY,
-                   user_mail TEXT,
-                   user_pass TEXT
-                   );")
+  query <- RSQLite::dbSendQuery(
+    conn,
+    "CREATE TABLE user_db (
+     timestamp INTEGER,
+     user_id TEXT PRIMARY KEY,
+     user_mail TEXT,
+     user_pass TEXT
+     );")
   
   RSQLite::dbClearResult(query)
   
@@ -61,10 +62,11 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
 
     temp_row <- cred_db[n,]
 
-    query <- RSQLite::dbSendQuery(conn,
-                         "INSERT INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass)
-                         ON CONFLICT (user_id) DO UPDATE SET user_pass = :user_pass;",
-                         temp_row)
+    query <- RSQLite::dbSendQuery(
+      conn,
+      "INSERT INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass)
+       ON CONFLICT (user_id) DO UPDATE SET user_pass = :user_pass;",
+       temp_row)
     
     RSQLite::dbClearResult(query)
     }
@@ -87,7 +89,7 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
 #' 
 #' @param name specify name for 'googlesheet' file. Defaults to random name.
 #' @return id of the 'googlesheet' file. After creation you need to provide it to \code{login_server()}.
-#' @param credentials you can pass credentials data to create already populated tables. Provide list containing \code{user_db} and \code{reset_db}
+#' @param credentials you can pass credentials data to create already populated tables. Provide data.frame object containing variables: timestamp, user_id, user_mail and user_pass. If there are multiple records with the same user_id, the most recent will be kept only.
 #' @param credentials_pass_hashed mandatory when putting some credentials data. Are the passwords already hashed with 'scrypt' package? Takes TRUE (if hashed) or FALSE (if not hashed and need hashing)
 #' @import googlesheets4
 #' 
@@ -162,12 +164,14 @@ sqlite_get_db <- function(sqlite_db){
   
   sq_db <- DBI::dbConnect(RSQLite::SQLite(), dbname = sqlite_db)
   
-  user_db <- DBI::dbGetQuery(sq_db,
-                             "SELECT * FROM user_db")
+  user_db <- DBI::dbGetQuery(
+    sq_db,
+    "SELECT * FROM user_db")
   user_db <- dplyr::mutate(user_db, timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
   
-  reset_db <- DBI::dbGetQuery(sq_db,
-                             "SELECT * FROM reset_db")
+  reset_db <- DBI::dbGetQuery(
+    sq_db,
+    "SELECT * FROM reset_db")
   reset_db <- dplyr::mutate(reset_db, timestamp = as.POSIXct(as.numeric(timestamp), origin = "1970-01-01"))
   
   DBI::dbDisconnect(sq_db)

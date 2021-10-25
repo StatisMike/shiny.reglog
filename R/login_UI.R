@@ -10,7 +10,7 @@
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
 #'
-#' @return NONE
+#' @return 'tags$div' containing all elements for login procedure 
 #'
 #' @seealso login_server() for more details and example
 #'
@@ -49,7 +49,7 @@ login_UI <- function(id = "login_system",
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
 #' 
-#' @return NONE
+#' @return 'tags$div' containing all elements for password reset procedure 
 #'
 #' @seealso login_server() for more details and example
 #'
@@ -92,7 +92,7 @@ password_reset_UI <- function(id = "login_system",
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
 #'
-#' @return NONE
+#' @return 'tags$div' containing all elements for registration procedure
 #'
 #' @seealso login_server() for more details and example
 #'
@@ -128,4 +128,32 @@ register_UI <- function(id = "login_system",
 
   )
 
+}
+
+#### UI button for logout ####
+
+#' Action Button for logging out
+#' 
+#' Simple action button - after pressing it, the user will be logged out
+#' 
+#' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
+#' @param lang lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
+#' 
+#' @return 'actionButton' for logout
+#'
+#' @export
+#'
+
+logout_button <- function(id = "login_system",
+                        lang = "en"){
+  
+  ns <- NS(id)
+  
+  txt <- use_language(lang)
+  
+  actionButton(
+    ns("logout_bttn"),
+    label = txt$get("logout_bttn")
+  )
+  
 }

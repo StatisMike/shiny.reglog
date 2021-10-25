@@ -9,7 +9,7 @@ create_gsheet_db(name = NULL, credentials = NULL, credentials_pass_hashed)
 \arguments{
 \item{name}{specify name for 'googlesheet' file. Defaults to random name.}
 
-\item{credentials}{you can pass credentials data to create already populated tables. Provide list containing \code{user_db} and \code{reset_db}}
+\item{credentials}{you can pass credentials data to create already populated tables. Provide data.frame object containing variables: timestamp, user_id, user_mail and user_pass. If there are multiple records with the same user_id, the most recent will be kept only.}
 
 \item{credentials_pass_hashed}{mandatory when putting some credentials data. Are the passwords already hashed with 'scrypt' package? Takes TRUE (if hashed) or FALSE (if not hashed and need hashing)}
 }

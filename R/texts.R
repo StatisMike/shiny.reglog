@@ -72,7 +72,12 @@ pkgEnv$label_en = list(
  reg_mail_h = "confirmation of registration",
  reg_mail_1 = "Thank you for registering an account in our application.",
  reg_mail_2 = "Your user ID: ",
- reg_mail_3 = "You can always visit our application at: "
+ reg_mail_3 = "You can always visit our application at: ",
+ # logout
+ logout_bttn = "Log-out",
+ logout_modal_title = "Do you really want to log out?",
+ logout_unaccept_bttn = "Don't log me out!",
+ logout_impossible_modal = "You aren't logged in yet!"
 )
 
 pkgEnv$label_pl = list(
@@ -144,7 +149,12 @@ pkgEnv$label_pl = list(
  reg_mail_h = "potwierdzenie rejestracji",
  reg_mail_1 = "Dzi\u0119kujemy za zarejestrowanie konta w naszej aplikacji.",
  reg_mail_2 = "Twoja nazwa u\u017Cytkownika: ",
- reg_mail_3 = "Mo\u017Cesz odwiedzi\u0107 nasz\u0105 aplikacj\u0119 pod adresem: "
+ reg_mail_3 = "Mo\u017Cesz odwiedzi\u0107 nasz\u0105 aplikacj\u0119 pod adresem: ",
+  # logout bttn
+ logout_bttn = "Wyloguj",
+ logout_modal_title = "Czy na pewno chcesz się wylogować?",
+ logout_unaccept_bttn = "Nie wylogowuj!",
+ logout_impossible_modal = "Nie jesteś jeszcze zalogowany."
 )
 
 v_language_registered = c("en", "pl")

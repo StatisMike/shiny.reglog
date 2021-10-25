@@ -12,7 +12,7 @@ password_reset_UI(id = "login_system", lang = "en")
 \item{lang}{specifies the app used language. Accepts "en" or "pl". Defaults to "en"}
 }
 \value{
-NONE
+'tags$div' containing all elements for password reset procedure
 }
 \description{
 This function creates a UI div() element containing informations and input necessary for user to reset password.

@@ -669,6 +669,47 @@ login_server <- function(id = "login_system",
         
       })
       
+      #### user logout 
+      
+      observeEvent(input$logout_bttn, {
+        
+        if (active_user$is_logged) {
+        
+        showModal(
+          modalDialog(
+            txt$get("logout_modal_title"),
+            footer = list(
+              actionButton(
+                session$ns("logout_accept"),
+                txt$get("logout_bttn")
+              ),
+              modalButton(
+                txt$get("logout_unaccept_bttn")
+              )
+            )
+          )
+        )} else {
+          
+          showModal(
+            modalDialog(
+              txt$get("logout_impossible_modal"),
+              footer = modalButton("OK")
+            )
+          )
+        }
+        
+      })
+      
+      observeEvent(input$logout_accept, {
+        
+        active_user$is_logged <- FALSE
+        active_user$user_id <- paste("Anon", as.character(Sys.time()), sep = "_")
+        active_user$user_mail <- ""
+        
+        removeModal()
+        
+      })
+      
       return(active_user)
       
     }

@@ -71,7 +71,8 @@ in the package.
 
 ### 3.1 Googlesheet database method
 
-1.  Create googlesheet file on your googledrive to support database:
+1.  Create googlesheet file on your googledrive to support database. It
+    creates empty spreadsheet.
 
 ``` r
 # create googlesheet and gather its id for later usage
@@ -82,14 +83,34 @@ gsheet_id <- create_gsheet_db()
 # save you gsheet_id - you need to provide it later to login_server()
 ```
 
+If you wish to import some credentials, you can do it by giving the
+`data.frame` object to the `credentials` argument:
 
-2.  Configure googlesheets4 package to use out-of-band auth. For more
-    information about it visit [googlesheets4
-    documentation](https://googlesheets4.tidyverse.org/)
+``` r
+# get some credentials
+credentials <- data.frame(
+  timestamp = Sys.time(),
+  user_id = "ShinyReglogTest",
+  user_mail = "shinyreglog@test",
+  user_pass = "VeryHardPassword"
+  )
+
+# create SQLite database with some credentials
+gsheet_id <- create_gsheet_db(
+  credentials = credentials,
+  # when giving some credentials, you need to specify if the passwords were hashed by 'scrypt` package
+  credentials_pass_hashed = F)
+```
+
+2.  Configure googlesheets4 package to use out-of-band (non-interactive)
+    auth. For more information about it visit [googlesheets4
+    documentation](https://googlesheets4.tidyverse.org/) or vignette
+    provided with `shiny.reglog`
 
 ### 3.2 SQLite database method
 
-Create an SQLite database that your Shiny App will have access to.
+Create an SQLite database that your Shiny App will have access to. It
+creates empty database.
 
 ``` r
 # create SQLite database and gather its filepath for later usage
@@ -99,32 +120,24 @@ create_sqlite_db("path/to/db.sqlite")
 # you need to provide 'path/to/db.sqlite' later to login_server()
 ```
 
-### 3.3 Database with existing credentials data
-
-You can also use both above functions to create credentials database
-with existing credentials data:
+If you wish to import some credentials, you can do it by giving the
+`data.frame` object to the `credentials` argument:
 
 ``` r
-# example of credentials data
+# get some credentials
 credentials <- data.frame(
   timestamp = Sys.time(),
-  user_id = "shinyreglog",
-  user_mail = "statismike@gmail.com",
-  user_pass = "statismike"
-)
+  user_id = "ShinyReglogTest",
+  user_mail = "shinyreglog@test",
+  user_pass = "VeryHardPassword"
+  )
 
-# create database
-gsheet_id <- create_gsheet_db(
-  name = "shiny.reglog_test",
-  credentials = credentials,
-  credentials_pass_hashed = F #true if the passwords are already hashed
-  )
-  
+# create SQLite database with some credentials
 create_sqlite_db(
-  output_file = "test.sqlite",
+  "path/to/db.sqlite",
   credentials = credentials,
-  credentials_pass_hashed = F
-  )
+  # when giving some credentials, you need to specify if the passwords were hashed by 'scrypt` package
+  credentials_pass_hashed = F)
 ```
 
 ## 4. Information about functions
@@ -142,7 +155,7 @@ All UI functions creates a `div` element which can be input into UI of
 your application, inside a `fluidRow`, complete `fluidPage`, `tabItem`
 of dashboard or any other container of your choosing.
 
-#### 4.1.1. register\_UI
+#### 4.1.1. register_UI
 
 The register box contains inputs for user ID (which can be used to link
 the user with other elements in external databases), e-mail address
@@ -164,7 +177,7 @@ Provided password is saved in hashed form - using the
 [![Register UI - click for
 gif!](https://statismike.github.io/gallery/shiny.reglog/1_register.png)](https://statismike.github.io/gallery/shiny.reglog/1_register.gif)
 
-#### 4.1.2. login\_UI
+#### 4.1.2. login_UI
 
 The login box contains inputs for user ID and password. After pushing
 the “Login” button, it check validity of inputs and logins user.
@@ -173,10 +186,10 @@ Produces modal dialog detailing results.
 [![Login UI - click for
 gif!](https://statismike.github.io/gallery/shiny.reglog/2_login.png)](https://statismike.github.io/gallery/shiny.reglog/2_login.gif)
 
-#### 4.1.3. password\_reset\_UI
+#### 4.1.3. password_reset_UI
 
 The box for password reset consists of two UI elements: the
-password\_reset\_UI `div` element and modal dialog it produces after
+password_reset_UI `div` element and modal dialog it produces after
 confirming validity of inputted confirmation code.
 
 The main `div` contains input for User ID. After user inputs their ID,
@@ -201,9 +214,15 @@ dialog with “OK” button.
 [![Reset modal dialog - click for
 gif!](https://statismike.github.io/gallery/shiny.reglog/4_reset2.png)](https://statismike.github.io/gallery/shiny.reglog/4_reset2.gif)
 
+#### 4.1.4. logout_button
+
+Simple `actionButton` for your users to log out during ShinyApp session.
+Clicking it brings on `modalDialog` asking if they are sure that they
+want to logout.
+
 ### 4.2. Server function
 
-Currently there is only one server function: login\_server()
+Currently there is only one server function: login_server()
 
 ``` r
 login_server(
@@ -231,11 +250,11 @@ login_server(
 
 These arguments are always mandatory while using `login_server`
 
--   *id* argument defaults to “login\_system”. You can use different
+-   *id* argument defaults to “login_system”. You can use different
     name - but remember to keep it consistent for all functions
--   *db\_method* specify which database method you want to use. At this
+-   *db_method* specify which database method you want to use. At this
     moment there are two methods for databases: `gsheet` and `sqlite`
--   *mail\_method* specify which e-mailing method you want to use. At
+-   *mail_method* specify which e-mailing method you want to use. At
     this moment there are two methods fo e-mailing: `gmailr` and
     `emayili`
 -   *appname* is the character string with title of your application
@@ -247,28 +266,28 @@ These arguments are always mandatory while using `login_server`
 
 ##### 4.2.1.2 Arguments specific to database methods
 
--   *gsheet\_file* is the character string containing your googlesheets
+-   *gsheet_file* is the character string containing your googlesheets
     ID. Argument is mandatory when using `gsheet` database method
--   *sqlite\_db* is the character string specifying path to your sqlite
+-   *sqlite_db* is the character string specifying path to your sqlite
     database path. Argument is mandatory when using `sqlite`
 
 ##### 4.2.1.3 Arguments specific to e-mail methods
 
--   *gmailr\_user* is the character string of your gmail address that
-    you wish the application to use for automatic e-mails. Used in
-    `gmailr` mailing method
+-   *gmailr_user* is the character string of your gmail address that you
+    wish the application to use for automatic e-mails. Used in `gmailr`
+    mailing method
 
--   *emayili\_user* is the character string of your email address, that
+-   *emayili_user* is the character string of your email address, that
     is also used to log into your mailbox. Used in `emayili` mailing
     method, as the ones below.
 
--   *emayili\_password* is the character string of password that you use
+-   *emayili_password* is the character string of password that you use
     to log into your mailbox
 
--   *emayili\_host* is the character string specifying the sending host
+-   *emayili_host* is the character string specifying the sending host
     of your mailbox (fe. `smtp.gmail.com` for gmail mailbox)
 
--   *emayili\_port* is the character string containing the sending port
+-   *emayili_port* is the character string containing the sending port
     of your mailbox (fe. `465` for gmail mailbox)
 
 #### 4.2.2. Values
@@ -276,14 +295,14 @@ These arguments are always mandatory while using `login_server`
 `login_server` function creates `reactiveValues` object containing three
 elements, describing the status of current sessions’ active user.
 
--   *is\_logged* returns a boolean indicating, if the user is anonymous
+-   *is_logged* returns a boolean indicating, if the user is anonymous
     (`FALSE`) or logged in (`TRUE`)
--   *user\_id* returns a character string containing the ID specyfied
+-   *user_id* returns a character string containing the ID specyfied
     during registration and used to log-in. When `is_logged = F` it
     countains the timestamp of time when the anonymous user began his
     session. It can be used to link specific activities and outputs
     generated by the same person.
--   *user\_mail* returns a character string containing the email address
+-   *user_mail* returns a character string containing the email address
     provided during registration. It can be used for automatic sending
     the user some kind of e-mails (fe. containing the results of some
     analysis after using your ShinyApp). When `is_logged = F` it

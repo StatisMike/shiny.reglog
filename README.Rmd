@@ -72,33 +72,67 @@ To use the contents of this package, can use helper functions included in the pa
 
 ### 3.1 Googlesheet database method
 
-1. Create googlesheet file on your googledrive to support database:
+1. Create googlesheet file on your googledrive to support database. It creates empty spreadsheet.
 
 ```{r creating gsheet, eval = F}
-
 # create googlesheet and gather its id for later usage
 # you can also specify optional 'name' argument for custom gsheet name
 
 gsheet_id <- create_gsheet_db()
 
 # save you gsheet_id - you need to provide it later to login_server()
+```
+
+If you wish to import some credentials, you can do it by giving the `data.frame` object to the `credentials` argument:
+
+```{r, eval = F}
+# get some credentials
+credentials <- data.frame(
+  timestamp = Sys.time(),
+  user_id = "ShinyReglogTest",
+  user_mail = "shinyreglog@test",
+  user_pass = "VeryHardPassword"
+  )
+
+# create SQLite database with some credentials
+gsheet_id <- create_gsheet_db(
+  credentials = credentials,
+  # when giving some credentials, you need to specify if the passwords were hashed by 'scrypt` package
+  credentials_pass_hashed = F)
 
 ```
 
-2. Configure googlesheets4 package to use out-of-band auth. For more information about it visit [googlesheets4 documentation](https://googlesheets4.tidyverse.org/)
+2. Configure googlesheets4 package to use out-of-band (non-interactive) auth. For more information about it visit [googlesheets4 documentation](https://googlesheets4.tidyverse.org/) or vignette provided with `shiny.reglog`
 
 ### 3.2 SQLite database method
 
-Create an SQLite database that your Shiny App will have access to. 
+Create an SQLite database that your Shiny App will have access to. It creates empty database.
 
 ```{r creating SQLite, eval = F}
-
 # create SQLite database and gather its filepath for later usage
 
 create_sqlite_db("path/to/db.sqlite")
 
 # you need to provide 'path/to/db.sqlite' later to login_server()
+```
 
+If you wish to import some credentials, you can do it by giving the `data.frame` object to the `credentials` argument:
+
+```{r, eval = F}
+# get some credentials
+credentials <- data.frame(
+  timestamp = Sys.time(),
+  user_id = "ShinyReglogTest",
+  user_mail = "shinyreglog@test",
+  user_pass = "VeryHardPassword"
+  )
+
+# create SQLite database with some credentials
+create_sqlite_db(
+  "path/to/db.sqlite",
+  credentials = credentials,
+  # when giving some credentials, you need to specify if the passwords were hashed by 'scrypt` package
+  credentials_pass_hashed = F)
 ```
 
 ## 4. Information about functions
@@ -140,6 +174,10 @@ After they receive reset code, they need to input it in the next inputbox below 
 The user need to provide new password and repeat it to check for any typos. After pushing the "Confirm new password" button, below input boxes a message is rendered to give feedback to the user - if the password was changed successfully. After that, the user can close modal dialog with "OK" button.
 
 [![Reset modal dialog - click for gif!](https://statismike.github.io/gallery/shiny.reglog/4_reset2.png)](https://statismike.github.io/gallery/shiny.reglog/4_reset2.gif)
+
+#### 4.1.4. logout_button
+
+Simple `actionButton` for your users to log out during ShinyApp session. Clicking it brings on `modalDialog` asking if they are sure that they want to logout.
 
 ### 4.2. Server function
 
@@ -218,7 +256,6 @@ user_data <- list(
   ID = auth$user_id,
   mail = auth$user_mail
 )
-
 ```
 
 ## 5. Examples

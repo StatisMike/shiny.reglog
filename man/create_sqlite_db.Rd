@@ -9,7 +9,7 @@ create_sqlite_db(output_file, credentials = NULL, credentials_pass_hashed)
 \arguments{
 \item{output_file}{path to new 'SQLite' database. After creation you need to provide it to \code{login_server()}}
 
-\item{credentials}{you can pass credentials data to create already populated tables. Provide list containing \code{user_db} and \code{reset_db}}
+\item{credentials}{you can pass credentials data to create already populated tables. Provide data.frame object containing variables: timestamp, user_id, user_mail and user_pass. If there are multiple records with the same user_id, the most recent will be kept only.}
 
 \item{credentials_pass_hashed}{specify if you put in some credentials data. Are the passwords already hashed with 'scrypt' package? Takes TRUE (if hashed) or FALSE (if not hashed and need hashing)}
 }

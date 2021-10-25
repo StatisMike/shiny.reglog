@@ -8,3 +8,5 @@ test_shinydashboard
 test.sqlite
 cache
 tests
+.secrets
+inst/doc
