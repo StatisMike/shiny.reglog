@@ -152,9 +152,9 @@ pkgEnv$label_pl = list(
  reg_mail_3 = "Mo\u017Cesz odwiedzi\u0107 nasz\u0105 aplikacj\u0119 pod adresem: ",
   # logout bttn
  logout_bttn = "Wyloguj",
- logout_modal_title = "Czy na pewno chcesz się wylogować?",
+ logout_modal_title = "Czy na pewno chcesz si\u0119 wylogowa\u0107?",
  logout_unaccept_bttn = "Nie wylogowuj!",
- logout_impossible_modal = "Nie jesteś jeszcze zalogowany."
+ logout_impossible_modal = "Nie jeste\u015B jeszcze zalogowany."
 )
 
 v_language_registered = c("en", "pl")

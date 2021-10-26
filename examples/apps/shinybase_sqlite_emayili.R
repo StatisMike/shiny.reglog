@@ -3,14 +3,16 @@
 
 if(interactive()){
 
-#### example of db_method = "gsheets" and mail_method = "gmailr"
-
-# gmailR and googlesheets configuration should be contained in external .R file, restricted to shiny user
-
-source("authorization-scheme.R")
+#### example of db_method = "sqlite" and mail_method = "emayili"
 
 library(shiny)
 library(shiny.reglog)
+  
+# initializing sqlite
+
+sqlite.path <- tempfile(fileext = "sqlite")
+create_sqlite_db(sqlite.path)
+database <- sqlite_get_db(sqlite.path)
 
 # Define UI containing shiny.reglog modules
 ui <- fluidPage(
@@ -28,11 +30,12 @@ ui <- fluidPage(
         ),
         tabPanel("Login", login_UI()),
         tabPanel("Register", register_UI()),
-        tabPanel("Reset Password", password_reset_UI())
+        tabPanel("Reset Password", password_reset_UI()),
+        tabPanel("Logout", logout_button())
+        
     )
 )
 
-# Define server logic required to draw a histogram
 server <- function(input, output, session) {
     
     # login server with specified methods for database and mailing
@@ -40,12 +43,16 @@ server <- function(input, output, session) {
     # cofigure it for your needs
     
     auth <- login_server(
-        db_method = "gsheet",
-        mail_method = "gmailr",
-        appname = "shiny.reglog test",
+        db_method = "sqlite",
+        mail_method = "emayili",
+        appname = "shiny.reglog example",
         appaddress = "not-on-net.com",
-        gsheet_file = "your_gsheet_ID",
-        gmailr_user = "your_address@gmail.com"
+        sqlite_db = sqlite.path,
+      # arguments below need configuration for your mailing account
+        emayili_user = "your_email_address",
+        emayili_password = "your_email_password",
+        emayili_port = "your_email_box_port",
+        emayili_host = "your_email_box_host"
     )
     
     # table of values returned by login_server
@@ -72,4 +79,5 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 
 }
+
 # }

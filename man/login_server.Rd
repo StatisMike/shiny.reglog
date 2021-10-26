@@ -94,6 +94,12 @@ if(interactive()){
 
 library(shiny)
 library(shiny.reglog)
+  
+# initializing sqlite
+
+sqlite.path <- tempfile(fileext = "sqlite")
+create_sqlite_db(sqlite.path)
+database <- sqlite_get_db(sqlite.path)
 
 # Define UI containing shiny.reglog modules
 ui <- fluidPage(
@@ -111,7 +117,9 @@ ui <- fluidPage(
         ),
         tabPanel("Login", login_UI()),
         tabPanel("Register", register_UI()),
-        tabPanel("Reset Password", password_reset_UI())
+        tabPanel("Reset Password", password_reset_UI()),
+        tabPanel("Logout", logout_button())
+        
     )
 )
 
@@ -124,9 +132,10 @@ server <- function(input, output, session) {
     auth <- login_server(
         db_method = "sqlite",
         mail_method = "emayili",
-        appname = "shiny.reglog test",
+        appname = "shiny.reglog example",
         appaddress = "not-on-net.com",
-        sqlite_db = "test.sqlite",
+        sqlite_db = sqlite.path,
+      # arguments below need configuration for your mailing account
         emayili_user = "your_email_address",
         emayili_password = "your_email_password",
         emayili_port = "your_email_box_port",

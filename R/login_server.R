@@ -139,7 +139,7 @@ NULL
 #' @import DBI
 #' @import RSQLite
 #' 
-#' @example examples/shinybase_sqlite_emayili/app.R
+#' @example examples/apps/shinybase_sqlite_emayili.R
 
 
 login_server <- function(id = "login_system",
