@@ -14,7 +14,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-knitr::opts_chunk$set(eval = F)
 ```
 
 *shiny.reglog* currently allows for two methods in both data storage and e-mail sending. In both of these areas, one of the method makes use of *gargle*-based packages: *googlesheets4* for data storage and *gmailr* for e-mail sending.
@@ -31,7 +30,7 @@ As I know from my own experience, the setup for this authorization may be a litt
 
 To enable authorization for *googlesheets4* in ShinyApp, you need to create a token with correct scopes once, during the interactive session. **auth/spreadsheet** scope don't need the `httr` OAuth app set up (though it is recommended if you are also using *gmailr* for mail sending - details in next section)
 
-```{r}
+```{r, eval = F}
     # Setting up OAuth app isn't mandatory, though it is recommended
     # more details about this in next session
 
@@ -77,7 +76,7 @@ Scopes for e-mail sending are a bit higher than spreadsheet read & write. You ne
 
     -   you will get a modal dialog with "Your Client ID" (key) and "Your Client Secret" (secret). You will need to provide it to the `httr::oauth_app()` function, as shown below:
 
-```{r}
+```{r, eval = F}
     gmailr::gm_auth_configure(
        key = "Your Client ID", 
        secret = "Your Client Secret"
