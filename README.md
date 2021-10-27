@@ -10,7 +10,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecy
 [![CRAN
 status](https://www.r-pkg.org/badges/version/shiny.reglog)](https://CRAN.R-project.org/package=shiny.reglog)
 [![CRAN
-checks](https://cranchecks.info/badges/summary/shiny.reglog)](https://cran.r-project.org/web/checks/check_results_shiny.reglog.html)
+checks](https://cranchecks.info/badges/summary/shiny.reglog)](https://cranchecks.info/pkgs/shiny.reglog)
 [![](http://cranlogs.r-pkg.org/badges/last-month/shiny.reglog?color=green)](https://cran.r-project.org/package=shiny.reglog)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/shiny.reglog?color=blue)](https://cran.r-project.org/package=shiny.reglog)
 
