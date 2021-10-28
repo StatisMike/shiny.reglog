@@ -9,4 +9,3 @@ test.sqlite
 cache
 tests
 .secrets
-inst/doc

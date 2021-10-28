@@ -50,7 +50,7 @@ To enable authorization for *googlesheets4* in ShinyApp, you need to create a to
 
 After running the code once in interactive session, you can copy the secret from **path/to/secrets**, paste it in safe folder on the server and modify the code to show the `gs4_auth()` function where to find it.
 
-Security shouldn't be a problem on [shinyapps.io](https://shinyapps.io), but if you are deploying Shiny-Server yourself, remember to secure it - ideally make it available only for the **shiny** user.
+Security shouldn't be a problem on [shinyapps.io](https://www.shinyapps.io), but if you are deploying Shiny-Server yourself, remember to secure it - ideally make it available only for the **shiny** user.
 
 ## Setting up `gmailr` auth
 
