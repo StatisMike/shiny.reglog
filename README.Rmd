@@ -94,7 +94,7 @@ credentials <- data.frame(
   user_pass = "VeryHardPassword"
   )
 
-# create SQLite database with some credentials
+# create gsheet database with some credentials
 gsheet_id <- create_gsheet_db(
   credentials = credentials,
   # when giving some credentials, you need to specify if the passwords were hashed by 'scrypt` package
