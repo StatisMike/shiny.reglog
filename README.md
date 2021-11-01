@@ -10,7 +10,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecy
 [![CRAN
 status](https://www.r-pkg.org/badges/version/shiny.reglog)](https://CRAN.R-project.org/package=shiny.reglog)
 [![CRAN
-checks](https://cranchecks.info/badges/summary/shiny.reglog)](https://cranchecks.info/pkgs/shiny.reglog)
+checks](https://cranchecks.info/badges/worst/shiny.reglog)](https://cranchecks.info/pkgs/shiny.reglog)
 [![](http://cranlogs.r-pkg.org/badges/last-month/shiny.reglog?color=green)](https://cran.r-project.org/package=shiny.reglog)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/shiny.reglog?color=blue)](https://cran.r-project.org/package=shiny.reglog)
 
@@ -42,7 +42,9 @@ sending:
 -   via `emayili` package for more flexibility and easier setup but less
     security
 -   via `gmailr` package, allowing usage of popular gmail accounts. This
-    method is more secure but the setup can be more tricky
+    method is more secure but the setup can be more tricky: for more
+    information you can check vignette:
+    <a href="https://cran.r-project.org/web/packages/shiny.reglog/vignettes/auth.html" target="_blank">shiny.reglog: How to get Google API authorization</a>
 
 Currently the package went into stable state, as it have potential of
 growth without danger of breaking changes. In the future I plan to widen
@@ -56,7 +58,7 @@ the usability:
 You can install this version of shiny.reglog from GitHub with:
 
 ``` r
-# install version 0.2.0.2 from CRAN 
+# install version 0.4.0.1 from CRAN 
 install.packages("shiny.reglog")
 
 # or install latest version from GitHub
@@ -183,8 +185,7 @@ The login box contains inputs for user ID and password. After pushing
 the “Login” button, it check validity of inputs and logins user.
 Produces modal dialog detailing results.
 
-[![Login UI - click for
-gif!](https://statismike.github.io/gallery/shiny.reglog/2_login.png)](https://statismike.github.io/gallery/shiny.reglog/2_login.gif)
+<a href="https://statismike.github.io/gallery/shiny.reglog/2_login.gif" target="_blank"><img src="https://statismike.github.io/gallery/shiny.reglog/2_login.png" alt="Login UI - click for gif!" /></a>
 
 #### 4.1.3. password_reset_UI
 
@@ -202,8 +203,7 @@ inputbox below and push next button. The validity of inputted code in
 relation to user ID is then checked. If correct, the new modal dialog
 opens to input the new password.
 
-[![Reset UI - click for
-gif!](https://statismike.github.io/gallery/shiny.reglog/3_reset1.png)](https://statismike.github.io/gallery/shiny.reglog/3_reset1.gif)
+<a href="https://statismike.github.io/gallery/shiny.reglog/3_reset1.gif" target="_blank"><img src="https://statismike.github.io/gallery/shiny.reglog/3_reset1.png" alt="Reset UI - click for gif!" /></a>
 
 The user need to provide new password and repeat it to check for any
 typos. After pushing the “Confirm new password” button, below input
@@ -211,8 +211,7 @@ boxes a message is rendered to give feedback to the user - if the
 password was changed successfully. After that, the user can close modal
 dialog with “OK” button.
 
-[![Reset modal dialog - click for
-gif!](https://statismike.github.io/gallery/shiny.reglog/4_reset2.png)](https://statismike.github.io/gallery/shiny.reglog/4_reset2.gif)
+<a href="https://statismike.github.io/gallery/shiny.reglog/4_reset2.gif" target="_blank"><img src="https://statismike.github.io/gallery/shiny.reglog/4_reset2.png" alt="Reset modal dialog - click for gif!" /></a>
 
 #### 4.1.4. logout_button
 
