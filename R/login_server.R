@@ -154,7 +154,8 @@ login_server <- function(id = "login_system",
                          emayili_user,
                          emayili_password,
                          emayili_host,
-                         emayili_port
+                         emayili_port,
+                         useLoginModal = TRUE
 ){
   
   moduleServer(
@@ -265,13 +266,13 @@ login_server <- function(id = "login_system",
           )
         } else {
           
-          showModal(
+          if (useLoginModal) { showModal(
             
             modalDialog(title = txt$get("login_succ_t"),
                         p(txt$get("login_succ_b")),
                         footer = modalButton("OK")
             )
-          )
+          ) }
           
           
           active_user$is_logged <- TRUE
