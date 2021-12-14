@@ -6,7 +6,7 @@
   user_db <- dplyr::slice_head(user_db)
   user_db <- dplyr::ungroup(user_db)
 
-  if(!credentials_pass_hashed){
+  if(credentials_pass_hashed){
     user_db$user_pass <- sapply(user_db$user_pass, scrypt::hashPassword)
   }
 
