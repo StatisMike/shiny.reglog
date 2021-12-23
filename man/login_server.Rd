@@ -60,7 +60,7 @@ reactiveValues() object with three elements:
 
 \code{is_logged}, containing boolean describing authorization status
 
-\code{last_state_change}, containing string after last change of user state. Currently only supports state changes during login
+\code{last_state_change}, containing string describing last change of login system state. Currently only supports state changes during login procedure
 
 \code{user_id}, containing the logged user identification name. When not logged, it contains the timestamp of session start
 

@@ -114,7 +114,7 @@
 #'
 #' @return reactiveValues() object with three elements:
 #' @return \code{is_logged}, containing boolean describing authorization status
-#' @return \code{last_state_change}, containing string after last change of user state. Currently only supports state changes during login
+#' @return \code{last_state_change}, containing string describing last change of login system state. Currently only supports state changes during login procedure
 #' @return \code{user_id}, containing the logged user identification name. When not logged, it contains the timestamp of session start
 #' @return \code{user_mail}, containing the logged user mail. When not logged, it is empty character string of nchar() value 0: ("")
 #'
@@ -211,7 +211,7 @@ login_server <- function(id = "login_system",
 
       active_user <- reactiveValues(
         is_logged = FALSE,
-        last_state_change = NULL,
+        last_state_change = "init",
         user_id = paste("Anon", as.character(Sys.time()), sep = "_"),
         user_mail = ""
       )
