@@ -60,11 +60,11 @@ reactiveValues() object with three elements:
 
 \code{is_logged}, containing boolean describing authorization status
 
-\code{last_state_change}, containing string describing last change of login system state. Currently only supports state changes during login procedure
-
 \code{user_id}, containing the logged user identification name. When not logged, it contains the timestamp of session start
 
 \code{user_mail}, containing the logged user mail. When not logged, it is empty character string of nchar() value 0: ("")
+
+\code{last_state_change}, containing string describing last change of login system state. Currently only supports state changes during login procedure
 }
 \description{
 Shiny server module for the optional login/registration system
