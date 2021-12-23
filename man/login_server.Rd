@@ -18,7 +18,7 @@ login_server(
   emayili_password,
   emayili_host,
   emayili_port,
-  useLoginModal = TRUE
+  use_login_modals = list(UserNotFound = T, WrongPass = T, Success = T)
 )
 }
 \arguments{
@@ -47,11 +47,20 @@ login_server(
 \item{emayili_host}{host of your email box (for: \code{db_method = "emayili"})}
 
 \item{emayili_port}{port of your email box (for: \code{db_method = "emayili"})}
+
+\item{use_login_modals}{list of logicals indicating if the modalDialog after log-in should be shown. Defaults to named list of logicals:
+\itemize{
+\item{UserNotFound = T}
+\item{WrongPass = T}
+\item{Success = T}
+}}
 }
 \value{
 reactiveValues() object with three elements:
 
 \code{is_logged}, containing boolean describing authorization status
+
+\code{last_state_change}, containing string after last change of user state. Currently only supports state changes during login
 
 \code{user_id}, containing the logged user identification name. When not logged, it contains the timestamp of session start
 
