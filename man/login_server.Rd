@@ -17,7 +17,8 @@ login_server(
   emayili_user,
   emayili_password,
   emayili_host,
-  emayili_port
+  emayili_port,
+  useLoginModal = TRUE
 )
 }
 \arguments{
