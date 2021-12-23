@@ -1,6 +1,6 @@
 Package: shiny.reglog
 Title: Optional Login and Registration Module System for ShinyApps
-Version: 0.4.1
+Version: 0.4.2
 Authors@R: 
     person(given = "Michal",
            family = "Kosinski",
@@ -29,5 +29,5 @@ License:
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1.9001
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

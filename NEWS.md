@@ -17,3 +17,15 @@
 * Added description of how to provide credentials to `create_sqlite_db` and `create_gsheet_db` functions 
 * Created vignette specifying the authorization process for `gmailr` and `googlesheets4` to use their methods of email sending and database storage
 * Removed `dbplyr` dependency
+
+4# shiny.reglog 0.4.2
+
+* Added optional argument to `login_server`: `use_login_modals` enabling developer to silence systemic modals
+after any or all login attempts
+* Added `last_state_change` to the reactiveValues object, that is returned from `login_server`. It enables to
+listen to last state changes of login procedure. Currently it supports only state changes from login procedure, so it can take
+this values:
+  - "init", if no state change was made
+  - "login_UserNotFound", if the user tried to login with non-existing username
+  - "login_WrongPass", if the user provided incorrect password
+  - "login_Success", if the user has been logged successfully
