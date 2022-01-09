@@ -4,12 +4,17 @@
 \alias{register_UI}
 \title{Shiny UI module for registration box}
 \usage{
-register_UI(id = "login_system", lang = "en")
+register_UI(id = "login_system", lang = "en", custom_txts = NULL)
 }
 \arguments{
 \item{id}{the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.}
 
 \item{lang}{specifies the app used language. Accepts "en" or "pl". Defaults to "en"}
+
+\item{custom_txts}{named list containing customized texts. For more details,
+see documentation for 'reglog_txt'. Provided list can contain only elements
+used by this function, but it is recommended to provide the same list for
+every 'shiny.reglog' function}
 }
 \value{
 'tags$div' containing all elements for registration procedure

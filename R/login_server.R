@@ -104,6 +104,11 @@
 #' @param emayili_password password to your email account (for: \code{db_method = "emayili"})
 #' @param emayili_host host of your email box (for: \code{db_method = "emayili"})
 #' @param emayili_port port of your email box (for: \code{db_method = "emayili"})
+#' 
+#' @param custom_txts named list containing customized texts. For more details,
+#' see documentation for 'reglog_txt'. Provided list can contain only elements
+#' used by this function, but it is recommended to provide the same list for
+#' every 'shiny.reglog' function
 #'
 #' @param use_login_modals list of logicals indicating if the modalDialog after log-in should be shown. Defaults to named list of logicals:
 #' \itemize{
@@ -163,6 +168,7 @@ login_server <- function(id = "login_system",
                          emayili_password,
                          emayili_host,
                          emayili_port,
+                         custom_txts = NULL,
                          use_login_modals = list(UserNotFound = T,
                                                  WrongPass = T,
                                                  Success = T)
@@ -171,8 +177,6 @@ login_server <- function(id = "login_system",
   moduleServer(
     id,
     function(input, output, session){
-
-      txt <- use_language(lang)
 
       #### checking for packages for handling databases
 
@@ -260,9 +264,9 @@ login_server <- function(id = "login_system",
 
             showModal(
 
-              modalDialog(title = txt$get("id_nfound_t"),
-                          p(txt$get("id_nfound_1")),
-                          p(txt$get("id_nforun_2")),
+              modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "id_nfound_t"),
+                          p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "id_nfound_1")),
+                          p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "id_nforun_2")),
                           footer = modalButton("OK"))
             )
           }
@@ -276,8 +280,8 @@ login_server <- function(id = "login_system",
 
             showModal(
 
-              modalDialog(title = txt$get("login_wrong_pass_t"),
-                          p(txt$get("login_wrong_pass_b")),
+              modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "login_wrong_pass_t"),
+                          p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "login_wrong_pass_b")),
                           footer = modalButton("OK")
               )
             )
@@ -291,8 +295,8 @@ login_server <- function(id = "login_system",
 
             showModal(
 
-              modalDialog(title = txt$get("login_succ_t"),
-                          p(txt$get("login_succ_b")),
+              modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "login_succ_t"),
+                          p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "login_succ_b")),
                           footer = modalButton("OK")
               )
             )
@@ -319,8 +323,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("id_nfound"),
-                        p(txt$get("id_nfound_reset")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "id_nfound"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "id_nfound_reset")),
                         footer = modalButton("OK"))
           )
 
@@ -328,8 +332,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reset_code_send_t"),
-                        p(txt$get("reset_code_send_b")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_code_send_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_code_send_b")),
                         footer = modalButton("OK"))
           )
 
@@ -342,18 +346,18 @@ login_server <- function(id = "login_system",
             reset_mail_w_from <- gmailr::gm_from(reset_mail_w_to, gmailr_user)
             reset_mail_w_sub <- gmailr::gm_subject(reset_mail_w_from,
                                                    paste(appname,
-                                                         txt$get("reset_mail_h"),
+                                                         reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
                                                          sep = " - "))
             reset_mail <- gmailr::gm_html_body(reset_mail_w_sub,
                                                paste0("<p>",
-                                                      txt$get("reset_mail_1"),
+                                                      reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_1"),
                                                       "</p><p>",
-                                                      txt$get("reset_mail_2"),
+                                                      reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_2"),
                                                       reset_code,
                                                       "</p><p>",
-                                                      txt$get("reset_mail_3"),
+                                                      reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_3"),
                                                       "</p><hr>",
-                                                      txt$get("mail_automatic"))
+                                                      reglog_txt(lang = lang, custom_txts = custom_txts, x = "mail_automatic"))
                                                )
 
             gmailr::gm_send_message(reset_mail)
@@ -365,18 +369,18 @@ login_server <- function(id = "login_system",
             reset_mail_w_from <- emayili::from(reset_mail_w_to, emayili_user)
             reset_mail_w_sub <- emayili::subject(reset_mail_w_from,
                                                  paste(appname,
-                                                       txt$get("reset_mail_h"),
+                                                       reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
                                                        sep = " - "))
             reset_mail <- emayili::html(reset_mail_w_sub,
                                         paste0("<p>",
-                                               txt$get("reset_mail_1"),
+                                               reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_1"),
                                                "</p><p>",
-                                               txt$get("reset_mail_2"),
+                                               reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_2"),
                                                reset_code,
                                                "</p><p>",
-                                               txt$get("reset_mail_3"),
+                                               reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_3"),
                                                "</p><hr>",
-                                               txt$get("mail_automatic"))
+                                               reglog_txt(lang = lang, custom_txts = custom_txts, x = "mail_automatic"))
                                         )
 
             smtp <- emayili::server(
@@ -431,8 +435,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reset_code_nfound_t"),
-                        p(txt$get("reset_code_nfound_b")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_code_nfound_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_code_nfound_b")),
                         footer = modalButton("OK"))
 
           )
@@ -440,8 +444,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reset_code_ncorr_t"),
-                        p(txt$get("reset_code_ncorr_b")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_code_ncorr_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_code_ncorr_b")),
                         footer = modalButton("OK"))
           )
 
@@ -449,14 +453,14 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reset_pass_mod_t"),
-                        p(txt$get("reset_pass_mod_b")),
-                        passwordInput(session$ns("resetpass1"), txt$get("password")),
-                        passwordInput(session$ns("resetpass2"), txt$get("password_rep")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_pass_mod_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_pass_mod_b")),
+                        passwordInput(session$ns("resetpass1"), reglog_txt(lang = lang, custom_txts = custom_txts, x = "password")),
+                        passwordInput(session$ns("resetpass2"), reglog_txt(lang = lang, custom_txts = custom_txts, x = "password_rep")),
                         htmlOutput(session$ns("resetpass_modal_err")),
                         footer = list(
                           actionButton(session$ns("resetpass_modal_bttn"),
-                                       label = txt$get("reset_pass_mod_bttn")),
+                                       label = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_pass_mod_bttn")),
                           modalButton("OK"))
 
             )
@@ -472,18 +476,18 @@ login_server <- function(id = "login_system",
         if(.check_user_login_pass(input$resetpass1) == F){
 
           output$resetpass_modal_err <- renderText({
-            txt$get("reset_pass_mod_nv1")
+            reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_pass_mod_nv1")
           })
         } else if(input$resetpass1 != input$resetpass2){
 
           output$resetpass_modal_err <- renderText({
-            txt$get("reset_pass_mod_nv2")
+            reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_pass_mod_nv2")
           })
 
         } else {
 
           output$resetpass_modal_err <- renderText({
-            txt$get("reset_pass_mod_succ")
+            reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_pass_mod_succ")
 
           })
 
@@ -543,8 +547,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reg_mod_err1_t"),
-                        p(txt$get("reg_mod_err1_b")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err1_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err1_b")),
                         footer = modalButton("OK"))
           )
 
@@ -555,8 +559,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reg_mod_err2_t"),
-                        p(txt$get("reg_mod_err2_b")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err2_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err2_b")),
                         footer = modalButton("OK"))
 
           )
@@ -568,8 +572,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reg_mod_err3_t"),
-                        p(txt$get("reg_mod_err3_b")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err3_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err3_b")),
                         footer = modalButton("OK"))
           )
 
@@ -580,8 +584,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reg_mod_err4_t"),
-                        p(txt$get("reg_mod_err4_b")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err4_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err4_b")),
                         footer = modalButton("OK"))
 
           )
@@ -592,8 +596,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reg_mod_err5_t"),
-                        p(txt$get("reg_mod_err5_b")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err5_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err5_b")),
                         footer = modalButton("OK"))
 
           )
@@ -605,8 +609,8 @@ login_server <- function(id = "login_system",
 
           showModal(
 
-            modalDialog(title = txt$get("reg_mod_succ_t"),
-                        p(txt$get("reg_mod_succ_b")),
+            modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_succ_t"),
+                        p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_succ_b")),
                         footer = modalButton("OK"))
 
           )
@@ -638,21 +642,21 @@ login_server <- function(id = "login_system",
             confirmation_mail_w_from <- emayili::from(confirmation_mail_w_to, emayili_user)
             confirmation_mail_w_sub <- emayili::subject(confirmation_mail_w_from,
                                                         paste(appname,
-                                                              txt$get("reg_mail_h")
+                                                              reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mail_h")
                                                               ))
 
             confirmation_mail <- emayili::html(confirmation_mail_w_sub,
                                                paste0(
                                                  "<p>",
-                                                 txt$get("reg_mail_1"),
+                                                 reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mail_1"),
                                                  "</p><p>",
-                                                 txt$get("reg_mail_2"),
+                                                 reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mail_2"),
                                                  temp_row$user_id,
                                                  "</p><p>",
-                                                 txt$get("reg_mail_3"),
+                                                 reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mail_3"),
                                                  appaddress,
                                                  "</p><hr>",
-                                                 txt$get("mail_automatic"))
+                                                 reglog_txt(lang = lang, custom_txts = custom_txts, x = "mail_automatic"))
             )
 
             smtp <- emayili::server(
@@ -671,20 +675,20 @@ login_server <- function(id = "login_system",
             confirmation_mail_w_from <- gmailr::gm_from(confirmation_mail_w_to, gmailr_user)
             confirmation_mail_w_sub <- gmailr::gm_subject(confirmation_mail_w_from,
                                                           paste(appname,
-                                                                txt$get("reg_mail_h")
+                                                                reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mail_h")
                                                           ))
             confirmation_mail <- gmailr::gm_html_body(confirmation_mail_w_sub,
                                                       paste0(
                                                         "<p>",
-                                                        txt$get("reg_mail_1"),
+                                                        reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mail_1"),
                                                         "</p><p>",
-                                                        txt$get("reg_mail_2"),
+                                                        reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mail_2"),
                                                         temp_row$user_id,
                                                         "</p><p>",
-                                                        txt$get("reg_mail_3"),
+                                                        reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mail_3"),
                                                         appaddress,
                                                         "</p><hr>",
-                                                        txt$get("mail_automatic"))
+                                                        reglog_txt(lang = lang, custom_txts = custom_txts, x = "mail_automatic"))
             )
 
             gmailr::gm_send_message(confirmation_mail)
@@ -702,14 +706,14 @@ login_server <- function(id = "login_system",
 
         showModal(
           modalDialog(
-            txt$get("logout_modal_title"),
+            reglog_txt(lang = lang, custom_txts = custom_txts, x = "logout_modal_title"),
             footer = list(
               actionButton(
                 session$ns("logout_accept"),
-                txt$get("logout_bttn")
+                reglog_txt(lang = lang, custom_txts = custom_txts, x = "logout_bttn")
               ),
               modalButton(
-                txt$get("logout_unaccept_bttn")
+                reglog_txt(lang = lang, custom_txts = custom_txts, x = "logout_unaccept_bttn")
               )
             )
           )
@@ -717,7 +721,7 @@ login_server <- function(id = "login_system",
 
           showModal(
             modalDialog(
-              txt$get("logout_impossible_modal"),
+              reglog_txt(lang = lang, custom_txts = custom_txts, x = "logout_impossible_modal"),
               footer = modalButton("OK")
             )
           )

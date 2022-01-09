@@ -12,7 +12,6 @@ Imports:
 	shiny,
 	dplyr,
 	scrypt,
-	R6,
 	DBI,
 	googlesheets4,
 	RSQLite,

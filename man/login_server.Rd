@@ -18,6 +18,7 @@ login_server(
   emayili_password,
   emayili_host,
   emayili_port,
+  custom_txts = NULL,
   use_login_modals = list(UserNotFound = T, WrongPass = T, Success = T)
 )
 }
@@ -47,6 +48,11 @@ login_server(
 \item{emayili_host}{host of your email box (for: \code{db_method = "emayili"})}
 
 \item{emayili_port}{port of your email box (for: \code{db_method = "emayili"})}
+
+\item{custom_txts}{named list containing customized texts. For more details,
+see documentation for 'reglog_txt'. Provided list can contain only elements
+used by this function, but it is recommended to provide the same list for
+every 'shiny.reglog' function}
 
 \item{use_login_modals}{list of logicals indicating if the modalDialog after log-in should be shown. Defaults to named list of logicals:
 \itemize{

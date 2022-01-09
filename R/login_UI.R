@@ -9,6 +9,10 @@
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
+#' @param custom_txts named list containing customized texts. For more details,
+#' see documentation for 'reglog_txt'. Provided list can contain only elements
+#' used by this function, but it is recommended to provide the same list for
+#' every 'shiny.reglog' function
 #'
 #' @return 'tags$div' containing all elements for login procedure 
 #'
@@ -18,21 +22,20 @@
 #'
 
 login_UI <- function(id = "login_system",
-                     lang = "en") {
+                     lang = "en",
+                     custom_txts = NULL) {
 
   ns <- NS(id)
-
-  txt <- use_language(lang)
   
   div(h1("Login"),
       textInput(ns("login_user_id"),
-                label = txt$get("user_id")
+                label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="user_id")
                 ),
       passwordInput(ns("password_login"),
-                    label = txt$get("password")
+                    label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="password")
                     ),
       actionButton(ns("login_button"),
-                   label = txt$get("login_bttn")
+                   label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="login_bttn")
                    )
       )
 }
@@ -48,6 +51,10 @@ login_UI <- function(id = "login_system",
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
+#' @param custom_txts named list containing customized texts. For more details,
+#' see documentation for 'reglog_txt'. Provided list can contain only elements
+#' used by this function, but it is recommended to provide the same list for
+#' every 'shiny.reglog' function
 #' 
 #' @return 'tags$div' containing all elements for password reset procedure 
 #'
@@ -56,26 +63,25 @@ login_UI <- function(id = "login_system",
 #' @export
 
 password_reset_UI <- function(id = "login_system",
-                              lang = "en") {
-
-  txt <- use_language(lang)
+                              lang = "en",
+                              custom_txts = NULL) {
   
   ns <- NS(id)
 
   div(
-    h1(txt$get("reset_ui_1")),
-    p(txt$get("reset_ui_2")),
+    h1(reglog_txt(lang = lang, custom_txts = custom_txts, x ="reset_ui_1")),
+    p(reglog_txt(lang = lang, custom_txts = custom_txts, x ="reset_ui_2")),
     textInput(ns("resetpass_user_ID"),
-              label = txt$get("user_id")
+              label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="user_id")
               ),
     actionButton(ns("resetpass_send"),
-                 label = txt$get("reset_bttn_1")),
-    p(txt$get("reset_ui_3")),
+                 label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="reset_bttn_1")),
+    p(reglog_txt(lang = lang, custom_txts = custom_txts, x ="reset_ui_3")),
     textInput(ns("resetpass_code"),
-              label = txt$get("reset_ui_4")
+              label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="reset_ui_4")
               ),
     actionButton(ns("resetpass_code_bttn"),
-                 label = txt$get("reset_bttn_2")
+                 label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="reset_bttn_2")
                  )
   )
 }
@@ -91,6 +97,10 @@ password_reset_UI <- function(id = "login_system",
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
+#' @param custom_txts named list containing customized texts. For more details,
+#' see documentation for 'reglog_txt'. Provided list can contain only elements
+#' used by this function, but it is recommended to provide the same list for
+#' every 'shiny.reglog' function
 #'
 #' @return 'tags$div' containing all elements for registration procedure
 #'
@@ -99,31 +109,30 @@ password_reset_UI <- function(id = "login_system",
 #' @export
 
 register_UI <- function(id = "login_system",
-                        lang = "en"){
+                        lang = "en",
+                        custom_txts = NULL){
 
   ns <- NS(id)
-  
-  txt <- use_language(lang)
 
   div(
-    h1(txt$get("register_ui_1")),
-    p(txt$get("register_ui_2"),
-      tags$ul(tags$li(txt$get("register_ui_3")),
-              tags$li(txt$get("register_ui_4")))),
+    h1(reglog_txt(lang = lang, custom_txts = custom_txts, x ="register_ui_1")),
+    p(reglog_txt(lang = lang, custom_txts = custom_txts, x ="register_ui_2"),
+      tags$ul(tags$li(reglog_txt(lang = lang, custom_txts = custom_txts, x ="register_ui_3")),
+              tags$li(reglog_txt(lang = lang, custom_txts = custom_txts, x ="register_ui_4")))),
     textInput(ns("register_user_ID"), 
-              label = txt$get("user_id")
+              label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="user_id")
               ),
     textInput(ns("register_email"), 
-              label = txt$get("email")
+              label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="email")
               ),
     passwordInput(ns("register_pass1"), 
-                  label = txt$get("password")
+                  label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="password")
                   ),
     passwordInput(ns("register_pass2"), 
-                  label = txt$get("password_rep")
+                  label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="password_rep")
                   ),
     actionButton(ns("register_bttn"), 
-                 label = txt$get("register_bttn")
+                 label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="register_bttn")
                  )
 
   )
@@ -138,6 +147,10 @@ register_UI <- function(id = "login_system",
 #' 
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
+#' @param custom_txts named list containing customized texts. For more details,
+#' see documentation for 'reglog_txt'. Provided list can contain only elements
+#' used by this function, but it is recommended to provide the same list for
+#' every 'shiny.reglog' function
 #' 
 #' @return 'actionButton' for logout
 #'
@@ -145,15 +158,14 @@ register_UI <- function(id = "login_system",
 #'
 
 logout_button <- function(id = "login_system",
-                        lang = "en"){
+                          lang = "en",
+                          custom_txts = NULL){
   
   ns <- NS(id)
   
-  txt <- use_language(lang)
-  
   actionButton(
     ns("logout_bttn"),
-    label = txt$get("logout_bttn")
+    label = reglog_txt(lang = lang, custom_txts = custom_txts, x ="logout_bttn")
   )
   
 }
