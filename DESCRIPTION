@@ -1,6 +1,6 @@
 Package: shiny.reglog
 Title: Optional Login and Registration Module System for ShinyApps
-Version: 0.4.2
+Version: 0.5.0.9001
 Authors@R: 
     person(given = "Michal",
            family = "Kosinski",
@@ -15,7 +15,8 @@ Imports:
 	DBI,
 	googlesheets4,
 	RSQLite,
-	lubridate
+	lubridate,
+	uuid
 Suggests:
     shinydashboard,
     googledrive,

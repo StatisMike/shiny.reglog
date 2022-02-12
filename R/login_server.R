@@ -173,6 +173,9 @@ login_server <- function(id = "login_system",
                                                  WrongPass = T,
                                                  Success = T)
 ){
+  
+  .Deprecated("RegLogServer", 
+              msg = R6switch_deprecate_mssg)
 
   moduleServer(
     id,
