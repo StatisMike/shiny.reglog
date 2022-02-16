@@ -96,6 +96,7 @@ RegLogServer <- R6::R6Class(
         }
       }
       
+      if (is.logical(use_modals)) private$use_modals <- use_modals
 
       
       
@@ -112,6 +113,19 @@ RegLogServer <- R6::R6Class(
       
       # launch the module
       private$launch_module()
+    },
+    
+    #' @description Method logging out logged user
+    logout = function() {
+      
+      if (isTRUE(self$is_logged())) {
+        
+        message_to_send <- RegLogConnectorMessage(
+          "logout",
+          logcontent = paste(self$user_id(), "logged out")
+        )
+        private$listener(message_to_send)
+      }
     }
     
   ),
@@ -122,6 +136,7 @@ RegLogServer <- R6::R6Class(
     custom_txts = NULL,
     app_name = NULL,
     app_address = NULL,
+    listener = NULL,
     
     launch_module = function() {
       RegLogServer_frontend(self = self, private = private)
@@ -149,6 +164,47 @@ RegLogServer_listener <- function(
     id = self$module_id, 
     function(input, output, session) {
       
+      # observe changes in internal listener ####
+      observe({
+        
+        req(!is.null(private$listener))
+        # receive the message
+        received_message <- private$listener()
+        req(class(received_message) == "RegLogConnectorMessage") 
+        
+        ## switches for different reactions ####
+        isolate({
+          switch(
+            received_message$type,
+            
+            ## logout messages reactions ####
+            logout = {
+              
+              if (modals_check(private, "logout")) {
+                showModal(
+                  modalDialog(
+                    title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "logout_mod_t"),
+                    tags$p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "logout_mod_b")),
+                    footer = modalButton("OK")
+                  )
+                )
+              }
+              
+              # clear user data
+              self$is_logged <- reactiveVal(FALSE)
+              self$user_id <- reactiveVal(uuid::UUIDgenerate())
+              self$user_mail <- reactiveVal("")
+              #expose the message to the outside
+              self$message(received_message)
+            }
+          )
+          
+        })
+        
+        
+      })
+      
+      # observe changes in dbConnector ####
       observe({
         
         # safety check - for the dbConnector to not be NULL
@@ -158,12 +214,12 @@ RegLogServer_listener <- function(
         received_message <- self$dbConnector$message()
         req(class(received_message) == "RegLogConnectorMessage")
         
-        # switches for different reactions ####
+        ## switches for different reactions ####
         isolate({
           switch(
             received_message$type,
             
-            # login messages reactions ####
+            ## login messages reactions ####
             login = {
               # if couldn't log in
               if (!received_message$data$success) {
@@ -213,7 +269,7 @@ RegLogServer_listener <- function(
               }
             },
             
-            # register messages reactions ####
+            ## register messages reactions ####
             register = {
               
               
@@ -222,7 +278,7 @@ RegLogServer_listener <- function(
               
             },
             
-            # data edit messages reactions ####
+            ## data edit messages reactions ####
             creds_edit = {
               
               
@@ -230,7 +286,7 @@ RegLogServer_listener <- function(
               
             },
             
-            # reset password messages reactions ####
+            ## reset password messages reactions ####
             
             resetpass = {
               
@@ -327,10 +383,13 @@ RegLogServer_backend <- function(
       # initialize reactiveVals
       self$message <- reactiveVal()
       self$is_logged <- reactiveVal(FALSE)
-      self$user_id <- reactiveVal(paste0("Anon", Sys.time()))
+      self$user_id <- reactiveVal(uuid::UUIDgenerate())
       self$user_mail <- reactiveVal("")
+      private$listener <- reactiveVal()
       
-      # private$app_address <- get_url_shiny(session = getDefaultReactiveDomain())
+      # if (is.null(private$app_address)) {
+      #   private$app_address <- get_url_shiny(session = getDefaultReactiveDomain())
+      # }
       
       # login UI reactions ####
       

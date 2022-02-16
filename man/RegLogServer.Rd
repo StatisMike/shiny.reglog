@@ -36,6 +36,7 @@ database.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{RegLogServer$new()}}
+\item \href{#method-logout}{\code{RegLogServer$logout()}}
 \item \href{#method-clone}{\code{RegLogServer$clone()}}
 }
 }
@@ -94,6 +95,16 @@ Recommended to keep it that way, unless it would cause any namespace issues.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-logout"></a>}}
+\if{latex}{\out{\hypertarget{method-logout}{}}}
+\subsection{Method \code{logout()}}{
+Method logging out logged user
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RegLogServer$logout()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

@@ -84,9 +84,11 @@ reglog_texts$en = list(
  reg_mail_3 = "You can always visit our application at: ",
  # logout
  logout_bttn = "Log-out",
- logout_modal_title = "Do you really want to log out?",
- logout_unaccept_bttn = "Don't log me out!",
- logout_impossible_modal = "You aren't logged in yet!"
+ logout_modal_title = "Do you really want to log out?",  # deprecated
+ logout_unaccept_bttn = "Don't log me out!",             # deprecated
+ logout_impossible_modal = "You aren't logged in yet!",  # deprecated
+ logout_mod_t = "Logged out",
+ logout_mod_b = "Logged out succesfully!"
 )
 
 reglog_texts$pl = list(
@@ -161,9 +163,11 @@ reglog_texts$pl = list(
  reg_mail_3 = "Mo\u017Cesz odwiedzi\u0107 nasz\u0105 aplikacj\u0119 pod adresem: ",
   # logout bttn
  logout_bttn = "Wyloguj",
- logout_modal_title = "Czy na pewno chcesz si\u0119 wylogowa\u0107?",
- logout_unaccept_bttn = "Nie wylogowuj!",
- logout_impossible_modal = "Nie jeste\u015B jeszcze zalogowany."
+ logout_modal_title = "Czy na pewno chcesz si\u0119 wylogowa\u0107?",  # deprecated
+ logout_unaccept_bttn = "Nie wylogowuj!",                              # deprecated
+ logout_impossible_modal = "Nie jeste\u015B jeszcze zalogowany.",      # deprecated
+ logout_mod_t = "Wylogowano",
+ logout_mod_b = "Pomy\u015Blnie wylogowano!"
 )
 
 # also - modify documentation in quetzio_server argument `lang`
