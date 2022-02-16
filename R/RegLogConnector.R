@@ -19,7 +19,7 @@ RegLogConnector = R6::R6Class(
     #' @field message reactiveVal containing outward message
     message = NULL,
     
-    #' @field logs list containing data about received and sent messages by the object
+    #' @field log list containing data about received and sent messages by the object
     log = list(),
     
     #' @field handlers named list containing functions used to handle different
@@ -41,8 +41,8 @@ RegLogConnector = R6::R6Class(
       }
     ),
     
-    #' @description Function to receive all saved logs from the object
-    #' 
+    #' @description Function to receive all saved logs from the object in the form
+    #' of single data.frame
     
     get_logs = function() {
       
@@ -96,60 +96,70 @@ RegLogConnector = R6::R6Class(
         RegLogConnectorMessage("ping")
       )
       # begin listening to the changes
-      self$listen(self, private)
+      private$listen(self, private)
     },
     
-    #' @desciption moduleServer that listens and reacts to changes in 
-    #' `RegLogServer`
+    #' @description Suspend the listening to the changes
+    suspend = function() {
+      if (!is.null(private$o) && isFALSE(private$o$.suspended))
+      private$o$suspend()
+    },
     
-    listen = function(self,
-                      private) {
-      
-      moduleServer(id = self$module_id,
-        
-        function(input, output, session) {
-          
-          private$o <- observe({
-            # receive the message
-            received_message <- self$listener()
-            # reacts only on certain objects passed to its listener
-            req(class(received_message) == "RegLogConnectorMessage" &&
-                  received_message$type %in% names(self$handlers))
-            isolate({
-              # save received message to the logs
-              self$log[[format(received_message$time, digits=15)]] <-
-                data.frame(session = session$token,
-                           direction = "received",
-                           type = as.character(received_message$type),
-                           note = if(is.null(received_message$logcontent)) "" else as.character(received_message$logcontent))
-              # call function, passing received message into it and assign
-              # returning message to sent
-              message_to_send <-
-                self$handlers[[
-                  # call function associated with correct message
-                  received_message$type
-                ]](self = self,
-                   private = private,
-                   message = received_message)
-              
-              # save sent message to the logs
-              self$log[[format(message_to_send$time, digits=15)]] <-
-                data.frame(session = session$token,
-                           direction = "sent",
-                           type = as.character(message_to_send$type),
-                           note = if(is.null(message_to_send$logcontent)) "" else as.character(message_to_send$logcontent))
-              
-              # send message to the reactiveVal
-              self$message(message_to_send)
-            })
-          })
-        })
-      }
+    #' @description Resume the listening to the changes
+    resume = function() {
+      if (!is.null(private$o) && isTRUE(private$o$.suspended))
+      private$o$resume()
+    }
+    
   ),
   private = list(
     
     # observer of listening moduleServer
-    o = NULL
+    o = NULL,
+    # moduleServer that listens and reacts to changes in `RegLogServer`
+    listen = function(self,
+                      private) {
+      
+      moduleServer(id = self$module_id,
+                   
+                   function(input, output, session) {
+                     
+                     private$o <- observe({
+                       # receive the message
+                       received_message <- self$listener()
+                       # reacts only on certain objects passed to its listener
+                       req(class(received_message) == "RegLogConnectorMessage" &&
+                             received_message$type %in% names(self$handlers))
+                       isolate({
+                         # save received message to the logs
+                         self$log[[format(received_message$time, digits=15)]] <-
+                           data.frame(session = session$token,
+                                      direction = "received",
+                                      type = as.character(received_message$type),
+                                      note = if(is.null(received_message$logcontent)) "" else as.character(received_message$logcontent))
+                         # call function, passing received message into it and assign
+                         # returning message to sent
+                         message_to_send <-
+                           self$handlers[[
+                             # call function associated with correct message
+                             received_message$type
+                           ]](self = self,
+                              private = private,
+                              message = received_message)
+                         
+                         # save sent message to the logs
+                         self$log[[format(message_to_send$time, digits=15)]] <-
+                           data.frame(session = session$token,
+                                      direction = "sent",
+                                      type = as.character(message_to_send$type),
+                                      note = if(is.null(message_to_send$logcontent)) "" else as.character(message_to_send$logcontent))
+                         
+                         # send message to the reactiveVal
+                         self$message(message_to_send)
+                       })
+                     })
+                   })
+    }
     
   )
 )

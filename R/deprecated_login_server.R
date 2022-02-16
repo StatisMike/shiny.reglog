@@ -148,7 +148,6 @@
 #'
 #' @export
 #' @import shiny
-NULL
 #' @import DBI
 #' @import RSQLite
 #'

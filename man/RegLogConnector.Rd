@@ -17,18 +17,11 @@ module_id for listener server module}
 
 \item{\code{message}}{reactiveVal containing outward message}
 
-\item{\code{logs}}{list containing data about received and sent messages by the object}
+\item{\code{log}}{list containing data about received and sent messages by the object}
 
 \item{\code{handlers}}{named list containing functions used to handle different
 types of \code{RegLogConnectorMessage}. Name of the element corresponds to
 the 'type' that is should handle.}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{logs}}{list containing data about received and sent messages by the object}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,7 +30,8 @@ the 'type' that is should handle.}
 \itemize{
 \item \href{#method-get_logs}{\code{RegLogConnector$get_logs()}}
 \item \href{#method-new}{\code{RegLogConnector$new()}}
-\item \href{#method-listen}{\code{RegLogConnector$listen()}}
+\item \href{#method-suspend}{\code{RegLogConnector$suspend()}}
+\item \href{#method-resume}{\code{RegLogConnector$resume()}}
 \item \href{#method-clone}{\code{RegLogConnector$clone()}}
 }
 }
@@ -45,7 +39,8 @@ the 'type' that is should handle.}
 \if{html}{\out{<a id="method-get_logs"></a>}}
 \if{latex}{\out{\hypertarget{method-get_logs}{}}}
 \subsection{Method \code{get_logs()}}{
-Function to receive all saved logs from the object
+Function to receive all saved logs from the object in the form
+of single data.frame
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RegLogConnector$get_logs()}\if{html}{\out{</div>}}
 }
@@ -84,11 +79,22 @@ object of \code{RegLogConnector} class
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-listen"></a>}}
-\if{latex}{\out{\hypertarget{method-listen}{}}}
-\subsection{Method \code{listen()}}{
+\if{html}{\out{<a id="method-suspend"></a>}}
+\if{latex}{\out{\hypertarget{method-suspend}{}}}
+\subsection{Method \code{suspend()}}{
+Suspend the listening to the changes
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RegLogConnector$listen(self, private)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RegLogConnector$suspend()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-resume"></a>}}
+\if{latex}{\out{\hypertarget{method-resume}{}}}
+\subsection{Method \code{resume()}}{
+Resume the listening to the changes
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RegLogConnector$resume()}\if{html}{\out{</div>}}
 }
 
 }

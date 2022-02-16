@@ -22,7 +22,7 @@ DBI_login_handler <- function(self, private, message) {
     # if don't return any, then nothing happened
     
     RegLogConnectorMessage(
-      "login", username = FALSE, password = FALSE,
+      "login", success = FALSE, username = FALSE, password = FALSE,
       logcontent = paste(message$data$username, "don't exist")
     )
     
@@ -33,14 +33,17 @@ DBI_login_handler <- function(self, private, message) {
       # if success: user logged in
       
       RegLogConnectorMessage(
-        "login", username = TRUE, password = TRUE,
+        "login", success = TRUE, username = TRUE, password = TRUE,
+        user_id = user_data$username,
+        user_mail = user_data$email,
         logcontent = paste(message$data$username, "logged in")
       )
       
     } else {
+      # if else: the password didn't match
     
       RegLogConnectorMessage(
-        "login", username = TRUE, password = FALSE,
+        "login", success = FALSE, username = TRUE, password = FALSE,
         logcontent = paste(message$data$username, "bad pass")
       )
     }
@@ -79,7 +82,7 @@ DBI_register_handler = function(self, private, message) {
   } else {
     # if query returns no data register new
     sql <- paste0("INSERT INTO ", private$db_tables[1], 
-                  " (username, password, email, create_time, modify_time) VALUES (?, ?, ?, ?, ?)")
+                  " (username, password, email, create_time, update_time) VALUES (?, ?, ?, ?, ?)")
     query <- DBI::sqlInterpolate(private$db_conn, sql, 
                                  message$data$username, 
                                  scrypt::hashPassword(message$data$password),
@@ -197,8 +200,8 @@ DBI_creds_edit_handler <- function(self, private, message) {
 
         } else {
           # if nothing is returned, update can be made!
-          update_query <- paste("UPDATE", private$db_tables[1], "SET modify_time = ?modify_time")
-          interpolate_vals <- list("modify_time" = as.character(Sys.time()))
+          update_query <- paste("UPDATE", private$db_tables[1], "SET update_time = ?update_time")
+          interpolate_vals <- list("update_time" = as.character(Sys.time()))
           # for every field to update popupalte query and interpolate vals
           if (!is.null(message$data$new_username)) {
             update_query <- paste(update_query, "username = ?username", sep = ", ")

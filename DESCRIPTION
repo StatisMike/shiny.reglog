@@ -25,7 +25,7 @@ Suggests:
     knitr,
     rmarkdown
 License: 
-	GPL-3
+	MIT
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

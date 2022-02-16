@@ -51,11 +51,7 @@ RegLogDBIConnector = R6::R6Class(
   ),
   # public elements ####
   public = list(
-    #' @field module_id
-    #' @description character vector specifying the automatically-generated
-    #' module_id for listener server module
-    module_id = NULL,
-    
+
     #' @description Initialization of the object. Creates initial connection
     #' to the database.
     #' 
@@ -82,6 +78,8 @@ RegLogDBIConnector = R6::R6Class(
       # append default handlers
       self$handlers[["login"]] <- DBI_login_handler
       self$handlers[["register"]] <- DBI_register_handler
+      self$handlers[["creds_edit"]] <- DBI_creds_edit_handler
+      
       
       super$initialize(custom_handlers = custom_handlers)
       # store the arguments internally

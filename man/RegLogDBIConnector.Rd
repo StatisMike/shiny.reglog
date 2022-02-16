@@ -23,7 +23,8 @@ Provides methods than will be used by RegLogServer to get and send data.
 \out{<details open ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="get_logs">}\href{../../shiny.reglog/html/RegLogConnector.html#method-get_logs}{\code{shiny.reglog::RegLogConnector$get_logs()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="listen">}\href{../../shiny.reglog/html/RegLogConnector.html#method-listen}{\code{shiny.reglog::RegLogConnector$listen()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="resume">}\href{../../shiny.reglog/html/RegLogConnector.html#method-resume}{\code{shiny.reglog::RegLogConnector$resume()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="suspend">}\href{../../shiny.reglog/html/RegLogConnector.html#method-suspend}{\code{shiny.reglog::RegLogConnector$suspend()}}\out{</span>}
 }
 \out{</details>}
 }
@@ -31,10 +32,6 @@ Provides methods than will be used by RegLogServer to get and send data.
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-character vector specifying the automatically-generated
-module_id for listener server module
-
-
 Initialization of the object. Creates initial connection
 to the database.
 \subsection{Usage}{
