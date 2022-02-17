@@ -18,7 +18,8 @@ DBI_login_handler(self, private, message)
 }}
 }
 \description{
-DBI login handler
+Default handler function querying database to confirm login
+procedure. Used within object of \code{RegLogDBIConnector} class internally.
 }
 \seealso{
 Other DBI handler functions: 

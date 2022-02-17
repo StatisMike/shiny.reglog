@@ -30,6 +30,8 @@ RegLogServer <- R6::R6Class(
     dbConnector = NULL,
     #' @field mailConnector `RegLogConnector` object used for sending emails.
     mailConnector = NULL,
+    #' @field log list containing all messages send and received
+    log = list(),
     
     #' @description Initialize 'ReglogServer' moduleServer
     #' 
@@ -126,17 +128,31 @@ RegLogServer <- R6::R6Class(
         )
         private$listener(message_to_send)
       }
+    },
+    
+    #' @description Method to receive all saved logs from the object in the form
+    #' of single data.frame
+    #' @return data.frame
+    
+    get_logs = function() {
+      
+      as.data.frame(data.table::rbindlist(self$logs))
+      
     }
     
   ),
   
   private = list(
+    # simple private objects ####
     use_modals = NULL,
     lang = NULL,
     custom_txts = NULL,
     app_name = NULL,
     app_address = NULL,
     listener = NULL,
+    app_address_reactVal = NULL,
+    
+    # private functions ####
     
     launch_module = function() {
       RegLogServer_frontend(self = self, private = private)
@@ -171,6 +187,12 @@ RegLogServer_listener <- function(
         # receive the message
         received_message <- private$listener()
         req(class(received_message) == "RegLogConnectorMessage") 
+        req(received_message$type %in% c("logout"))
+        # save the message to the logs
+        save_to_logs(received_message,
+                     "received",
+                     self,
+                     session)        
         
         ## switches for different reactions ####
         isolate({
@@ -198,10 +220,7 @@ RegLogServer_listener <- function(
               self$message(received_message)
             }
           )
-          
         })
-        
-        
       })
       
       # observe changes in dbConnector ####
@@ -213,9 +232,15 @@ RegLogServer_listener <- function(
         # receive the message
         received_message <- self$dbConnector$message()
         req(class(received_message) == "RegLogConnectorMessage")
+        req(!received_message$type %in% c("logout"))
         
         ## switches for different reactions ####
         isolate({
+          # save the received message to logs
+          save_to_logs(received_message,
+                       "received",
+                       self,
+                       session)
           switch(
             received_message$type,
             
@@ -227,39 +252,30 @@ RegLogServer_listener <- function(
                 # user doesn't exist:
                 if (!received_message$data$username) {
                   # show the modal if configuration allows
-                  if (modals_check(private, "login_BadId")) {
+                  if (modals_check(private, "login_badId")) {
                     showModal(
                       modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_t"),
                                   p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_1")),
                                   p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nforun_2")),
                                   footer = modalButton("OK")))
                   }
-                  
-                  # expose the message to the outside
-                  self$message(received_message)
                 } else {
                   # if the password is wrong
-                  if (modals_check(private, "login_BadPass")) {
+                  if (modals_check(private, "login_badPass")) {
                     showModal(
                       modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_wrong_pass_t"),
                                   p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_wrong_pass_b")),
                                   footer = modalButton("OK")))
                   }
-                  
-                  #expose the message to the outside
-                  self$message(received_message)
                 }
               } else {
                 # if login is successful
-                if (modals_check(private, "login_Success")) {
+                if (modals_check(private, "login_success")) {
                   showModal(
                     modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_succ_t"),
                                 p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_succ_b")),
                                 footer = modalButton("OK")))
                 }
-                
-                #expose the message to the outside
-                self$message(received_message)
                 
                 # change the log-in state
                 self$is_logged(TRUE)
@@ -272,10 +288,22 @@ RegLogServer_listener <- function(
             ## register messages reactions ####
             register = {
               
-              
-              
-              
-              
+              # if registration is successful
+              if (received_message$success) {
+                # show modal if enabled
+                if (modals_check(private, "register_success")) {
+                  showModal(
+                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_succ_t"),
+                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_succ_b")),
+                                footer = modalButton("OK")))
+                }
+                # send message over to the mailConnector
+                self$mailConnector$listener(received_message)
+                save_to_logs(received_message,
+                             "sent",
+                             self,
+                             session)
+              }
             },
             
             ## data edit messages reactions ####
@@ -295,6 +323,10 @@ RegLogServer_listener <- function(
             }
             
           )
+          
+          #expose the message to the outside
+          self$message(received_message)
+          
         })
       })
     })
@@ -387,9 +419,11 @@ RegLogServer_backend <- function(
       self$user_mail <- reactiveVal("")
       private$listener <- reactiveVal()
       
-      # if (is.null(private$app_address)) {
-      #   private$app_address <- get_url_shiny(session = getDefaultReactiveDomain())
-      # }
+      observe(
+        if (is.null(private$app_address)) {
+         private$app_address <- get_url_shiny(session = session)
+        }
+      )
       
       # login UI reactions ####
       
@@ -410,14 +444,79 @@ RegLogServer_backend <- function(
           
           self$dbConnector$listener(message_to_sent)
           
+          # save into logs
+          save_to_logs(message_to_sent,
+                       "sent",
+                       self,
+                       session)
+          
         }
         
       })
       
       # register UI reactions ####
       
-      
-      
+      observeEvent(input$register_bttn, {
+        
+        # check if the inputs are filled
+        req(input$register_user_ID, input$register_email, input$register_pass1, input$register_pass2)
+        
+        on.exit(.blank_textInputs(inputs = c("register_pass1", "register_pass2"),
+                                  session = session))
+        
+        # check validity of login
+        if (!check_user_login(input$register_user_ID)) {
+          
+          showModal(
+            modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_t"),
+                        p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_b")),
+                        footer = modalButton("OK")))
+          
+          # check validity of email
+        } else if (!check_user_mail(input$register_email)) {
+          
+          showModal(
+            modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_t"),
+                        p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_b")),
+                        footer = modalButton("OK")))
+          
+          # check validity of password
+        } else if (!check_user_pass(input$register_pass1)) {
+          
+          showModal(
+            modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_t"),
+                        p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_b")),
+                        footer = modalButton("OK")))
+          
+          # check if passwords are the same
+        } else if (input$register_pass1 != input$register_pass2) {
+          
+          showModal(
+            modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_t"),
+                        p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_b")),
+                        footer = modalButton("OK")))
+          
+          # if everything is OK - send the message
+        } else {
+          
+          message_to_send <- RegLogConnectorMessage(
+            type = "register",
+            username = input$register_user_ID,
+            password = input$register_pass1,
+            email = input$register_email,
+            logcontent = paste0(input$register_user_ID, "/", input$register_email)
+          )
+          
+          self$dbConnector$listener(message_to_send)
+          
+          # save into logs
+          save_to_logs(message_to_sent,
+                       "sent",
+                       self,
+                       session)
+          
+        }
+      })
     }
   )
 }

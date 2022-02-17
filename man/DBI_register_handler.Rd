@@ -19,7 +19,8 @@ DBI_register_handler(self, private, message)
 }}
 }
 \description{
-DBI register handler
+Default handler function querying database to confirm registration
+validity and input new data. Used within object of \code{RegLogDBIConnector} class internally.
 }
 \seealso{
 Other DBI handler functions: 

@@ -29,6 +29,8 @@ describing the latest change in the state of the system.}
 database.}
 
 \item{\code{mailConnector}}{\code{RegLogConnector} object used for sending emails.}
+
+\item{\code{log}}{list containing all messages send and received}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,6 +39,7 @@ database.}
 \itemize{
 \item \href{#method-new}{\code{RegLogServer$new()}}
 \item \href{#method-logout}{\code{RegLogServer$logout()}}
+\item \href{#method-get_logs}{\code{RegLogServer$get_logs()}}
 \item \href{#method-clone}{\code{RegLogServer$clone()}}
 }
 }
@@ -105,6 +108,20 @@ Method logging out logged user
 \if{html}{\out{<div class="r">}}\preformatted{RegLogServer$logout()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_logs"></a>}}
+\if{latex}{\out{\hypertarget{method-get_logs}{}}}
+\subsection{Method \code{get_logs()}}{
+Method to receive all saved logs from the object in the form
+of single data.frame
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RegLogServer$get_logs()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+data.frame
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

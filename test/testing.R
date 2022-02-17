@@ -1,11 +1,25 @@
 library(shiny.reglog)
 
 ui <- fluidPage(
-  RegLog_login_UI(),
-  actionButton("browser",
-               "Browser"),
-  actionButton("logout",
-               "Log out")
+  fluidRow(
+    column(4,
+           RegLog_login_UI(),
+           actionButton("logout",
+                        "Log out")),
+    column(4,
+           RegLog_register_UI()),
+    column(4, 
+           RegLog_resetPass_send_code_UI(),
+           RegLog_resetPass_confirm_code_UI())
+  ),
+  fluidRow(
+    tags$h1("Debug"),
+    actionButton("browser",
+                 "Browser"),
+    actionButton("logout",
+                 "Log out"),
+    verbatimTextOutput("state") 
+  )
 )
 
 server <- function(input, output, session) {
@@ -29,6 +43,8 @@ server <- function(input, output, session) {
   observeEvent(input$browser, browser())
   
   observeEvent(input$logout, RegLog$logout())
+  
+  output$state <- renderPrint(RegLog$message())
   
 }
 

@@ -53,6 +53,9 @@ and \code{message} of class \code{RegLogConnectorMessage}. It should return
 return \code{RegLogConnectorMessage} object
 }
 
+\subsection{Returns}{
+data.frame
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}

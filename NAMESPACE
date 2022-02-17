@@ -3,6 +3,7 @@
 export(RegLogConnector)
 export(RegLogConnectorMessage)
 export(RegLogDBIConnector)
+export(RegLogEmayiliConnector)
 export(RegLogServer)
 export(RegLog_edit_UI)
 export(RegLog_login_UI)

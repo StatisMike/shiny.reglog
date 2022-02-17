@@ -25,7 +25,9 @@ It can also contain elements for change:
 }}
 }
 \description{
-DBI edit to the database handler
+Default handler function querying database to confirm credentials
+edit procedure and update values saved within database. Used within object of
+\code{RegLogDBIConnector} class internally.
 }
 \seealso{
 Other DBI handler functions: 

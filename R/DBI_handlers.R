@@ -1,4 +1,8 @@
 #' DBI login handler
+#' 
+#' @description Default handler function querying database to confirm login 
+#' procedure. Used within object of `RegLogDBIConnector` class internally.
+#' 
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which should contain within its data:
@@ -41,7 +45,7 @@ DBI_login_handler <- function(self, private, message) {
       
     } else {
       # if else: the password didn't match
-    
+      
       RegLogConnectorMessage(
         "login", success = FALSE, username = TRUE, password = FALSE,
         logcontent = paste(message$data$username, "bad pass")
@@ -51,6 +55,10 @@ DBI_login_handler <- function(self, private, message) {
 }
 
 #' DBI register handler
+#' 
+#' @description Default handler function querying database to confirm registration 
+#' validity and input new data. Used within object of `RegLogDBIConnector` class internally.
+#' 
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which should contain within its data:
@@ -72,13 +80,13 @@ DBI_register_handler = function(self, private, message) {
   
   if (nrow(user_data) > 0) {
     # if query returns data don't register new
-      RegLogConnectorMessage(
-        "register", 
-        success = FALSE, 
-        username = message$data$username %in% user_data$username,
-        email = message$data$email %in% user_data$email,
-        logcontent = paste(message$data$username, "or", message$data$email, "in db")
-      )
+    RegLogConnectorMessage(
+      "register", 
+      success = FALSE, 
+      username = !message$data$username %in% user_data$username,
+      email = !message$data$email %in% user_data$email,
+      logcontent = paste(message$data$username, "or", message$data$email, "in db")
+    )
   } else {
     # if query returns no data register new
     sql <- paste0("INSERT INTO ", private$db_tables[1], 
@@ -94,13 +102,19 @@ DBI_register_handler = function(self, private, message) {
     
     RegLogConnectorMessage(
       "register", 
-      success = TRUE, 
-      logcontent = paste(message$data$username, "with", message$data$email, "registered")
+      success = TRUE, username = TRUE, email = TRUE,
+      user_id = message$data$username,
+      user_mail = message$data$email,
+      logcontent = paste(message$data$username, message$data$email, sep = "/")
     )
   }
 }
 
 #' DBI edit to the database handler
+#' 
+#' @description Default handler function querying database to confirm credentials
+#' edit procedure and update values saved within database. Used within object of 
+#' `RegLogDBIConnector` class internally.
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which need to contain within its data:
@@ -197,7 +211,7 @@ DBI_creds_edit_handler <- function(self, private, message) {
                    if (!message_to_send$data$new_email) " email", "." )
           
           message_to_send
-
+          
         } else {
           # if nothing is returned, update can be made!
           update_query <- paste("UPDATE", private$db_tables[1], "SET update_time = ?update_time")
@@ -227,8 +241,8 @@ DBI_creds_edit_handler <- function(self, private, message) {
             "creds_edit", success = TRUE,
             username = TRUE, password = TRUE,
             logcontent = paste(message$data$username, "updated",
-                                paste(names(interpolate_vals)[c(-1, -length(interpolate_vals))],
-                                      collapse = ", "))
+                               paste(names(interpolate_vals)[c(-1, -length(interpolate_vals))],
+                                     collapse = ", "))
           )
         }
       }
