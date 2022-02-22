@@ -1,0 +1,146 @@
+---
+title: "RegLogServer object fields and methods"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{RegLogServer object fields and methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## About R6 and specifically RegLogServer Class
+
+*R6* is the alternative class system available for **R** users. It is more driven towards
+Object Oriented Programming vs Functional Programming that is most known to **R** users
+via built-in *S3* class system.
+
+*R6* is ideal for creating more complex systems - it keeps all their elements enclosed
+in their own environment. Most of **R** users actually uses *R6* objects on
+daily basis: eg. the whole *Shiny* system is built as system of *R6* objects.
+
+Basically, all there is to know about *R6* system in regards to *shiny.reglog*
+usage is, that:
+
+- all modules available in *shiny.reglog* are *R6* classes:
+  - *RegLogServer*
+  - dbConnectors - which are used by every *RegLogServer* to communicate with
+  database containing your user data.
+     - *RegLogDBIConnector*
+     - *RegLogGsheetConnector*
+  - mailConnectors - which are used by every *RegLogServer* to send emails to
+  users of your ShinyApp.
+     - *RegLogEmayiliConnector*
+     - *RegLogGmailConnector*
+  - vanilla *RegLogConnector*, that you can use to create your own *Connector*.
+- R6 objects after initialization have public elements, that can be accessed
+  with `$`. They can be either *fields*, holding some values, or *methods*
+  containing functions.
+  
+If you want to get to know more about R6 system as a whole I advise you to check
+out [articles created by R6 maintainers](https://r6.r-lib.org/articles/). Below
+I will talk more thoroughly about *RegLogServer* class and its public fields and
+methods.
+
+There are multiple public elements to *RegLogServer*. To keep them in order, I will
+describe them on basis of their usage. In all code chunks I will refer to them
+as if they would be called from an object assigned as *RegLogServer*:
+
+```{r setup, include=F}
+library(shiny.reglog)
+```
+
+```{r RegLogServer_assignement_example, eval = F}
+  RegLogServer <- RegLogServer$new(
+    dbConnector = dbConnector,
+    mailConnector = mailConnector
+  )
+```
+
+## State of user in current ShinyApp session
+
+Elements described there are the most important things that every creator of 
+ShinyApp that incorporates *shiny.reglog* should be using to profit from user
+login. All of them are `reactiveVal` objects, so you can `observe` their changes
+and to access their current value you need to include them with parentheses.
+
+### Check if the user in current session is logged in
+
+`is_logged` is a simple boolean value to check if the user in current session is 
+logged in (`TRUE`) or not (`FALSE`)
+
+```{r is_logged, eval = F}
+# observe the reactiveVal change
+observeEvent(RegLogServer$is_logged, {
+  
+  # if contains TRUE: user is currently logged-in
+  if (RegLogServer$is_logged()) {
+    showModal(modalDialog(title = "You are logged in!"))
+    # if contains FALSE: user isn't logged-in
+  } else {
+    showModal(modalDialog(title = "You are not logged in!"))
+  }
+})
+```
+
+### Current ID of the user
+
+`user_id` field (character string): unique user ID. When the user 
+isn't logged it contains generated at the start of the session (or after logout)
+*Universally Unique Identifier* (with the use of `uuid::UUIDgenerate()`).
+```{r uuid_example}
+uuid::UUIDgenerate()
+```
+After login it contains the username that the user have chosen during registration
+procedure.
+```{r user_id, eval = F}
+RegLogServer$user_id()
+```
+
+### Email address of the currently logged user
+
+`user_mail` field (character string): unique user email. When the user is logged in,
+it contains the email that is currently associated with their *user_id*. Otherwise,
+it contains empty character string (`""`).
+```{r user_mail, eval = F}
+RegLogServer$user_mail()
+```
+
+## Message
+
+`message` field is another `reactiveVal` value that can be used to observe
+**any** change of the *RegLogServer* object state. It always contains most recent object 
+of *S3* class **RegLogConnectorMessage**, that the *RegLogServer* received from its
+*dbConnector* or *mailConnector*, or was specifically generated to communicate
+specific status changes.
+
+Creation of custom logic depending on its change isn't at all necessary. It can
+be handy especially when for any reason you want to inhibit the default
+*modalDialog*s that are called by *RegLogServer* to inform end-user about
+consequences of their actions (eg. successful login or unsuccessful, because the
+inputed user ID or password is incorrect). 
+
+Every *RegLogConnectorMessage* is specific type of *list* and can contain up to 
+four elements:
+
+- **time**: numeric representation of `Sys.time()` when it was generated
+- **type**: indicates the type of the process during which the message was generated
+- **data**: *list* containing data that was send with this message. Values
+contained there can be specific to certain *type* of the message
+- **logcontent**: all *RegLogConnectorMessage*s send by and received by the
+*RegLogServer* object (and by every *RegLogConnector*) are appended to that
+object `log` field. Content there will be saved as a *note* in the logs.
+
+Below I want to characterize all types of *RegLogConnectorMessages* that can be
+exposed in the `RegLogServer$message()` field. Besides them there are also messages
+that are send by the *RegLogServer* to its *Connectors*. To learn more about these,
+read vignette **Creating custom RegLogConnector handlers**.
+
+### Type: **ping**
+
+The object that will be available in the 

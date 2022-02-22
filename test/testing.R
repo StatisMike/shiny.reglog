@@ -1,5 +1,13 @@
 library(shiny.reglog)
 
+mail_message <- RegLogConnectorMessage(
+  "register_mail",
+  username = "Testowy",
+  email = "mninten90@gmail.com",
+  mail_subject = "testing",
+  mail_body = "<p>I am testing this!</p>"
+)
+
 ui <- fluidPage(
   fluidRow(
     column(4,
@@ -33,11 +41,14 @@ server <- function(input, output, session) {
     dbname = "reglog_test"
   )
   
-  mockConnector <- RegLogConnector$new()
+  mailConnector <- RegLogEmayiliConnector$new(
+    from = "statismike@gmail.com",
+    smtp = emayili::gmail("statismike@gmail.com", Sys.getenv("STATISMIKE_GMAIL_PASS"))
+  )
   
   RegLog <- RegLogServer$new(
     dbConnector = dbConnector,
-    mailConnector = mockConnector
+    mailConnector = mailConnector
   )
   
   observeEvent(input$browser, browser())

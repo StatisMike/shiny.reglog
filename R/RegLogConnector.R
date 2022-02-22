@@ -35,8 +35,8 @@ RegLogConnector = R6::R6Class(
       ping = function(self, private, message) {
         
         RegLogConnectorMessage(
-          "response",
-          response_time = as.numeric(Sys.time()) - message$time 
+          "ping",
+          response_time = as.numeric(Sys.time()) - message$time
         )
       }
     ),

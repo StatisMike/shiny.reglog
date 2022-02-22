@@ -80,13 +80,22 @@ DBI_register_handler = function(self, private, message) {
   
   if (nrow(user_data) > 0) {
     # if query returns data don't register new
-    RegLogConnectorMessage(
+    message_to_send <- RegLogConnectorMessage(
       "register", 
       success = FALSE, 
       username = !message$data$username %in% user_data$username,
-      email = !message$data$email %in% user_data$email,
-      logcontent = paste(message$data$username, "or", message$data$email, "in db")
-    )
+      email = !message$data$email %in% user_data$email)
+    
+    if (!message_to_send$data$username && !message_to_send$data$email) {
+      message_to_send$logcontent <- paste0(message$data$username, "/", message$data$email, " conflict")
+    } else if (!message_to_send$data$username) {
+      message_to_send$logcontent <- paste(message$data$username, "conflict")
+    } else if (!message_to_send$data$email) {
+      message_to_send$logcontent <- paste(message$data$email, "conflict")
+    }
+    
+    return(message_to_send)
+    
   } else {
     # if query returns no data register new
     sql <- paste0("INSERT INTO ", private$db_tables[1], 
@@ -100,12 +109,14 @@ DBI_register_handler = function(self, private, message) {
     
     DBI::dbSendQuery(private$db_conn, query)
     
-    RegLogConnectorMessage(
-      "register", 
-      success = TRUE, username = TRUE, email = TRUE,
-      user_id = message$data$username,
-      user_mail = message$data$email,
-      logcontent = paste(message$data$username, message$data$email, sep = "/")
+    return(
+      RegLogConnectorMessage(
+        "register", 
+        success = TRUE, username = TRUE, email = TRUE,
+        user_id = message$data$username,
+        user_mail = message$data$email,
+        logcontent = paste(message$data$username, message$data$email, sep = "/")
+      )
     )
   }
 }
@@ -145,8 +156,8 @@ DBI_creds_edit_handler <- function(self, private, message) {
   if (nrow(user_data) == 0) {
     # if don't return any, then nothing happens
     
-    RegLogConnectorMessage(
-      "creds_edit", success = FALSE, username = FALSE, password = FALSE,
+    message_to_send <- RegLogConnectorMessage(
+      "credsEdit", success = FALSE, username = FALSE, password = FALSE,
       logcontent = paste(message$data$username, "don't exist")
     )
     
@@ -156,8 +167,8 @@ DBI_creds_edit_handler <- function(self, private, message) {
     if (isFALSE(scrypt::verifyPassword(user_data$password, message$data$password))) {
       # if FALSE: don't allow changes
       
-      RegLogConnectorMessage(
-        "creds_edit", success = FALSE, username = TRUE, password = FALSE,
+      message_to_send <- RegLogConnectorMessage(
+        "credsEdit", success = FALSE, username = TRUE, password = FALSE,
         logcontent = paste(message$data$username, "bad pass")
       )
       
@@ -199,18 +210,16 @@ DBI_creds_edit_handler <- function(self, private, message) {
         if (nrow(user_data) > 0) {
           
           message_to_send <- RegLogConnectorMessage(
-            "creds_edit", success = FALSE,
+            "credsEdit", success = FALSE,
             username = TRUE, password = TRUE,
             # if there is a conflict, these returns FALSE
             new_username = !isTRUE(message$data$new_username %in% user_data$username),
-            new_email = !isTRUE(message$data$new_email %in% user_data$email))
+            new_mail = !isTRUE(message$data$new_email %in% user_data$email))
           
           message_to_send$logcontent <-
             paste0(message$data$username, " conflict:",
                    if (!message_to_send$data$new_username) " username",
                    if (!message_to_send$data$new_email) " email", "." )
-          
-          message_to_send
           
         } else {
           # if nothing is returned, update can be made!
@@ -237,9 +246,12 @@ DBI_creds_edit_handler <- function(self, private, message) {
           
           DBI::dbSendQuery(private$db_conn, query)
           
-          RegLogConnectorMessage(
-            "creds_edit", success = TRUE,
+          message_to_send <- RegLogConnectorMessage(
+            "credsEdit", success = TRUE,
             username = TRUE, password = TRUE,
+            new_user_id = message$data$new_username,
+            new_user_mail = message$data$new_mail,
+            new_user_pass = if(!is.null(message$data$new_password)) TRUE else NULL,
             logcontent = paste(message$data$username, "updated",
                                paste(names(interpolate_vals)[c(-1, -length(interpolate_vals))],
                                      collapse = ", "))
@@ -248,4 +260,7 @@ DBI_creds_edit_handler <- function(self, private, message) {
       }
     }
   }
+  
+  return(message_to_send)
+  
 }

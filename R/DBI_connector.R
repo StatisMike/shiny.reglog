@@ -78,8 +78,8 @@ RegLogDBIConnector = R6::R6Class(
       # append default handlers
       self$handlers[["login"]] <- DBI_login_handler
       self$handlers[["register"]] <- DBI_register_handler
-      self$handlers[["creds_edit"]] <- DBI_creds_edit_handler
-      # self$handlers[["reset_pass"]] <- DBI_reset_pass_handler
+      self$handlers[["credsEdit"]] <- DBI_creds_edit_handler
+      # self$handlers[["resetPass"]] <- DBI_reset_pass_handler
       
       
       super$initialize(custom_handlers = custom_handlers)

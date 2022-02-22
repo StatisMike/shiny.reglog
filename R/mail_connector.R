@@ -19,6 +19,11 @@ RegLogEmayiliConnector <- R6::R6Class(
     #' @param from Character containing content in `from` of the email.
     #' @param smtp Object created by `emayili::server` or all its similiar
     #' functions.
+    #' @param lang character specyfiyng which language to use for all texts
+    #' generated in the UI. Defaults to 'en' for English. Currently 'pl' for
+    #' Polish is also supported.
+    #' @param custom_txts named list containing character strings with custom
+    #' messages. Defaults to NULL, so all built-in strings will be used.
     #' @param custom_handlers named list of custom handler functions. Custom handler
     #' should take arguments: `self` and `private` - relating to the R6 object
     #' and `message` of class `RegLogConnectorMessage`. It should return
@@ -26,12 +31,14 @@ RegLogEmayiliConnector <- R6::R6Class(
     initialize = function(
       from,
       smtp,
-      custom_handlers
+      lang = "en",
+      custom_txts = NULL,
+      custom_handlers = NULL
     ) {
       
       # append default handlers
-      # self$handlers[["register_mail"]] <- emayili_register_handler
-      # self$handlers[["reset_pass_mail"]] <- emayili_resetPass_handler
+      self$handlers[["register_mail"]] <- emayili_register_handler
+      self$handlers[["reset_pass_mail"]] <- emayili_resetPass_handler
       
       # append all custom handlers
       super$initialize(custom_handlers = custom_handlers)
@@ -39,6 +46,9 @@ RegLogEmayiliConnector <- R6::R6Class(
       # save smtp server for sending
       private$smtp <- smtp
       private$from <- from
+      
+      private$custom_txts <- custom_txts
+      private$lang <- lang
       
       # assign the unique ID for the module
       self$module_id <- uuid::UUIDgenerate()
@@ -48,6 +58,8 @@ RegLogEmayiliConnector <- R6::R6Class(
   
   private = list(
     smtp = NULL,
-    from = NULL
+    from = NULL,
+    custom_txts = NULL,
+    lang = NULL
   )
 )

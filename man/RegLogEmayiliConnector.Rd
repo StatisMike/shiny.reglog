@@ -34,7 +34,13 @@ confirming the registration and containing code for password reset procedure.
 Initialization of the object. Creates smtp server for email
 sending.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RegLogEmayiliConnector$new(from, smtp, custom_handlers)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RegLogEmayiliConnector$new(
+  from,
+  smtp,
+  lang = "en",
+  custom_txts = NULL,
+  custom_handlers = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -44,6 +50,13 @@ sending.
 
 \item{\code{smtp}}{Object created by \code{emayili::server} or all its similiar
 functions.}
+
+\item{\code{lang}}{character specyfiyng which language to use for all texts
+generated in the UI. Defaults to 'en' for English. Currently 'pl' for
+Polish is also supported.}
+
+\item{\code{custom_txts}}{named list containing character strings with custom
+messages. Defaults to NULL, so all built-in strings will be used.}
 
 \item{\code{custom_handlers}}{named list of custom handler functions. Custom handler
 should take arguments: \code{self} and \code{private} - relating to the R6 object

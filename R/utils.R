@@ -16,7 +16,7 @@ get_url_shiny <- function(session) {
 
 modals_check <- function(private, modalname) {
   
-  isTRUE(private$use_modals) || (is.list(private$use_modals) && isTRUE(private$use_modals[[modalname]]))
+  isTRUE(private$use_modals) || (is.list(private$use_modals) && !isFALSE(private$use_modals[[modalname]]))
   
 }
 
@@ -47,4 +47,20 @@ save_to_logs <- function(message, direction, self, session) {
                type = as.character(message$type),
                note = if(is.null(message$logcontent)) "" else as.character(message$logcontent))
   
+}
+
+#' function to replace multiple values in string
+#' @param x string to make replacements on
+#' @param to_replace named list of character strings to replace
+#' @noRd
+
+string_interpolate <- function(x, to_replace) {
+  
+  look_for <- paste0("?", names(to_replace), "?")
+  
+  for (i in seq_along(look_for)) {
+    x <- gsub(x = x, pattern = look_for[i], replacement = to_replace[[i]], fixed = T)
+  }
+  
+  return(x)
 }
