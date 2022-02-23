@@ -178,7 +178,7 @@ RegLogServer_listener <- function(
 
               # if data change is successful              
               if (received_message$data$success) {
-                if (modals_check(private, "credEdit_success")) {
+                if (modals_check(private, "credsEdit_success")) {
                   showModal(
                     modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "credEdit_mod_succ_t"),
                                 p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "credEdit_mod_succ_b")),
@@ -192,7 +192,38 @@ RegLogServer_listener <- function(
                 }
                 # if there were any conflicts
               } else {
-                # if (!is.null())
+                if (isFALSE(received_message$data$username)) {
+                  if (modals_check(private, "credsEdit_badId")) {
+                    showModal(
+                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_t"),
+                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_1")),
+                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nforun_2")),
+                                  footer = modalButton("OK")))
+                  }
+                } else if (isFALSE(received_message$data$password)) {
+                  if (modals_check(private, "credsEdit_badPass")) {
+                    showModal(
+                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_wrong_pass_t"),
+                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_wrong_pass_b")),
+                                  footer = modalButton("OK")))
+                  }
+                } else if (isFALSE(received_message$data$new_username)) {
+                  if (modals_check(private, "credsEdit_existingID")) {
+                    showModal(
+                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1_t"),
+                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1_b")),
+                                  footer = modalButton("OK"))
+                    )
+                  }
+                } else if (isFALSE(received_message$data$new_email)) {
+                  if (modals_check(private, "credsEdit_existingMail")) {
+                    showModal(
+                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1m_t"),
+                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1m_b")),
+                                  footer = modalButton("OK"))
+                    )
+                  }
+                }
                 
                 
                 

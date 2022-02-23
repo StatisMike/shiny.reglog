@@ -28,3 +28,4 @@ Other DBI handler functions:
 \code{\link{DBI_login_handler}()}
 }
 \concept{DBI handler functions}
+\keyword{internal}

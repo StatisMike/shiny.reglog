@@ -36,7 +36,8 @@ RegLogConnector = R6::R6Class(
         
         RegLogConnectorMessage(
           "ping",
-          response_time = as.numeric(Sys.time()) - message$time
+          response_time = as.numeric(Sys.time()) - message$time,
+          logcontent = if (!is.null(message$logcontent)) message$logcontent else ""
         )
       }
     ),
@@ -90,11 +91,11 @@ RegLogConnector = R6::R6Class(
       
       # initialize listener
       self$listener <- reactiveVal(
-        RegLogConnectorMessage("ping")
+        RegLogConnectorMessage("ping", logcontent = "init")
       )
       # initialize message
       self$message <- reactiveVal(
-        RegLogConnectorMessage("ping")
+        RegLogConnectorMessage("ping", logcontent = "init")
       )
       # begin listening to the changes
       private$listen(self, private)

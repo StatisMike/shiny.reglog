@@ -45,7 +45,7 @@ RegLog_edit_UI <- function(module_id = "login_system") {
   
   ns <- NS(module_id)
   
-  uiOutput(ns("edit_ui"))
+  uiOutput(ns("creds_edit_ui"))
   
 }
 

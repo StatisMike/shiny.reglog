@@ -27,3 +27,4 @@ Other DBI handler functions:
 \code{\link{DBI_register_handler}()}
 }
 \concept{DBI handler functions}
+\keyword{internal}

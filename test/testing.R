@@ -17,8 +17,7 @@ ui <- fluidPage(
     column(4,
            RegLog_register_UI()),
     column(4, 
-           RegLog_resetPass_send_code_UI(),
-           RegLog_resetPass_confirm_code_UI())
+           RegLog_edit_UI())
   ),
   fluidRow(
     tags$h1("Debug"),

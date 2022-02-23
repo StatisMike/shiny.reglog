@@ -175,7 +175,7 @@ RegLogServer_backend <- function(
       })
       
       # creds edit password change ####
-      observeEvent(input$cred_edit_pass_change) {
+      observeEvent(input$cred_edit_pass_change, {
         
         # check if the inputs are filled
         req(input$cred_edit_old_ID, input$cred_edit_old_pass, 
@@ -183,7 +183,7 @@ RegLogServer_backend <- function(
         
         if (!check_user_pass(input$cred_edit_new_pass1)) {
           
-          if (modals_check(private, "credEdit_nonValidPass")) {
+          if (modals_check(private, "credsEdit_nonValidPass")) {
             showModal(
               modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_t"),
                           p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_b")),
@@ -192,7 +192,7 @@ RegLogServer_backend <- function(
           
           # parse message to show back in the self$message
           message_to_show <- RegLogConnectorMessage(
-            "credEdit_front",
+            "credsEdit_front",
             success = F, valid_pass = F, identical_pass = F 
           )
           
@@ -205,7 +205,7 @@ RegLogServer_backend <- function(
           # check if passwords are the same
         } else if (input$cred_edit_new_pass1 != input$cred_edit_new_pass2) {
           
-          if (modals_check(private, "credEdit_notIndenticalPass")) {
+          if (modals_check(private, "credsEdit_notIndenticalPass")) {
             showModal(
               modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_t"),
                           p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_b")),
@@ -214,7 +214,7 @@ RegLogServer_backend <- function(
           
           # parse message to show back in the self$message
           message_to_show <- RegLogConnectorMessage(
-            "credEdit_front",
+            "credsEdit_front",
             success = F, valid_pass = T, identical_pass = F 
           )
           
@@ -228,7 +228,7 @@ RegLogServer_backend <- function(
         } else {
           
           message_to_send <- RegLogConnectorMessage(
-            type = "credEdit",
+            type = "credsEdit",
             username = input$cred_edit_old_ID,
             password = input$cred_edit_old_pass,
             new_password = input$cred_edit_new_pass1,
@@ -243,7 +243,7 @@ RegLogServer_backend <- function(
                        self,
                        session)
         }
-      }
+      })
       
       # creds edit credentials change ####
       
@@ -255,18 +255,18 @@ RegLogServer_backend <- function(
         
         # create placeholder message to show with success
         message_to_show <- RegLogConnectorMessage(
-          "credEdit_front",
+          "credsEdit_front",
           success = T 
         )
         # create message to send
         message_to_send <- RegLogConnectorMessage(
-          "credEdit",
+          "credsEdit",
           username = input$cred_edit_old_ID,
           password = input$cred_edit_old_pass
         )
         
         ## check if there is an ID to change ####
-        if (req(input$cred_edit_new_ID)) {
+        if (isTruthy(input$cred_edit_new_ID)) {
           
           # if ID is not valid
           if (!check_user_login(input$cred_edit_new_ID)) {
@@ -280,7 +280,7 @@ RegLogServer_backend <- function(
         }
 
         ## check if there is an email to change ####
-        if (req(input$cred_edit_new_mail)) {
+        if (isTruthy(input$cred_edit_new_mail)) {
           
           # if mail is not valid
           if (!check_user_mail(input$cred_edit_new_mail)) {
@@ -297,18 +297,18 @@ RegLogServer_backend <- function(
         if (!message_to_show$data$success) {
           
           if (isFALSE(message_to_show$data$valid_ID)) {
-            if (modals_check(private, "credEdit_nonValidID")) {
+            if (modals_check(private, "credsEdit_nonValidID")) {
               showModal(
-                modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err2_t"),
-                            p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err2_b")),
+                modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_t"),
+                            p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_b")),
                             footer = modalButton("OK")))
             } 
           }
           if (isFALSE(message_to_show$data$valid_mail)) {
-            if (modals_check(private, "credEdit_nonValidMail")) {
+            if (modals_check(private, "credsEdit_nonValidMail")) {
               showModal(
-                modalDialog(title = reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err3_t"),
-                            p(reglog_txt(lang = lang, custom_txts = custom_txts, x = "reg_mod_err3_b")),
+                modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_t"),
+                            p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_b")),
                             footer = modalButton("OK")))
             }
           }
