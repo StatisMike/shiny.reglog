@@ -41,7 +41,7 @@ RegLog_register_UI <- function(module_id = "login_system") {
 #' @import shiny
 #' @export
 
-RegLog_edit_UI <- function(module_id = "login_system") {
+RegLog_credsEdit_UI <- function(module_id = "login_system") {
   
   ns <- NS(module_id)
   
@@ -49,44 +49,20 @@ RegLog_edit_UI <- function(module_id = "login_system") {
   
 }
 
-#' Generate ResetPass code send UI for RegLog system
+#' Generate ResetPass code UI for RegLog system
 #'  
 #' @param module_id Character declaring the id of the module. Defaults to 'login_system'.
 #' Recommended to keep it that way, unless it would cause any namespace issues.
 #'
-#' @details Password reset procedure needs two-step UI: firstly, provide username
-#' and email provided during registration. Secondly, provide reset code send via 
-#' email and new password. This function binds the UI for the first step.
 #'
 #' @family RegLog UI
 #' @import shiny
 #' @export
 
-RegLog_resetPass_send_code_UI <- function(module_id = "login_system") {
+RegLog_resetPass_UI <- function(module_id = "login_system") {
   
   ns <- NS(module_id)
   
-  uiOutput(ns("reset_send_ui"))
-  
-}
-
-#' Generate ResetPass code confirm UI for RegLog system
-#'  
-#' @param module_id Character declaring the id of the module. Defaults to 'login_system'.
-#' Recommended to keep it that way, unless it would cause any namespace issues.
-#' 
-#' @details Password reset procedure needs two-step UI: firstly, provide username
-#' and email provided during registration. Secondly, provide reset code send via 
-#' email and new password. This function binds the UI for the second step.
-#'
-#' @family RegLog UI
-#' @import shiny
-#' @export
-
-RegLog_resetPass_confirm_code_UI <- function(module_id = "login_system") {
-  
-  ns <- NS(module_id)
-  
-  uiOutput(ns("reset_confirm_ui"))
+  uiOutput(ns("reset_pass_ui"))
   
 }

@@ -32,15 +32,15 @@ RegLogServer <- R6::R6Class(
     mailConnector = NULL,
     #' @field log list containing all messages send and received
     log = list(),
-    #' @field tagList_login reactiveVal holding the tagList of whole login UI
-    tagList_login = NULL,
-    #' @field tagList_resetPass reactiveVal holding the tagList of whole resetPass UI
-    tagList_resetPass = NULL,
-    #' @field tagList_credsEdit reactiveVal holding the tagList of whole credentioals
+    #' @field UI_list_login reactiveVal holding the tagList of whole login UI
+    UI_list_login = NULL,
+    #' @field UI_list_resetPass reactiveVal holding the tagList of whole resetPass UI
+    UI_list_resetPass = NULL,
+    #' @field UI_list_credsEdit reactiveVal holding the tagList of whole credentioals
     #' edit UI
-    tagList_credsEdit = NULL,
-    #' @field tagList_register reactiveVal holding the tagList of whole register UI
-    tagList_register = NULL, 
+    UI_list_credsEdit = NULL,
+    #' @field UI_list_register reactiveVal holding the tagList of whole register UI
+    UI_list_register = NULL, 
     
     #' @description Initialize 'ReglogServer' moduleServer
     #' 

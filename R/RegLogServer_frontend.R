@@ -18,7 +18,7 @@ RegLogServer_frontend <- function(
       
       # create tagList for login ####
       observe(
-        self$tagList_login <- list(
+        self$UI_list_login <- list(
           title = h1("Login"),
           id_input = textInput(
             session$ns("login_user_id"),
@@ -37,12 +37,12 @@ RegLogServer_frontend <- function(
       
       # render UI for login and ease of usage ####
       output$login_ui <- renderUI(
-        tagList(self$tagList_login)
+        tagList(self$UI_list_login)
       )
       
       # create tagList for registration ####
       observe(
-        self$tagList_register <- list(
+        self$UI_list_register <- list(
           title = h1(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="register_ui_1")),
           description = p(
             reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="register_ui_2"),
@@ -73,12 +73,12 @@ RegLogServer_frontend <- function(
       
       # render UI for registration and ease of use ####
       output$register_ui <- renderUI(
-        tagList(self$tagList_register)
+        tagList(self$UI_list_register)
       )
       
       # create tagList for credentials edit ####      
       observe(
-        self$tagList_credsEdit <- list(
+        self$UI_list_credsEdit <- list(
           title = h1(
             reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "cred_edit_ui_h1")),
           h_current = h2(
@@ -124,13 +124,13 @@ RegLogServer_frontend <- function(
       
       # render UI for credentials edit ####
       output$creds_edit_ui <- renderUI(
-        tagList(self$tagList_credsEdit)
+        tagList(self$UI_list_credsEdit)
       )
       
       # create tagList for reset password procedure ####
       
       observe(
-        self$tagList_resetPass <- list(
+        self$UI_list_resetPass <- list(
           title = h1(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_ui_1")),
           desc1 = p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_ui_2")),
           user_ID = textInput(
@@ -160,8 +160,8 @@ RegLogServer_frontend <- function(
       )
       
       # render UI for reset password procedure ####
-      output$creds_edit_ui <- renderUI(
-        tagList(self$tagList_resetPass)
+      output$reset_pass_ui <- renderUI(
+        tagList(self$UI_list_resetPass)
       )
     }
   )

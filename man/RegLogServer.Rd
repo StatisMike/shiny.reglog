@@ -32,14 +32,14 @@ database.}
 
 \item{\code{log}}{list containing all messages send and received}
 
-\item{\code{tagList_login}}{reactiveVal holding the tagList of whole login UI}
+\item{\code{UI_list_login}}{reactiveVal holding the tagList of whole login UI}
 
-\item{\code{tagList_resetPass}}{reactiveVal holding the tagList of whole resetPass UI}
+\item{\code{UI_list_resetPass}}{reactiveVal holding the tagList of whole resetPass UI}
 
-\item{\code{tagList_credsEdit}}{reactiveVal holding the tagList of whole credentioals
+\item{\code{UI_list_credsEdit}}{reactiveVal holding the tagList of whole credentioals
 edit UI}
 
-\item{\code{tagList_register}}{reactiveVal holding the tagList of whole register UI}
+\item{\code{UI_list_register}}{reactiveVal holding the tagList of whole register UI}
 }
 \if{html}{\out{</div>}}
 }

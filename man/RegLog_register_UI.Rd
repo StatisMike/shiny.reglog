@@ -15,9 +15,8 @@ Generate Register UI for RegLog system
 }
 \seealso{
 Other RegLog UI: 
-\code{\link{RegLog_edit_UI}()},
+\code{\link{RegLog_credsEdit_UI}()},
 \code{\link{RegLog_login_UI}()},
-\code{\link{RegLog_resetPass_confirm_code_UI}()},
-\code{\link{RegLog_resetPass_send_code_UI}()}
+\code{\link{RegLog_resetPass_UI}()}
 }
 \concept{RegLog UI}
