@@ -241,6 +241,8 @@ credentials edit procedure. It contains:
   
 This message type is binded with default *modalDialogs*:
 
+- credsEdit_badId (`data$success == FALSE && data$username == FALSE`)
+- credsEdit_badPass (`data$success == FALSE && data$password == FALSE`)
 - credsEdit_existingID (`data$success == FALSE && isFALSE(data$username)`)
 - credsEdit_existingMail (`data$success == FALSE && isFALSE(data$email)`)
 - credsEdit_success (`data$success == TRUE`)
@@ -257,3 +259,21 @@ by user. It contains:
   - valid_email: boolean - `TRUE` if provided email was valid
   - valid_pass: boolean - `TRUE` if provided password was valid
   - identical_pass: boolean - `FALSE` (it is the last condition checked)
+  
+This message type is binded with default *modalDialogs*:
+
+- credsEdit_badId (`data$success == FALSE && data$username == FALSE`)
+- credsEdit_badPass (`data$success == FALSE && data$password == FALSE`)
+- credsEdit_existingID (`data$success == FALSE && isFALSE(data$username)`)
+- credsEdit_existingMail (`data$success == FALSE && isFALSE(data$email)`)
+- credsEdit_success (`data$success == TRUE`)
+  
+### Type:  **resetPass_req**
+
+Type of the message received from the database connector with responses about
+password reset procedure. It contains:
+
+- **data**:
+  - success: boolean - `TRUE` if reset code was send successfully
+  - username: boolean - `TRUE` if the username was found in the database
+  - 

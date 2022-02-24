@@ -143,7 +143,21 @@ RegLogServer <- R6::R6Class(
     
     get_logs = function() {
       
-      as.data.frame(data.table::rbindlist(self$log))
+      browser()
+      
+      binded_logs <- list()
+      
+      for (i in seq_along(self$log)) {
+        
+        binded_logs[[names(self$log)[i]]] <-
+          data.table::rbindlist(self$log[[i]], idcol = "time")
+        
+      }
+      
+      binded_logs <- data.table::rbindlist(binded_logs, idcol = "direction")
+      binded_logs <- as.data.frame(binded_logs[order(binded_logs$time),])
+      
+      return(binded_logs)
       
     }
     

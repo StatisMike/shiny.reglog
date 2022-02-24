@@ -41,9 +41,8 @@ check_user_mail <- function(x) {
 
 save_to_logs <- function(message, direction, self, session) {
   
-  self$log[[format(message$time, digits=15)]] <-
+  self$log[[as.character(direction)]][[format(message$time, digits=15)]] <-
     data.frame(session = session$token,
-               direction = direction,
                type = as.character(message$type),
                note = if(is.null(message$logcontent)) "" else as.character(message$logcontent))
   

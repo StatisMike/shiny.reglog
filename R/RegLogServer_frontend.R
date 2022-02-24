@@ -126,6 +126,43 @@ RegLogServer_frontend <- function(
       output$creds_edit_ui <- renderUI(
         tagList(self$tagList_credsEdit)
       )
+      
+      # create tagList for reset password procedure ####
+      
+      observe(
+        self$tagList_resetPass <- list(
+          title = h1(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_ui_1")),
+          desc1 = p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_ui_2")),
+          user_ID = textInput(
+            session$ns("reset_user_ID"),
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="user_id")
+          ),
+          send_code_bttn = actionButton(
+            session$ns("reset_send"),
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_bttn_1")),
+          desc2 = p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_ui_3")),
+          reset_code = textInput(
+            session$ns("reset_code"),
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_ui_4")),
+          desc_pass = p(
+            reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_ui_p_pass_change")),
+          newpass1_input = passwordInput(
+            session$ns("reset_pass1"),
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "password")),
+          newpass2_input = passwordInput(
+            session$ns("reset_pass2"),
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "password_rep")),
+          confirm_code_bttn = actionButton(
+            session$ns("reset_confirm_bttn"),
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_bttn_2")
+          )
+        )
+      )
+      
+      # render UI for reset password procedure ####
+      output$creds_edit_ui <- renderUI(
+        tagList(self$tagList_resetPass)
+      )
     }
   )
 }
