@@ -59,6 +59,10 @@ RegLogEmayiliConnector <- R6::R6Class(
       custom_mails = NULL
     ) {
       
+      # language
+      private$lang <- lang
+      private$custom_txts <- custom_txts
+      
       # append default handlers
       self$handlers[["register_mail"]] <- emayili_mail_handler
       self$handlers[["reset_pass_mail"]] <- emayili_mail_handler
@@ -86,12 +90,9 @@ RegLogEmayiliConnector <- R6::R6Class(
       # append all custom mails
       handle_custom_mails(self = self, custom_mails = custom_mails)
       
-      # save smtp server for sending
+      # save mailing details for sending
       private$smtp <- smtp
       private$from <- from
-      
-      private$custom_txts <- custom_txts
-      private$lang <- lang
       
       # assign the unique ID for the module
       self$module_id <- uuid::UUIDgenerate()
@@ -166,6 +167,10 @@ RegLogGmailrConnector <- R6::R6Class(
       custom_mails = NULL
     ) {
       
+      # language
+      private$lang <- lang
+      private$custom_txts <- custom_txts
+      
       # append default handlers
       self$handlers[["register_mail"]] <- gmailr_mail_handler
       self$handlers[["reset_pass_mail"]] <- gmailr_mail_handler
@@ -193,11 +198,8 @@ RegLogGmailrConnector <- R6::R6Class(
       # append all custom mails
       handle_custom_mails(self = self, custom_mails = custom_mails)
       
-      # save smtp server for sending
+      # save mailing details server for sending
       private$from <- from
-      
-      private$custom_txts <- custom_txts
-      private$lang <- lang
       
       # assign the unique ID for the module
       self$module_id <- uuid::UUIDgenerate()

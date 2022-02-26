@@ -274,3 +274,55 @@ DBI_creds_edit_handler <- function(self, private, message) {
   
   return(message_to_send)
 }
+
+
+#' DBI resetpass code generation handler
+#' 
+#' @description Default handler function querying database to confirm credentials
+#' edit procedure and update values saved within database. Used within object of 
+#' `RegLogDBIConnector` class internally.
+#' @param self R6 object element
+#' @param private R6 object element
+#' @param message RegLogConnectorMessage which need to contain within its data:
+#' - username
+#' 
+#' @family DBI handler functions
+#' @keywords internal
+
+DBI_resetPass_generation_handler <- function(self, private, message) {
+  
+  private$db_check_n_refresh()
+  on.exit(private$db_disconnect())
+  
+  sql <- paste0("SELECT * FROM ", private$db_tables[1], " WHERE username = ?;")
+  query <- DBI::sqlInterpolate(private$db_conn, sql, message$data$username)
+  
+  user_data <- DBI::dbGetQuery(private$db_conn, query)
+  
+  # check condition and create output message accordingly
+  
+  if (nrow(user_data) == 0) {
+    # if don't return any, then nothing happened
+    
+    RegLogConnectorMessage(
+      "resetPass_generate", success = FALSE, username = FALSE, generated = FALSE,
+      logcontent = paste(message$data$username, "don't exist")
+    )
+    
+    # if username exists, generate new resetpass code
+  } else {
+    
+    reset_code <- paste(floor(stats::runif(10, min = 0, max = 9.9)), collapse = "")
+    
+    sql <- paste0("INSERT INTO ", private$db_tables[2], 
+                  " (user_id, used, create_time, update_time) VALUES (?, ?, ?, ?)")
+    query <- DBI::sqlInterpolate(private$db_conn, sql, 
+                                 user_data$id, 
+                                 0,
+                                 as.character(Sys.time()),
+                                 as.character(Sys.time()))
+    
+    
+  }
+  
+}

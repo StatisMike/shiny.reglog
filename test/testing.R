@@ -8,26 +8,21 @@ mail_message <- RegLogConnectorMessage(
   mail_body = "<p>I am testing this!</p>"
 )
 
-ui <- fluidPage(
-  fluidRow(
-    column(4,
-           RegLog_login_UI(),
-           actionButton("logout",
-                        "Log out")),
-    column(4,
-           RegLog_register_UI()),
-    column(4, 
-           RegLog_edit_UI())
+ui <- fluidPage(style = "max-width: 600px;",
+  tabsetPanel(
+    tabPanel("Login",
+             RegLog_login_UI()),
+    tabPanel("Register",
+             RegLog_register_UI()),
+    tabPanel("Edit credentials",
+             RegLog_credsEdit_UI()),
+    tabPanel("Reset password",
+             RegLog_resetPass_UI())
   ),
   fluidRow(
-    tags$h1("Debug"),
-    actionButton("browser",
-                 "Browser"),
-    actionButton("logout",
-                 "Log out"),
-    verbatimTextOutput("state") 
-  )
-)
+   actionButton("logout", "Log out"),
+  actionButton("browser", "Browser"),
+  verbatimTextOutput("state")))
 
 server <- function(input, output, session) {
   

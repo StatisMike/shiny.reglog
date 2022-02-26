@@ -10,6 +10,7 @@
 #' - email
 #' - app_name
 #' - app_address
+#' - reset_code (optional for reset code mails)
 #' 
 #' It can also contain *mail_subject* and *mail_body* if you want to send custom
 #' `RegLogEmayiliConnector` message.
@@ -33,7 +34,8 @@ emayili_mail_handler <- function(self, private, message) {
       username = message$data$username,
       email = message$data$email,
       app_name = message$data$app_name,
-      app_address = message$data$app_address
+      app_address = message$data$app_address,
+      reset_code = message$data$reset_code
     ))
 
   # search message for the body
@@ -51,7 +53,8 @@ emayili_mail_handler <- function(self, private, message) {
       username = message$data$username,
       email = message$data$email,
       app_name = message$data$app_name,
-      app_address = message$data$app_address
+      app_address = message$data$app_address,
+      reset_code = message$data$reset_code
     ))
   
   # parse the email
@@ -98,8 +101,10 @@ emayili_mail_handler <- function(self, private, message) {
 #' @param message RegLogConnectorMessage which should contain within its data:
 #' - username
 #' - email
-#' - mail_subject
-#' - mail_body
+#' - app_name
+#' - app_address
+#' - reset_code (optional for reset code mails)
+#' 
 #' @family mail handler functions
 #' @keywords internal
 
@@ -120,7 +125,8 @@ gmailr_mail_handler <- function(self, private, message) {
       username = message$data$username,
       email = message$data$email,
       app_name = message$data$app_name,
-      app_address = message$data$app_address
+      app_address = message$data$app_address,
+      reset_code = message$data$reset_code
     ))
   
   # search message for the body
@@ -138,7 +144,8 @@ gmailr_mail_handler <- function(self, private, message) {
       username = message$data$username,
       email = message$data$email,
       app_name = message$data$app_name,
-      app_address = message$data$app_address
+      app_address = message$data$app_address,
+      reset_code = message$data$reset_code
     ))
   
   # parse email using gmailr function
