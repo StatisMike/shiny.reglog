@@ -207,7 +207,7 @@ This message type is binded with default *modalDialogs*:
 
 ### Type: **register**
 
-Type of the message received from the database connectors with responses about
+Type of the message received from the database connector with responses about
 register procedure. It contains:
 
 - **data**:
@@ -228,10 +228,11 @@ This message type is binded with default *modalDialogs*:
 
 - register_existingID (`data$success == FALSE && data$username == FALSE`)
 - register_existingMail (`data$success == FALSE && data$email == FALSE`)
+- register_success (`data$success == TRUE`)
 
 ### Type: **register_mail**
 
-Type of the message received from mailConnectors with response about confirmation
+Type of the message received from mailConnector with response about confirmation
 mail send. It contains:
 
 - **data**
@@ -239,16 +240,6 @@ mail send. It contains:
 - **logcontent**
   - registered username and email to which the mail was send. If there were any
   error during sending, it will be also appended.
-  
-This message type is binded with default *modalDialog*:
-
-- register_success (`data$success == TRUE`)
-
->modalDialog indicating successful registration is shown after receiving
-this message to encourage observing the same change with any custom logic. After
-successful update of database the appearance time of `register` message can be 
-very brief, so it is better to write logic to observe this message `register_mail`
-message.
 
 ### Type: **credsEdit_front**
 
@@ -331,7 +322,7 @@ mail send. It contains:
 - **data**
   - success: boolean - `TRUE` if the reset code mail send was successful
 - **logcontent**
-  - registered username and email to which the mail was send. If there were any
+  - registered username and email to which the mail was send. If there was any
   error during sending, it will be also appended.
   
 ### Type: **resetPass_confirm** 
@@ -344,4 +335,4 @@ password reset procedure - code confirmation step. It contains:
   - username: boolean - `TRUE` if the username was found in the database
   - code_valid: boolean - `TRUE` if the reset code was valid (both matched and not expired)
 - **logcontent**
-  - username for which the password were changed.
+  - username for which the password was changed.

@@ -50,6 +50,7 @@ Created tables should have following structure:
 \itemize{
 \item id: integer, primary key, auto-increment
 \item user_id: integer, NOT NULL
+\item reset_code: varchar(10), NOT NULL
 \item used: tinyint, NOT NULL
 \item create_time: datetime, NOT NULL
 \item update_time: datetime, NOT NULL

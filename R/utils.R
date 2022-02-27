@@ -58,8 +58,19 @@ string_interpolate <- function(x, to_replace) {
   look_for <- paste0("?", names(to_replace), "?")
   
   for (i in seq_along(look_for)) {
-    x <- gsub(x = x, pattern = look_for[i], replacement = to_replace[[i]], fixed = T)
+    if (!is.null(to_replace[[i]])) {
+      x <- gsub(x = x, pattern = look_for[i], replacement = to_replace[[i]], fixed = T)
+    }
   }
   
   return(x)
+}
+
+#' function to create SQL-friendly time format
+#' @noRd
+
+SQL_timestamp <- function() {
+  
+  format(Sys.time(), format = "%Y-%m-%d %H:%M:%OS3")
+  
 }

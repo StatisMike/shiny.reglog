@@ -334,6 +334,91 @@ RegLogServer_backend <- function(
                        session)
         }
       })
+      
+      # resetPass generate observer ####
+      observeEvent(input$reset_send, {
+        req(input$reset_user_ID)
+        
+        message_to_send <- RegLogConnectorMessage(
+          "resetPass_generate",
+          username = input$reset_user_ID
+        )
+        
+        self$dbConnector$listener(message_to_send)
+        # save into logs
+        save_to_logs(message_to_send,
+                     "sent",
+                     self,
+                     session)
+        
+      })
+      
+      # resetPass confirm observer ####
+      observeEvent(input$reset_confirm_bttn, {
+        req(input$reset_user_ID, input$reset_code, input$reset_pass1, input$reset_pass2)
+        
+        if (!check_user_pass(input$reset_pass1)) {
+          
+          if (modals_check(private, "resetPass_nonValidPass")) {
+            showModal(
+              modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_t"),
+                          p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_b")),
+                          footer = modalButton("OK")))
+          }
+          
+          # parse message to show back in the self$message
+          message_to_show <- RegLogConnectorMessage(
+            "resetPass_front",
+            success = F, valid_pass = F, identical_pass = F 
+          )
+          
+          self$message(message_to_show)
+          save_to_logs(message_to_show,
+                       "shown",
+                       self,
+                       session)
+          
+          # check if passwords are the same
+        } else if (input$reset_pass1 != input$reset_pass2) {
+          
+          if (modals_check(private, "resetPass_notIndenticalPass")) {
+            showModal(
+              modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_t"),
+                          p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_b")),
+                          footer = modalButton("OK")))
+          }
+          
+          # parse message to show back in the self$message
+          message_to_show <- RegLogConnectorMessage(
+            "resetPass_front",
+            success = F, valid_pass = T, identical_pass = F 
+          )
+          
+          self$message(message_to_show)
+          save_to_logs(message_to_show,
+                       "shown",
+                       self,
+                       session)
+          
+          # if everything is OK - send the message
+        } else {
+          message_to_send <- RegLogConnectorMessage(
+            "resetPass_confirm",
+            username = input$reset_user_ID,
+            reset_code = input$reset_code,
+            password = input$reset_pass1
+          )
+          
+          self$dbConnector$listener(message_to_send)
+          save_to_logs(message_to_send,
+                       "sent",
+                       self,
+                       session)
+          
+        }
+        
+      })
+      
     }
   )
 }

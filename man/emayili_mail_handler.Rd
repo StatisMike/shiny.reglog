@@ -17,6 +17,7 @@ emayili_mail_handler(self, private, message)
 \item email
 \item app_name
 \item app_address
+\item reset_code (optional for reset code mails)
 }
 
 It can also contain \emph{mail_subject} and \emph{mail_body} if you want to send custom

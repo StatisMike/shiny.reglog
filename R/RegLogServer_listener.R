@@ -126,7 +126,15 @@ RegLogServer_listener <- function(
               
               # if registration is successful
               if (received_message$data$success) {
-
+                
+                # show modal if enabled
+                if (modals_check(private, "register_success")) {
+                  showModal(
+                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_succ_t"),
+                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_succ_b")),
+                                footer = modalButton("OK")))
+                }
+                
                 # send message to the mailConnector
                 message_to_send <- RegLogConnectorMessage(
                   "register_mail",
@@ -217,20 +225,99 @@ RegLogServer_listener <- function(
                   }
                 }
               }
-              
-              # expose the message
-              self$message(received_message)
+              # 
+              # # expose the message
+              # self$message(received_message)
               
             },
             
-            ## reset password messages reactions ####
+            # reset password generation messages reactions ####
             
-            resetpass = {
+            resetPass_generate = {
               
-              
-              
+              # if generation were successful
+              if (received_message$data$success) {
+                
+                # generate modal dialog if successful
+                if (modals_check(private, "resetPass_generated")) {
+                  showModal(
+                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_t"),
+                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_b")),
+                                footer = modalButton("OK")))
+                }
+                
+                # send message to the mailConnector
+                message_to_send <- RegLogConnectorMessage(
+                  "resetPass_mail",
+                  username = received_message$data$user_id,
+                  email = received_message$data$user_mail,
+                  app_name = private$app_name,
+                  app_address = private$app_address,
+                  reset_code = received_message$data$reset_code
+                )
+                
+                self$mailConnector$listener(message_to_send)
+                save_to_logs(message_to_send,
+                             "sent",
+                             self,
+                             session)
+                
+              } else {
+                #if not succesful
+                
+                if (modals_check(private, "resetPass_badId")) {
+                  showModal(
+                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_t"),
+                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_1")),
+                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nforun_2")),
+                                footer = modalButton("OK")))
+                }
+              }
             }
+            # ,
             
+            # reset password confirmation messages reactions ####
+            
+            # resetPass_confirm = {
+            #   # if reset code was valid
+            #   if (received_message$data$success) {
+            #     
+            #     # generate modal dialog if successful
+            #     if (modals_check(private, "resetPass_success")) {
+            #       showModal(
+            #         modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_t"),
+            #                     p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_b")),
+            #                     footer = modalButton("OK")))
+            #     }
+            #     
+            #     # send message to the dbConnector
+            #     message_to_send <- RegLogConnectorMessage(
+            #       "resetPass_mail",
+            #       username = received_message$data$user_id,
+            #       email = received_message$data$user_mail,
+            #       app_name = private$app_name,
+            #       app_address = private$app_address,
+            #       reset_code = received_message$data$reset_code
+            #     )
+            #     
+            #     self$mailConnector$listener(message_to_send)
+            #     save_to_logs(message_to_send,
+            #                  "sent",
+            #                  self,
+            #                  session)
+            #     
+            #   } else {
+            #     #if not succesful
+            #     
+            #     if (modals_check(private, "resetPass_badId")) {
+            #       showModal(
+            #         modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_t"),
+            #                     p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_1")),
+            #                     p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nforun_2")),
+            #                     footer = modalButton("OK")))
+            #     }
+            #   }
+            # }
           )
           
           #expose the message to the outside
@@ -258,17 +345,6 @@ RegLogServer_listener <- function(
                        "received",
                        self,
                        session)
-          
-          # if ended successfully
-          if (isTRUE(received_message$data$success)) {
-            # show modal if enabled
-            if (modals_check(private, "register_success")) {
-              showModal(
-                modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_succ_t"),
-                            p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_succ_b")),
-                            footer = modalButton("OK")))
-            }
-          }
           
           #expose the message to the outside
           self$message(received_message)

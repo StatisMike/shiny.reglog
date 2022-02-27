@@ -26,13 +26,18 @@ ui <- fluidPage(style = "max-width: 600px;",
 
 server <- function(input, output, session) {
   
-  dbConnector <- RegLogDBIConnector$new(
-    driver = RMySQL::MySQL(),
-    user = Sys.getenv("REGLOG_MYSQL_USER"),
-    password = Sys.getenv("REGLOG_MYSQL_PASS"),
-    host = "localhost",
-    port = 3306,
-    dbname = "reglog_test"
+  # dbConnectorMySQL <- RegLogDBIConnector$new(
+  #   driver = RMySQL::MySQL(),
+  #   user = Sys.getenv("REGLOG_MYSQL_USER"),
+  #   password = Sys.getenv("REGLOG_MYSQL_PASS"),
+  #   host = "localhost",
+  #   port = 3306,
+  #   dbname = "reglog_test"
+  # )
+  
+  dbConnectorSQLite <- RegLogDBIConnector$new(
+    driver = RSQLite::SQLite(),
+    dbname = "/home/kosin/Documents/sqlite/users.sqlite"
   )
   
   mailConnector <- RegLogEmayiliConnector$new(
@@ -41,7 +46,7 @@ server <- function(input, output, session) {
   )
   
   RegLog <- RegLogServer$new(
-    dbConnector = dbConnector,
+    dbConnector = dbConnectorSQLite,
     mailConnector = mailConnector
   )
   

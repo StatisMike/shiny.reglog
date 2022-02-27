@@ -143,8 +143,6 @@ RegLogServer <- R6::R6Class(
     
     get_logs = function() {
       
-      browser()
-      
       binded_logs <- list()
       
       for (i in seq_along(self$log)) {

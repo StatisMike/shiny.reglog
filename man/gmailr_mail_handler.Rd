@@ -15,8 +15,9 @@ gmailr_mail_handler(self, private, message)
 \itemize{
 \item username
 \item email
-\item mail_subject
-\item mail_body
+\item app_name
+\item app_address
+\item reset_code (optional for reset code mails)
 }}
 }
 \description{

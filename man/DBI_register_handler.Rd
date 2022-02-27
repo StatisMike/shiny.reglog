@@ -26,6 +26,7 @@ validity and input new data. Used within object of \code{RegLogDBIConnector} cla
 Other DBI handler functions: 
 \code{\link{DBI_creds_edit_handler}()},
 \code{\link{DBI_login_handler}()},
+\code{\link{DBI_resetPass_confirmation_handler}()},
 \code{\link{DBI_resetPass_generation_handler}()}
 }
 \concept{DBI handler functions}

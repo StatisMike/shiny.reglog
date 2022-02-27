@@ -65,9 +65,10 @@ RegLogEmayiliConnector <- R6::R6Class(
       
       # append default handlers
       self$handlers[["register_mail"]] <- emayili_mail_handler
-      self$handlers[["reset_pass_mail"]] <- emayili_mail_handler
+      self$handlers[["resetPass_mail"]] <- emayili_mail_handler
       
-      # append default mails
+      # append default mails ####
+      ## register mail ####
       self$mails[["register_mail"]][["body"]] <-
         paste0(
           "<p>",
@@ -83,6 +84,21 @@ RegLogEmayiliConnector <- R6::R6Class(
       self$mails[["register_mail"]][["subject"]] <- 
         paste("?app_name?",
               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_h"))
+      ## resetPass mail ####
+      self$mails[["resetPass_mail"]][["body"]] <-
+        paste0("<p>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_1"),
+               "</p><p>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_2"),
+               "?reset_code?",
+               "</p><p>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_3"),
+               "</p><hr>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+      self$mails[["resetPass_mail"]][["subject"]] <-
+        paste("?app_name?",
+              reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
+              sep = " - ")
       
       # append all custom handlers
       super$initialize(custom_handlers = custom_handlers)
@@ -173,9 +189,11 @@ RegLogGmailrConnector <- R6::R6Class(
       
       # append default handlers
       self$handlers[["register_mail"]] <- gmailr_mail_handler
-      self$handlers[["reset_pass_mail"]] <- gmailr_mail_handler
+      self$handlers[["resetPass_mail"]] <- gmailr_mail_handler
       
-      # append default mails
+      
+      # append default mails ####
+      ## register mail ####
       self$mails[["register_mail"]][["body"]] <-
         paste0(
           "<p>",
@@ -191,6 +209,26 @@ RegLogGmailrConnector <- R6::R6Class(
       self$mails[["register_mail"]][["subject"]] <- 
         paste("?app_name?",
               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_h"))
+      ## resetPass mail ####
+      self$mails[["resetPass_mail"]][["body"]] <-
+        paste0("<p>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_1"),
+               "</p><p>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_2"),
+               "?reset_code?",
+               "</p><p>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_3"),
+               "</p><hr>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+      self$mails[["resetPass_mail"]][["subject"]] <-
+        paste("?app_name?",
+              reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
+              sep = " - ")
+      ## credEdit mail ####
+      self$mails[["credEdit_mail"]][["body"]] <-
+        paste0()
+      self$mails[["credEdit_mail"]][["subject"]] <-
+        paste0()
       
       # append all custom handlers
       super$initialize(custom_handlers = custom_handlers)

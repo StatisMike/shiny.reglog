@@ -26,6 +26,7 @@
 #' - reset_code (default name)
 #'   - id: integer, primary key, auto-increment
 #'   - user_id: integer, NOT NULL
+#'   - reset_code: varchar(10), NOT NULL
 #'   - used: tinyint, NOT NULL
 #'   - create_time: datetime, NOT NULL
 #'   - update_time: datetime, NOT NULL
@@ -64,7 +65,7 @@ RegLog_DBI_database_create <- function(
     DBI::dbCreateTable(
       conn,
       user_name,
-      c("id" = if (class == "SQLiteConnection") "INT PRIMARY KEY"
+      c("id" = if (class == "SQLiteConnection") "INTEGER PRIMARY KEY"
           else if (class == "MySQLConnection") "INT PRIMARY KEY AUTO_INCREMENT",
         "username" = "VARCHAR(255) NOT NULL UNIQUE",
         "password" = "VARCHAR(255) NOT NULL",
@@ -83,9 +84,10 @@ RegLog_DBI_database_create <- function(
     DBI::dbCreateTable(
       conn,
       reset_code_name,
-      c("id" = if (class == "SQLiteConnection") "INT PRIMARY KEY"
+      c("id" = if (class == "SQLiteConnection") "INTEGER PRIMARY KEY"
           else if (class == "MySQLConnection") "INT PRIMARY KEY AUTO_INCREMENT",
         "user_id" = "INT NOT NULL",
+        "reset_code" = "VARCHAR(10) NOT NULL",
         "used" = "TINYINT NOT NULL",
         "create_time" = "DATETIME NOT NULL",
         "update_time" = "DATETIME NOT NULL")
@@ -103,7 +105,7 @@ RegLog_DBI_database_create <- function(
   #     DBI::dbCreateTable(
   #       conn,
   #       reset_code_name,
-  #       c("id" = "INT PRIMARY KEY",
+  #       c("id" = "INTEGER PRIMARY KEY",
   #         "user_id" = "INT NOT NULL UNIQUE",
   #         "used" = "TINYINT NOT NULL",
   #         "create_time" = "DATETIME NOT NULL",

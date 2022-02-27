@@ -36,7 +36,7 @@ RegLogConnector = R6::R6Class(
         
         RegLogConnectorMessage(
           "ping",
-          response_time = as.numeric(Sys.time()) - message$time,
+          response_time = as.numeric(lubridate::as_datetime(SQL_timestamp()) - lubridate::as_datetime(message$time)),
           logcontent = if (!is.null(message$logcontent)) message$logcontent else ""
         )
       }
@@ -209,7 +209,7 @@ RegLogConnectorMessage <- function(
 ) {
   
   x <- list(
-    time = as.numeric(Sys.time()),
+    time = SQL_timestamp(),
     type = as.character(type[1]),
     data = list(...),
     logcontent = logcontent

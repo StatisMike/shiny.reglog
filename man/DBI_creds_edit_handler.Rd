@@ -33,6 +33,7 @@ edit procedure and update values saved within database. Used within object of
 Other DBI handler functions: 
 \code{\link{DBI_login_handler}()},
 \code{\link{DBI_register_handler}()},
+\code{\link{DBI_resetPass_confirmation_handler}()},
 \code{\link{DBI_resetPass_generation_handler}()}
 }
 \concept{DBI handler functions}
