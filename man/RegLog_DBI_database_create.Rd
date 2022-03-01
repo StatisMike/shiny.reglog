@@ -9,7 +9,9 @@ RegLog_DBI_database_create(
   user_name = "user",
   reset_code_name = "reset_code",
   use_log = FALSE,
-  log_name = "logs"
+  log_name = "logs",
+  user_data = NULL,
+  hash_passwords = FALSE
 )
 }
 \arguments{
@@ -26,6 +28,18 @@ also created? Defaults to FALSE}
 
 \item{log_name}{Name of the table for storing logs from RegLogServer object.
 Used only if \code{use_log = TRUE}. Defaults to \code{logs}}
+
+\item{user_data}{If you wish to import existing user database, you can input
+data.frame with that table in this argument. It should contain columns:
+username, password, email. Defaults to NULL.}
+
+\item{hash_passwords}{If you are importing table of users upon tables creation,
+you can also specify if the password should be hashed using \code{scrypt::hashPassword}.
+Defaults to \code{FALSE}. If you have unhashed passwords in imported table, set
+this option to \code{TRUE}.}
+}
+\value{
+List with results of the creation
 }
 \description{
 Create RegLog-valid database tables with DBI
@@ -58,7 +72,7 @@ Created tables should have following structure:
 \item logs (default name, optional)
 \itemize{
 \item id: integer, primary key, auto-increment
-\item time: numeric, size 15, 5 decimal, NOT NULL
+\item time: datetime, NOT NULL
 \item session: varchar(255), NOT NULL
 \item direction: varchar(255), NOT NULL
 \item type: varchar(255), NOT NULL

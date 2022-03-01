@@ -109,9 +109,10 @@ DBI_register_handler = function(self, private, message) {
                                  username = message$data$username, 
                                  password = scrypt::hashPassword(message$data$password),
                                  email = message$data$email,
-                                 create_time = SQL_timestamp())
+                                 create_time = db_timestamp())
     
-    DBI::dbSendQuery(private$db_conn, query)
+    DBI::dbExecute(private$db_conn, query)
+    # DBI::dbSendQuery(private$db_conn, query)
     
     return(
       RegLogConnectorMessage(
@@ -231,7 +232,7 @@ DBI_creds_edit_handler <- function(self, private, message) {
       } else {
         # if nothing is returned, update can be made!
         update_query <- paste("UPDATE", private$db_tables[1], "SET update_time = ?update_time")
-        interpolate_vals <- list("update_time" = SQL_timestamp())
+        interpolate_vals <- list("update_time" = db_timestamp())
         # for every field to update popupalte query and interpolate vals
         if (!is.null(message$data$new_username)) {
           update_query <- paste(update_query, "username = ?username", sep = ", ")
@@ -251,7 +252,7 @@ DBI_creds_edit_handler <- function(self, private, message) {
         query <- DBI::sqlInterpolate(private$db_conn, update_query,
                                      .dots = interpolate_vals)
         
-        DBI::dbSendQuery(private$db_conn, query)
+        DBI::dbExecute(private$db_conn, query)
         
         message_to_send <- RegLogConnectorMessage(
           "credsEdit", success = TRUE,
@@ -322,9 +323,11 @@ DBI_resetPass_generation_handler <- function(self, private, message) {
     query <- DBI::sqlInterpolate(private$db_conn, sql, 
                                  user_id = user_data$id,
                                  reset_code = reset_code,
-                                 create_time = SQL_timestamp())
+                                 create_time = db_timestamp())
     
-    DBI::dbSendStatement(private$db_conn, query)
+    # res <- DBI::dbSendStatement(private$db_conn, query)
+    # DBI::dbClearResult(res)
+    DBI::dbExecute(private$db_conn, query)
     
     message_to_send <- RegLogConnectorMessage(
       "resetPass_generate", success = TRUE,  
@@ -388,8 +391,6 @@ DBI_resetPass_confirmation_handler <- function(self, private, message) {
     
     reset_code_data <- DBI::dbGetQuery(private$db_conn, query)
     
-    browser()
-    
     not_expired <- 
       (lubridate::as_datetime(reset_code_data$create_time) + lubridate::period(4, "hours")) > Sys.time()
     
@@ -402,20 +403,24 @@ DBI_resetPass_confirmation_handler <- function(self, private, message) {
       
       query <- DBI::sqlInterpolate(private$db_conn, sql,
                                    password = scrypt::hashPassword(message$data$password),
-                                   update_time = SQL_timestamp(),
+                                   update_time = db_timestamp(),
                                    user_id = user_data$id[1])
       
-      DBI::dbSendStatement(private$db_conn, query)
+      # res <- DBI::dbSendStatement(private$db_conn, query)
+      # DBI::dbClearResult(res)
+      DBI::dbExecute(private$db_conn, query)
       
       # update reset_code
       sql <- paste0("UPDATE ", private$db_tables[2],
                     " SET used = 1, update_time = ?update_time WHERE id = ?reset_code_id")
       
       query <- DBI::sqlInterpolate(private$db_conn, sql,
-                                   update_time = SQL_timestamp(),
+                                   update_time = db_timestamp(),
                                    reset_code_id = reset_code_data$id[1])
       
-      DBI::dbSendStatement(private$db_conn, query)
+      # res <- DBI::dbSendStatement(private$db_conn, query)
+      # DBI::dbClearResult(res)
+      DBI::dbExecute(private$db_conn, query)
       
       message_to_send <- RegLogConnectorMessage(
         "resetPass_confirm", success = TRUE, username = TRUE, code_valid = TRUE,
@@ -424,7 +429,7 @@ DBI_resetPass_confirmation_handler <- function(self, private, message) {
       # if reset code wasn't valid
     } else {
       
-      message_to_send <- regLogConnectorMessage(
+      message_to_send <- RegLogConnectorMessage(
         "resetPass_confirm", success = FALSE, username = TRUE, code_valid = FALSE,
         logcontent = paste(message$data$username, "invalid code")
       )

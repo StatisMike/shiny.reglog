@@ -1,6 +1,6 @@
 Package: shiny.reglog
 Title: Optional Login and Registration Module System for ShinyApps
-Version: 0.5.0.9006
+Version: 0.5.0.9007
 Authors@R: 
     person(given = "Michal",
            family = "Kosinski",

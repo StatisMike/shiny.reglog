@@ -47,6 +47,28 @@ RegLogDBIConnector = R6::R6Class(
           private$db_connect()
         }
       )
+    },
+    # method to input log into database
+    input_log = function(message, direction, session) {
+      
+      on.exit(private$db_disconnect())
+      
+      private$db_check_n_refresh()
+      
+      sql <- paste("INSERT INTO", tables[3], 
+                   "(time, session, direction, type, note)",
+                   "values(?time, ?session, ?direction, ?type, ?note")
+      
+      query <- DBI::sqlInterpolate(private$db_conn,
+                                   sql,
+                                   time = message$time,
+                                   session = session$token,
+                                   direction = direction,
+                                   type = message$type,
+                                   note = message$logcontent)
+      
+      DBI::dbExecute(private$db_conn, query)
+      
     }
   ),
   # public elements ####
@@ -62,8 +84,10 @@ RegLogDBIConnector = R6::R6Class(
     #' and `message` of class `RegLogConnectorMessage`. It should return
     #' return `RegLogConnectorMessage` object.
     #' @param table_names character vector. Contains names of the tables in the
-    #' database: first containing user data, second - reset codes information. For
-    #' more info check 'details'.
+    #' database: first containing user data, second - reset codes information,
+    #' third (optional) - logs from the object. For more info check documentation
+    #' of `RegLog_DBI_database_create` for DBI database or 
+    #' `RegLog_gsheet_database_create` for googlesheets database.
     #' 
     #' @return object of `RegLogDBIConnector` class
     #' 
@@ -72,7 +96,7 @@ RegLogDBIConnector = R6::R6Class(
       driver,
       ...,
       custom_handlers = NULL,
-      table_names = c("user", "reset_code")
+      table_names = c("user", "reset_code", "logs")
     ) {
       
       # append default handlers
@@ -88,7 +112,7 @@ RegLogDBIConnector = R6::R6Class(
       private$db_drv <- driver
       private$db_args <- list(...)
       private$db_tables <- table_names
-      # initial connection to the database, saving the 
+      # initial connection to the database, checking if everything is all right
       private$db_connect()
       # assign the unique ID for the module
       self$module_id <- uuid::UUIDgenerate()

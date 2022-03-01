@@ -273,51 +273,50 @@ RegLogServer_listener <- function(
                                 footer = modalButton("OK")))
                 }
               }
-            }
-            # ,
+            },
             
             # reset password confirmation messages reactions ####
-            
-            # resetPass_confirm = {
-            #   # if reset code was valid
-            #   if (received_message$data$success) {
-            #     
-            #     # generate modal dialog if successful
-            #     if (modals_check(private, "resetPass_success")) {
-            #       showModal(
-            #         modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_t"),
-            #                     p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_b")),
-            #                     footer = modalButton("OK")))
-            #     }
-            #     
-            #     # send message to the dbConnector
-            #     message_to_send <- RegLogConnectorMessage(
-            #       "resetPass_mail",
-            #       username = received_message$data$user_id,
-            #       email = received_message$data$user_mail,
-            #       app_name = private$app_name,
-            #       app_address = private$app_address,
-            #       reset_code = received_message$data$reset_code
-            #     )
-            #     
-            #     self$mailConnector$listener(message_to_send)
-            #     save_to_logs(message_to_send,
-            #                  "sent",
-            #                  self,
-            #                  session)
-            #     
-            #   } else {
-            #     #if not succesful
-            #     
-            #     if (modals_check(private, "resetPass_badId")) {
-            #       showModal(
-            #         modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_t"),
-            #                     p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_1")),
-            #                     p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nforun_2")),
-            #                     footer = modalButton("OK")))
-            #     }
-            #   }
-            # }
+
+            resetPass_confirm = {
+              # if reset code was valid
+              if (received_message$data$success) {
+
+                # generate modal dialog if successful
+                if (modals_check(private, "resetPass_success")) {
+                  showModal(
+                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_t"),
+                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_b")),
+                                footer = modalButton("OK")))
+                }
+
+                # send message to the dbConnector
+                message_to_send <- RegLogConnectorMessage(
+                  "resetPass_mail",
+                  username = received_message$data$user_id,
+                  email = received_message$data$user_mail,
+                  app_name = private$app_name,
+                  app_address = private$app_address,
+                  reset_code = received_message$data$reset_code
+                )
+
+                self$mailConnector$listener(message_to_send)
+                save_to_logs(message_to_send,
+                             "sent",
+                             self,
+                             session)
+
+              } else {
+                #if not succesful
+
+                if (modals_check(private, "resetPass_badId")) {
+                  showModal(
+                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_bad_code"),
+                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_bad_code")),
+                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_bad_code")),
+                                footer = modalButton("OK")))
+                }
+              }
+            }
           )
           
           #expose the message to the outside

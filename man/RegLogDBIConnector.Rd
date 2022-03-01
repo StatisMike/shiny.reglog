@@ -39,7 +39,7 @@ to the database.
   driver,
   ...,
   custom_handlers = NULL,
-  table_names = c("user", "reset_code")
+  table_names = c("user", "reset_code", "logs")
 )}\if{html}{\out{</div>}}
 }
 
@@ -56,8 +56,10 @@ and \code{message} of class \code{RegLogConnectorMessage}. It should return
 return \code{RegLogConnectorMessage} object.}
 
 \item{\code{table_names}}{character vector. Contains names of the tables in the
-database: first containing user data, second - reset codes information. For
-more info check 'details'.}
+database: first containing user data, second - reset codes information,
+third (optional) - logs from the object. For more info check documentation
+of \code{RegLog_DBI_database_create} for DBI database or
+\code{RegLog_gsheet_database_create} for googlesheets database.}
 }
 \if{html}{\out{</div>}}
 }

@@ -250,89 +250,118 @@ RegLogServer_backend <- function(
       observeEvent(input$cred_edit_other_change, {
         
         # check if the inputs are filled
-        req(input$cred_edit_old_ID, input$cred_edit_old_pass)
-        req(isTRUE(nchar(input$cred_edit_new_ID) > 0) || isTRUE(nchar(input$cred_edit_new_mail) > 0))
-        
-        # create placeholder message to show with success
-        message_to_show <- RegLogConnectorMessage(
-          "credsEdit_front",
-          success = T 
-        )
-        # create message to send
-        message_to_send <- RegLogConnectorMessage(
-          "credsEdit",
-          username = input$cred_edit_old_ID,
-          password = input$cred_edit_old_pass
-        )
-        
-        ## check if there is an ID to change ####
-        if (isTruthy(input$cred_edit_new_ID)) {
+        if (all(isTruthy(input$cred_edit_old_ID), isTruthy(input$cred_edit_old_pass)) &&
+            any(isTruthy(input$cred_edit_new_ID), isTruthy(input$cred_edit_new_mail))) {
           
-          # if ID is not valid
-          if (!check_user_login(input$cred_edit_new_ID)) {
+          # create placeholder message to show with success
+          message_to_show <- RegLogConnectorMessage(
+            "credsEdit_front",
+            success = T,
+            input_provided = T,
+            change = "other"
+          )
+          # create message to send
+          message_to_send <- RegLogConnectorMessage(
+            "credsEdit",
+            username = input$cred_edit_old_ID,
+            password = input$cred_edit_old_pass
+          )
+          
+          ## check if there is an ID to change ####
+          if (isTruthy(input$cred_edit_new_ID)) {
             
-            message_to_show$data$success <- FALSE
-            message_to_show$data$valid_ID <- FALSE
-          } else {
-            message_to_show$data$valid_ID <- TRUE
-            message_to_send$data$new_username <- input$cred_edit_new_ID
-          }
-        }
-
-        ## check if there is an email to change ####
-        if (isTruthy(input$cred_edit_new_mail)) {
-          
-          # if mail is not valid
-          if (!check_user_mail(input$cred_edit_new_mail)) {
-            
-            message_to_show$data$success <- FALSE
-            message_to_show$data$valid_mail <- FALSE
-          } else {
-            message_to_show$data$valid_mail <- TRUE
-            message_to_send$data$new_email <- input$cred_edit_new_mail
-          }
-        }
-
-        ## if not success, try to show modals ####
-        if (!message_to_show$data$success) {
-          
-          if (isFALSE(message_to_show$data$valid_ID)) {
-            if (modals_check(private, "credsEdit_nonValidID")) {
-              showModal(
-                modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_t"),
-                            p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_b")),
-                            footer = modalButton("OK")))
-            } 
-          }
-          if (isFALSE(message_to_show$data$valid_mail)) {
-            if (modals_check(private, "credsEdit_nonValidMail")) {
-              showModal(
-                modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_t"),
-                            p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_b")),
-                            footer = modalButton("OK")))
+            # if ID is not valid
+            if (!check_user_login(input$cred_edit_new_ID)) {
+              
+              message_to_show$data$success <- FALSE
+              message_to_show$data$valid_ID <- FALSE
+            } else {
+              message_to_show$data$valid_ID <- TRUE
+              message_to_send$data$new_username <- input$cred_edit_new_ID
             }
           }
-          # show message back
+          
+          ## check if there is an email to change ####
+          if (isTruthy(input$cred_edit_new_mail)) {
+            
+            # if mail is not valid
+            if (!check_user_mail(input$cred_edit_new_mail)) {
+              
+              message_to_show$data$success <- FALSE
+              message_to_show$data$valid_mail <- FALSE
+            } else {
+              message_to_show$data$valid_mail <- TRUE
+              message_to_send$data$new_email <- input$cred_edit_new_mail
+            }
+          }
+          
+          ## if not success, try to show modals ####
+          if (!message_to_show$data$success) {
+            
+            if (isFALSE(message_to_show$data$valid_ID)) {
+              if (modals_check(private, "credsEdit_nonValidID")) {
+                showModal(
+                  modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_t"),
+                              p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_b")),
+                              footer = modalButton("OK")))
+              } 
+            }
+            if (isFALSE(message_to_show$data$valid_mail)) {
+              if (modals_check(private, "credsEdit_nonValidMail")) {
+                showModal(
+                  modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_t"),
+                              p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_b")),
+                              footer = modalButton("OK")))
+              }
+            }
+            # show message back
+            self$message(message_to_show)
+            save_to_logs(message_to_show,
+                         "shown",
+                         self,
+                         session)
+            
+            # is everything is all right, send message
+          } else {
+            
+            message_to_send$logcontent <-
+              paste(input$cred_edit_old_ID, "changed:", 
+                    paste(c(input$cred_edit_new_username, input$cred_edit_new_mail), collapse = "/"))
+            
+            self$dbConnector$listener(message_to_send)
+            # save into logs
+            save_to_logs(message_to_send,
+                         "sent",
+                         self,
+                         session)
+          }
+          
+          # if there are missing inputs
+        } else {
+          
+          if (modals_check(private, "credsEdit_noInput_other")) {
+            showModal(
+              modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "credsEdit_noInput_oth_h"),
+                          p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "credsEdit_noInput_oth_b")),
+                          footer = modalButton("OK")))
+          }
+          
+          message_to_show <- RegLogConnectorMessage(
+            "credsEdit_front",
+            success = F,
+            input_provided = F,
+            change = "other"
+          )
+          
           self$message(message_to_show)
           save_to_logs(message_to_show,
                        "shown",
                        self,
                        session)
-          
-          # is everything is all right, send message
-        } else {
-          
-          message_to_send$logcontent <-
-            paste(input$cred_edit_old_ID, "changed:", 
-                  paste(c(input$cred_edit_new_username, input$cred_edit_new_mail), collapse = "/"))
-          
-          self$dbConnector$listener(message_to_send)
-          # save into logs
-          save_to_logs(message_to_send,
-                       "sent",
-                       self,
-                       session)
         }
+
+        
+
       })
       
       # resetPass generate observer ####

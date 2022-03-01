@@ -41,11 +41,30 @@ check_user_mail <- function(x) {
 
 save_to_logs <- function(message, direction, self, session) {
   
-  self$log[[as.character(direction)]][[format(message$time, digits=15)]] <-
-    data.frame(session = session$token,
-               type = as.character(message$type),
-               note = if(is.null(message$logcontent)) "" else as.character(message$logcontent))
+  # check options
+  if (direction %in% c("sent", "received")) {
+    log_save <- getOption("RegLogServer.logs", 1) >= 1
+    log_input <- getOption("RegLogServer.logs_to_database", 0) >= 1
+  } else if (direction == "shown") {
+    log_save <- getOption("RegLogServer.logs", 1) >= 2
+    log_input <- getOption("RegLogServer.logs_to_database", 0) >= 2
+  }
   
+  # if log is to be saved into self$log
+  if (log_save) {
+    self$log[[as.character(direction)]][[message$time]] <-
+      data.frame(session = session$token,
+                 type = as.character(message$type),
+                 note = if(is.null(message$logcontent)) "" else as.character(message$logcontent))
+  }
+  
+  # if log is to be input into the database
+  if (log_input) {
+    self$dbConnection$.__enclos_env__$private$input_log(
+      message = message,
+      direction = direction,
+      session = session)
+  }
 }
 
 #' function to replace multiple values in string
@@ -66,10 +85,11 @@ string_interpolate <- function(x, to_replace) {
   return(x)
 }
 
-#' function to create SQL-friendly time format
-#' @noRd
+#' function to create standardized timestamp
+#'
+#' @export
 
-SQL_timestamp <- function() {
+db_timestamp <- function() {
   
   format(Sys.time(), format = "%Y-%m-%d %H:%M:%OS3")
   
