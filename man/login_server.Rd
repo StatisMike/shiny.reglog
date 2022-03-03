@@ -73,7 +73,7 @@ reactiveValues() object with three elements:
 \code{last_state_change}, containing string describing last change of login system state. Currently only supports state changes during login procedure
 }
 \description{
-Shiny server module for the optional login/registration system
+DEPRACATED: Shiny server module for the optional login/registration system
 
 This function creates a server module to handle other modules of the system: \code{login_UI()}, \code{password_reset_UI()} and \code{register_UI}
 

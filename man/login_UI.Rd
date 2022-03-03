@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_login_UI.R
 \name{login_UI}
 \alias{login_UI}
-\title{Shiny UI module for login box}
+\title{DEPRECATED Shiny UI module for login box}
 \usage{
 login_UI(id = "login_system", lang = "en", custom_txts = NULL)
 }

@@ -79,24 +79,22 @@ RegLogDBIConnector = R6::R6Class(
     #' 
     #' @param driver Call that specifies the driver to be used during all queries
     #' @param ... other arguments used in `DBI::dbConnect()` call
+    #' @param table_names character vector. Contains names of the tables in the
+    #' database: first containing user data, second - reset codes information,
+    #' third (optional) - logs from the object. For more info check documentation
+    #' of `DBI_database_create`.
     #' @param custom_handlers named list of custom handler functions. Custom handler
     #' should take arguments: `self` and `private` - relating to the R6 object
     #' and `message` of class `RegLogConnectorMessage`. It should return
     #' return `RegLogConnectorMessage` object.
-    #' @param table_names character vector. Contains names of the tables in the
-    #' database: first containing user data, second - reset codes information,
-    #' third (optional) - logs from the object. For more info check documentation
-    #' of `RegLog_DBI_database_create` for DBI database or 
-    #' `RegLog_gsheet_database_create` for googlesheets database.
-    #' 
     #' @return object of `RegLogDBIConnector` class
     #' 
     
     initialize = function(
       driver,
       ...,
-      custom_handlers = NULL,
-      table_names = c("user", "reset_code", "logs")
+      table_names = c("user", "reset_code", "logs"),
+      custom_handlers = NULL
     ) {
       
       # append default handlers

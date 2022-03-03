@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_login_UI.R
 \name{logout_button}
 \alias{logout_button}
-\title{Action Button for logging out}
+\title{DEPRECATED Action Button for logging out}
 \usage{
 logout_button(id = "login_system", lang = "en", custom_txts = NULL)
 }

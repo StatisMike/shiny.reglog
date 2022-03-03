@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_login_UI.R
 \name{password_reset_UI}
 \alias{password_reset_UI}
-\title{Shiny UI module for password reset}
+\title{DEPRACEATED Shiny UI module for password reset}
 \usage{
 password_reset_UI(id = "login_system", lang = "en", custom_txts = NULL)
 }

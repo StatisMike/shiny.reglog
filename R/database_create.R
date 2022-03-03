@@ -247,21 +247,18 @@ DBI_tables_create <- function(
 #' Created spreadsheets will have following structure:
 #' 
 #' - user (default name)
-#'   - id: numeric
 #'   - username: character
 #'   - password: character
 #'   - email: character
 #'   - create_time: character
 #'   - update_time: character
 #' - reset_code (default name)
-#'   - id: numeric
 #'   - user_id: numeric
 #'   - reset_code: character
 #'   - used: numeric
 #'   - create_time: character
 #'   - update_time: character
 #' - logs (default name, optional)
-#'   - id: numeric
 #'   - time: character
 #'   - session: character
 #'   - direction: character
@@ -309,15 +306,12 @@ gsheet_tables_create <- function(
       }
       if (isTRUE(verbose)) close(hash_progress)
     }
-    user_data$id <- 1:nrow(user_data)
-    user_data <- user_data[, c("id", "username", "password", "email")]
     db_time <- db_timestamp()
     user_data$create_time <- db_time
     user_data$update_time <- db_time
   } else {
     # create skeleton for data.frame
     user_data <- data.frame(
-      id = as.numeric(NA),
       username = as.character(NA),
       password = as.character(NA),
       email = as.character(NA),
@@ -330,7 +324,6 @@ gsheet_tables_create <- function(
   
   # table with reset codes
   tables[[reset_code_name]] <- data.frame(
-    id = as.numeric(NA),
     user_id = as.numeric(NA),
     reset_code = as.character(NA),
     used = as.numeric(NA),
@@ -341,7 +334,6 @@ gsheet_tables_create <- function(
   # table for logs if chosen
   if (isTRUE(use_log)) {
     tables[[log_name]] <- data.frame(
-      id = as.numeric(NA),
       time = as.character(NA),
       session = as.character(NA),
       direction = as.character(NA),

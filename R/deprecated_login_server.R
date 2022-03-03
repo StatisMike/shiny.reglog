@@ -82,7 +82,7 @@
 #### main server module of the package ####
 #' @title Login server module
 #' @name login_server
-#' @description Shiny server module for the optional login/registration system
+#' @description DEPRACATED: Shiny server module for the optional login/registration system
 #'
 #' This function creates a server module to handle other modules of the system: \code{login_UI()}, \code{password_reset_UI()} and \code{register_UI}
 #'

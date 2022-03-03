@@ -61,7 +61,6 @@ Created spreadsheets will have following structure:
 \itemize{
 \item user (default name)
 \itemize{
-\item id: numeric
 \item username: character
 \item password: character
 \item email: character
@@ -70,7 +69,6 @@ Created spreadsheets will have following structure:
 }
 \item reset_code (default name)
 \itemize{
-\item id: numeric
 \item user_id: numeric
 \item reset_code: character
 \item used: numeric
@@ -79,7 +77,6 @@ Created spreadsheets will have following structure:
 }
 \item logs (default name, optional)
 \itemize{
-\item id: numeric
 \item time: character
 \item session: character
 \item direction: character

@@ -1,6 +1,6 @@
 #### UI module for login window ####
 
-#' Shiny UI module for login box
+#' DEPRECATED Shiny UI module for login box
 #'
 #' This function creates a UI div() element containing informations and input necessary for user to log-in.
 #' As it outputs a div() element, you can put it inside container of your choosing (be it some tabItem, fluidPage, fluidRow etc.)
@@ -42,7 +42,7 @@ login_UI <- function(id = "login_system",
 
 #### UI module for password reset ####
 
-#' Shiny UI module for password reset
+#' DEPRACEATED Shiny UI module for password reset
 #'
 #' This function creates a UI div() element containing informations and input necessary for user to reset password.
 #' As it outputs a div() element, you can put it inside container of your choosing (be it some tabItem, fluidPage, fluidRow etc.). It is important to mention that password reset procedure invokes modalDialog(), so it should be avoided to contain this function inside one.
@@ -88,7 +88,7 @@ password_reset_UI <- function(id = "login_system",
 
 #### UI module for registration ####
 
-#' Shiny UI module for registration box
+#' DEPRECATED Shiny UI module for registration box
 #'
 #' This function creates a UI div() element containing informations and input necessary for user to register new account.
 #' As it outputs a div() element, you can put it inside container of your choosing (be it some tabItem, fluidPage, fluidRow etc.)
@@ -141,7 +141,7 @@ register_UI <- function(id = "login_system",
 
 #### UI button for logout ####
 
-#' Action Button for logging out
+#' DEPRECATED Action Button for logging out
 #' 
 #' Simple action button - after pressing it, the user will be logged out
 #' 
