@@ -24,7 +24,7 @@ check_user_data <- function(user_data) {
 #' Create RegLog-valid database tables with DBI
 #' 
 #' @param conn DBI connection object
-#' @param user_name Name of table for storing user credentials. Defaults to
+#' @param user_name Name of the table for storing user credentials. Defaults to
 #' 'user'. Mandatory table.
 #' @param reset_code_name Name of the table for storing generated password reset
 #' codes. Defaults to 'reset_code'. Mandatory table.
@@ -43,8 +43,8 @@ check_user_data <- function(user_data) {
 #' printed back to the console. Defaults to `TRUE`.
 #' 
 #' @details Currently, the function is tested and working correctly for
-#' SQLite and MySQL databases. If you want to use another DBI-supported
-#' database, you need to create tables in other ways. 
+#' SQLite, MySQL, MariaDB and PostrgreSQL databases. If you want to use another 
+#' DBI-supported database, you need to create tables in other ways. 
 #' 
 #' Created tables should have following structure:
 #' 
@@ -182,7 +182,7 @@ DBI_tables_create <- function(
       # make sure that only required rows are present
       user_data <- user_data[, c("username", "password", "email")]
       # hash passwords if needed
-      if (hash_passwords) {
+      if (isTRUE(hash_passwords)) {
         if (isTRUE(verbose)) {
           writeLines(paste0("Hashing passwords from existing data."))
           hash_progress <- utils::txtProgressBar(min = 0, max = nrow(user_data), initial = 0,
@@ -195,7 +195,7 @@ DBI_tables_create <- function(
            utils::setTxtProgressBar(hash_progress, value = i)
          }
         }
-        close(hash_progress)
+        if (isTRUE(verbose)) close(hash_progress)
       }
       # add create_time and update_time to the data
       SQL_time <- db_timestamp()
@@ -214,3 +214,159 @@ DBI_tables_create <- function(
   }
   return(output)
 }
+
+#' Create RegLog-valid database tables with googlesheets4
+#' 
+#' @param user_name Name of the sheet for storing user credentials. Defaults to
+#' 'user'. Mandatory spreadsheet.
+#' @param reset_code_name Name of the sheet for storing generated password reset
+#' codes. Defaults to 'reset_code'. Mandatory table.
+#' @param use_log Should the sheet for keeping RegLogServer logs be 
+#' also created? Defaults to FALSE
+#' @param log_name Name of the sheet for storing logs from RegLogServer object.
+#' Used only if `use_log = TRUE`. Defaults to `logs`
+#' @param user_data If you wish to import existing user database, you can input
+#' data.frame with that table in this argument. It should contain columns:
+#' username, password, email. Defaults to NULL.
+#' @param hash_passwords If you are importing table of users upon tables creation,
+#' you can also specify if the password should be hashed using `scrypt::hashPassword`.
+#' Defaults to `FALSE`. If you have unhashed passwords in imported table, set
+#' this option to `TRUE`.
+#' @param gsheet_ss ID of the googlesheet that you want to append created tables
+#' to. Defaults to `NULL`, which means creating new googlesheet.
+#' @param gsheet_name If `gsheet_ss = NULL` and new googlesheet will be generated,
+#' you can choose choose its name. If left at default `NULL`, name will be
+#' generated randomly.
+#' @param verbose Boolean specific if the actions made by function should be
+#' printed back to the console. Defaults to `TRUE`. Don't affect `googlesheets4`
+#' generated messages. To silence them, use `options(googlesheets4_quiet = TRUE)`
+#' in the script before.
+#' 
+#' @details 
+#' 
+#' Created spreadsheets will have following structure:
+#' 
+#' - user (default name)
+#'   - id: numeric
+#'   - username: character
+#'   - password: character
+#'   - email: character
+#'   - create_time: character
+#'   - update_time: character
+#' - reset_code (default name)
+#'   - id: numeric
+#'   - user_id: numeric
+#'   - reset_code: character
+#'   - used: numeric
+#'   - create_time: character
+#'   - update_time: character
+#' - logs (default name, optional)
+#'   - id: numeric
+#'   - time: character
+#'   - session: character
+#'   - direction: character
+#'   - type: character
+#'   - note: character
+#' 
+#' @return ID of the created googlesheet
+#' @example examples/gsheet_tables_create.R
+#' @export
+#' @family RegLog databases
+
+gsheet_tables_create <- function(
+  user_name = "user",
+  reset_code_name = "reset_code",
+  use_log = FALSE,
+  log_name = "logs",
+  user_data = NULL,
+  hash_passwords = FALSE,
+  gsheet_ss = NULL,
+  gsheet_name = NULL,
+  verbose = TRUE
+){
+  # if user data is provided, check its validity
+  if (!is.null(user_data)) {
+    check_user_data(user_data)
+  }
+  
+  # parse tables to write
+  tables <- list()
+  
+  # table with user data
+  if (!is.null(user_data)) {
+    if (isTRUE(hash_passwords)) {
+      if (isTRUE(verbose)) {
+        writeLines(paste0("Hashing passwords from existing data."))
+        hash_progress <- utils::txtProgressBar(min = 0, max = nrow(user_data), initial = 0,
+                                               style = 3)
+      }
+      # iteratively hash passwords
+      for (i in seq_along(user_data$password)) {
+        user_data$password[i] <- scrypt::hashPassword(user_data$password[i])
+        if (isTRUE(verbose)) {
+          utils::setTxtProgressBar(hash_progress, value = i)
+        }
+      }
+      if (isTRUE(verbose)) close(hash_progress)
+    }
+    user_data$id <- 1:nrow(user_data)
+    user_data <- user_data[, c("id", "username", "password", "email")]
+    db_time <- db_timestamp()
+    user_data$create_time <- db_time
+    user_data$update_time <- db_time
+  } else {
+    # create skeleton for data.frame
+    user_data <- data.frame(
+      id = as.numeric(NA),
+      username = as.character(NA),
+      password = as.character(NA),
+      email = as.character(NA),
+      create_time = as.character(NA),
+      update_time = as.character(NA)
+    )[-1, ]
+  }
+  # append prepared data to the tables
+  tables[[user_name]] <- user_data
+  
+  # table with reset codes
+  tables[[reset_code_name]] <- data.frame(
+    id = as.numeric(NA),
+    user_id = as.numeric(NA),
+    reset_code = as.character(NA),
+    used = as.numeric(NA),
+    create_time = as.character(NA),
+    update_time = as.character(NA)
+  )[-1, ]
+
+  # table for logs if chosen
+  if (isTRUE(use_log)) {
+    tables[[log_name]] <- data.frame(
+      id = as.numeric(NA),
+      time = as.character(NA),
+      session = as.character(NA),
+      direction = as.character(NA),
+      type = as.character(NA),
+      note = as.character(NA)
+    )[-1, ]
+  }
+  
+  # if gsheet_ss is not provided, create new spreadsheet
+  
+  if (is.null(gsheet_ss)) {
+    output <- googlesheets4::gs4_create(
+      name = if (is.null(gsheet_name)) googlesheets4::gs4_random() else gsheet_name,
+      sheets = tables
+    )
+  } else {
+    for (i in seq_along(tables)) {
+      output <- googlesheets4::write_sheet(
+        data = tables[[i]],
+        ss = gsheet_ss,
+        sheet = names(tables)[i]
+      )
+    }
+  }
+  
+  return(output)
+}
+

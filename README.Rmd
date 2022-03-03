@@ -67,6 +67,18 @@ All new functions are prefixed with `RegLog`, so try to make the switch to them.
 
 ## 2. Basic structure 
 
+There are three main objects that are to be used when implementing *RegLog* system
+for login and registration in your ShinyApp. All of them need to be defined
+in the *server* code.
+
+- *dbConnector*: one of `RegLogDBIConnector` or `RegLogGsheetConnector`. It will handle
+all writes, edits and inputs to the users database.
+- *mailConnector*: one of `RegLogEmayiliConnector` or `RegLogGmailrConnector`. It
+will handle all automatical emailing to the user emails.
+- *RegLogServer*: The main module producing and controlling all of UI and 
+reactivity of the login and registration system. It uses *dbConnector* and
+*mailConnector* for actions external of R.
+
 ## 2. Installation
 
 You can install this version of shiny.reglog from GitHub with:

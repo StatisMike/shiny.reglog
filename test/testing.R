@@ -1,5 +1,7 @@
 library(shiny.reglog)
 
+ options("RegLogServer.logs_to_database" = 1)
+
 mail_message <- RegLogConnectorMessage(
   "register_mail",
   username = "Testowy",

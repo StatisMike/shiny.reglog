@@ -50,14 +50,14 @@ RegLogDBIConnector = R6::R6Class(
     },
     # method to input log into database
     input_log = function(message, direction, session) {
-      
+
       on.exit(private$db_disconnect())
       
       private$db_check_n_refresh()
       
-      sql <- paste("INSERT INTO", tables[3], 
+      sql <- paste("INSERT INTO", private$db_tables[3], 
                    "(time, session, direction, type, note)",
-                   "values(?time, ?session, ?direction, ?type, ?note")
+                   "VALUES (?time, ?session, ?direction, ?type, ?note);")
       
       query <- DBI::sqlInterpolate(private$db_conn,
                                    sql,

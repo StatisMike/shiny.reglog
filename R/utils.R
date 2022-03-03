@@ -40,7 +40,7 @@ check_user_mail <- function(x) {
 #' @noRd
 
 save_to_logs <- function(message, direction, self, session) {
-  
+
   # check options
   if (direction %in% c("sent", "received")) {
     log_save <- getOption("RegLogServer.logs", 1) >= 1
@@ -60,10 +60,12 @@ save_to_logs <- function(message, direction, self, session) {
   
   # if log is to be input into the database
   if (log_input) {
-    self$dbConnection$.__enclos_env__$private$input_log(
+    if (!is.null(self$dbConnector)) {
+          self$dbConnector$.__enclos_env__$private$input_log(
       message = message,
       direction = direction,
       session = session)
+    }
   }
 }
 
