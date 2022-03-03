@@ -105,6 +105,7 @@ emayili_mail_handler <- function(self, private, message) {
 #' - app_address
 #' - reset_code (optional for reset code mails)
 #' 
+#' It can also contain *mail_subject* and *mail_body* if you want to send custom
 #' @family mail handler functions
 #' @keywords internal
 

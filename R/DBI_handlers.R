@@ -144,7 +144,7 @@ DBI_register_handler = function(self, private, message) {
 #' @family DBI handler functions
 #' @keywords internal
 
-DBI_creds_edit_handler <- function(self, private, message) {
+DBI_credsEdit_handler <- function(self, private, message) {
   
   private$db_check_n_refresh()
   on.exit(private$db_disconnect())

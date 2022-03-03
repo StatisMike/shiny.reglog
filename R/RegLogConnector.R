@@ -148,12 +148,6 @@ RegLogConnector = R6::R6Class(
                                       "received",
                                       self,
                                       session)
-                         # self$log[[format(received_message$time, digits=15)]] <-
-                         #   data.frame(session = session$token,
-                         #              direction = "received",
-                         #              type = as.character(received_message$type),
-                         #              note = if(is.null(received_message$logcontent)) "" else as.character(received_message$logcontent))
-                         # call function, passing received message into it and assign
                          # returning message to sent
                          message_to_send <-
                            self$handlers[[
@@ -168,12 +162,7 @@ RegLogConnector = R6::R6Class(
                                       "sent",
                                       self,
                                       session)
-                         # self$log[[format(message_to_send$time, digits=15)]] <-
-                         #   data.frame(session = session$token,
-                         #              direction = "sent",
-                         #              type = as.character(message_to_send$type),
-                         #              note = if(is.null(message_to_send$logcontent)) "" else as.character(message_to_send$logcontent))
-                         
+
                          # send message to the reactiveVal
                          self$message(message_to_send)
                        })

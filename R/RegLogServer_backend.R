@@ -160,8 +160,7 @@ RegLogServer_backend <- function(
             type = "register",
             username = input$register_user_ID,
             password = input$register_pass1,
-            email = input$register_email,
-            logcontent = paste0(input$register_user_ID, "/", input$register_email)
+            email = input$register_email
           )
           
           self$dbConnector$listener(message_to_send)
@@ -231,8 +230,7 @@ RegLogServer_backend <- function(
             type = "credsEdit",
             username = input$cred_edit_old_ID,
             password = input$cred_edit_old_pass,
-            new_password = input$cred_edit_new_pass1,
-            logcontent = paste(input$cred_edit_old_ID, "password")
+            new_password = input$cred_edit_new_pass1
           )
           
           self$dbConnector$listener(message_to_send)
@@ -324,10 +322,6 @@ RegLogServer_backend <- function(
             # is everything is all right, send message
           } else {
             
-            message_to_send$logcontent <-
-              paste(input$cred_edit_old_ID, "changed:", 
-                    paste(c(input$cred_edit_new_username, input$cred_edit_new_mail), collapse = "/"))
-            
             self$dbConnector$listener(message_to_send)
             # save into logs
             save_to_logs(message_to_send,
@@ -359,9 +353,6 @@ RegLogServer_backend <- function(
                        self,
                        session)
         }
-
-        
-
       })
       
       # resetPass generate observer ####
@@ -379,7 +370,6 @@ RegLogServer_backend <- function(
                      "sent",
                      self,
                      session)
-        
       })
       
       # resetPass confirm observer ####
@@ -445,9 +435,7 @@ RegLogServer_backend <- function(
                        session)
           
         }
-        
       })
-      
     }
   )
 }

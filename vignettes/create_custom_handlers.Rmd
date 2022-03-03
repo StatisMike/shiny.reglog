@@ -1,0 +1,219 @@
+---
+title: "Creating custom RegLogConnector handlers"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating custom RegLogConnector handlers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(shiny.reglog)
+```
+
+*shiny.reglog* package requires user to create *dbConnector* and *mailConnector*
+for the *RegLogServer* functionality. While creating ShinyApp almost always
+you want to use one database and one emailing procedure. For all usage beyond
+*RegLogServer* defaults, it would be suboptimal to define new connections. That's
+why during development I came to the conclusion that these connectors should
+allow for easy extensions with custom functions.
+
+The scope of this vignette is to describe:
+
+- how the *RegLogConnectors* operate
+- the default *handlers functions*
+- how to write custom *handler function*
+
+## *RegLogConnector* dataflow
+
+Both *dbConnectors* (`RegLogDBIConnector` and `RegLogGsheetConnector`) and
+*mailConnectors* (`RegLogEmayiliConnector` and `RegLogGmailrConnector`) inherits
+from more general class: `RegLogConnector`. There are three public fields that
+are key for the whole dataflow:
+
+- `RegLogConnector$listener()` - *reactiveVal* object that intakes 
+*RegLogConnectorMessage* object. *RegLogConnector* listens to any change
+in the value of this this object and reacts accordingly.
+- `RegLogConnector$handlers` - *named list* of **handler functions**. For every
+`type` of received message there should be a specific function appended there.
+All of them should return another *RegLogConnectorMessage* object informing
+about the result of the function.
+- `RegLogConnector$message()` - *reactiveVal* object containing
+*RegLogConnectorMessage* that are returned from **handler function**.
+
+### RegLogConnectorMessage object
+
+`RegLogConnector` object reacts upon receiving some kind of 
+*RegLogConnectorMessage* object and responds likewise. Its an `S3` class object
+that contains four fields:
+
+- `time`: timestamp on which the message was generated
+- `type`: character string declaring handler function of the *RegLogConnector*
+that should be called when object receive message.
+- `data`: list of objects, usually some kind of input or output of the handler
+function
+- `logcontent`: character string declaring content that should be saved into
+*RegLogConnector* logs.
+
+You can create message freely using function of the same name:
+
+```{r preview_of_message}
+message <- 
+  RegLogConnectorMessage(
+    type = "test",
+    dataframe = mtcars,
+    numbers = runif(10, 0, 100),
+    logcontent = paste0("I contain data.frame and random numbers"))
+
+str(message)
+```
+
+## Default handler functions for *dbConnectors*
+
+Both *RegLogDBIConnector* and *RegLogGsheetConnector* contain the same default
+handler functions. In this vignette I will focus on the messages that are received
+by the handler functions and their general usability. To learn about messages
+produced by these functions, check "RegLogServer object fields and methods"
+vignette and its "Message" section - as all of these messages are finally
+exposed in `RegLogServer$message()` public field.
+
+All of these functions aren't exported, as they are used only internally. You can
+read the documentation for them though with usual syntax of `?function` in console. 
+Documentation is rendered for information how to react with them
+by creating *RegLogConnectorMessages* yourself.
+
+### Handler for *login* type message
+
+- *RegLogDBIConnector*: `DBI_login_handler`
+- *RegLogGsheetConnector*: `gsheet_login_handler`
+
+These functions are handling querying the database for the specified by the user
+of the ShinyApp user ID and password and check if there is a match. Message
+structure:
+
+```{r login_message}
+login_message <- 
+  RegLogConnectorMessage(
+    type = "login",
+    username = "Whatever",
+    password = "&f5*MSYj^niDt=V'3.[dyEX.C/")
+
+str(login_message)
+```
+
+### Handlers for *register* type message
+
+- *RegLogDBIConnector*: `DBI_register_handler`
+- *RegLogGsheetConnector*: `gsheet_register_handler`
+
+These functions are handling querying the database and checking if the specified
+user ID and email for new user aren't already existing in the database. If
+there is no conflicts, it will then hash provided password and input
+new row. Message structure:
+
+```{r register_message}
+register_message <- 
+  RegLogConnectorMessage(
+    type = "register",
+    username = "IAmNewThere",
+    email = "something@new.com",
+    password = "veryHardP422w0rd!")
+
+str(register_message)
+```
+
+### Handlers for *credsEdit* type message
+
+- *RegLogDBIConnector*: `DBI_credsEdit_handler`
+- *RegLogGsheetConnector*: `gsheet_credsEdit_handler`
+
+These functions are querying the database to search for the specified username
+and password. After confirming user identity, it can update the database row
+for this user with any or all of: new username, new email and new password.
+Message structure:
+
+```{r credsEdit message}
+credsEdit_message <- 
+  RegLogConnectorMessage(
+    type = "credsEdit",
+    username = "Whatever",
+    password = "&f5*MSYj^niDt=V'3.[dyEX.C/",
+    new_username = "Whenever",
+    new_email = "edited@email.com",
+    new_password = "veryHardP422w0rd!")
+
+str(credsEdit_message)
+```
+
+### Handlers for *resetCode_generate* type message
+
+- *RegLogDBIConnector*: `DBI_resetPass_generation_handler`
+- *RegLogGsheetConnector*: `gsheet_resetPass_generation_handler`
+
+These functions is querying the database to search for the specified username. 
+After confirming that the specified username exists, it generates and inputs
+reset code that the user can use to generate new password.
+Message structure:
+
+```{r resetPass_generate_message}
+resetPass_generate_message <- 
+  RegLogConnectorMessage(
+    type = "resetPass_generate",
+    username = "Whatever")
+
+str(resetPass_generate_message)
+```
+
+### Handlers for *resetCode_confirm* type message
+
+- *RegLogDBIConnector*: `DBI_resetPass_confirmation_handler`
+- *RegLogGsheetConnector*: `gsheet_resetPass_confirmation_handler`
+
+These functions is querying the database to search for the specified username
+and confirming that provided reset code is correct. After confirmation, it
+marks the reset code as used and updates password for the user. 
+Message structure:
+
+```{r resetPass_confirm_message}
+resetPass_confirm_message <-
+  RegLogConnectorMessage(
+    type = "resetPass_confirm",
+    username = "Whatever",
+    reset_code = "4265417643",
+    password = "veryHardP422w0rd!")
+
+str(resetPass_confirm_message)
+```
+
+## Default handler function for *mailConnectors*
+
+All handlers for *mailConnectors* use the same handler functions:
+
+- *RegLogEmayiliConnector*: `emayili_mail_handler`
+- *RegLogGmailrConnector*: `gmailr_mail_handler`
+
+They send the email to the specified address using subject and html body of the
+email kept in the `mailConnector$mails[[message_type]]` list. They also replace
+all of occurences of *?username?*, *?email?*, *?app_name?*, *?app_address?* and
+*?reset_code?* with respective values received in the *RegLogConnectorMessage*.
+
+```{r mail_reglogconnectormessage}
+resetPass_mail_message <- 
+  RegLogConnectorMessage(
+    type = "resetPass_mail",
+    username = "Whatever",
+    email = "edited@email.com",
+    app_name = "RegLog Nice ShinyApp",
+    app_address = "https://reglog.nice.com",
+    reset_code = "4265417643")
+
+str(resetPass_mail_message)
+```
+
+## How to write custom *handler function*
+
