@@ -26,14 +26,14 @@ ui <- fluidPage(style = "max-width: 600px;",
 
 server <- function(input, output, session) {
   
-  # dbConnectorMySQL <- RegLogDBIConnector$new(
-  #   driver = RMySQL::MySQL(),
-  #   user = Sys.getenv("REGLOG_MYSQL_USER"),
-  #   password = Sys.getenv("REGLOG_MYSQL_PASS"),
-  #   host = "localhost",
-  #   port = 3306,
-  #   dbname = "reglog_test"
-  # )
+  dbConnectorMariaDB <- RegLogDBIConnector$new(
+    driver = RMariaDB::MariaDB(),
+    user = Sys.getenv("MARIADB_LOCAL_USER"),
+    password = Sys.getenv("MARIADB_LOCAL_PASS"),
+    host = "localhost",
+    port = 3306,
+    dbname = "reglog_system"
+  )
   
   dbConnectorSQLite <- RegLogDBIConnector$new(
     driver = RSQLite::SQLite(),
@@ -46,7 +46,7 @@ server <- function(input, output, session) {
   )
   
   RegLog <- RegLogServer$new(
-    dbConnector = dbConnectorSQLite,
+    dbConnector = dbConnectorMariaDB,
     mailConnector = mailConnector
   )
   

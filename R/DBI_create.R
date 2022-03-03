@@ -12,7 +12,7 @@ check_user_data <- function(user_data) {
   if (class(user_data) != "data.frame") {
     stop(call. = F, "User data need to be in form of 'data.frame' object.")
   }
-  if (!all(c("username", "password", "email") %in% names(user_date))) {
+  if (!all(c("username", "password", "email") %in% names(user_data))) {
     stop(call. = F, "Data.frame containing user data needs to contain columns: 'username', 'password' and 'email'.")
   }
   if (sum(is.na(user_data$username), is.na(user_data$password), is.na(user_data$email)) > 0) {
@@ -39,6 +39,8 @@ check_user_data <- function(user_data) {
 #' you can also specify if the password should be hashed using `scrypt::hashPassword`.
 #' Defaults to `FALSE`. If you have unhashed passwords in imported table, set
 #' this option to `TRUE`.
+#' @param verbose Boolean specific if the actions made by function should be
+#' printed back to the console. Defaults to `TRUE`.
 #' 
 #' @details Currently, the function is tested and working correctly for
 #' SQLite and MySQL databases. If you want to use another DBI-supported
@@ -69,17 +71,19 @@ check_user_data <- function(user_data) {
 #'   - note: varchar(255)
 #' 
 #' @return List with results of the creation
+#' @example examples/DBI_tables_create.R
 #' @export
 #' @family RegLog databases
 
-RegLog_DBI_database_create <- function(
+DBI_tables_create <- function(
   conn,
   user_name = "user",
   reset_code_name = "reset_code",
   use_log = FALSE,
   log_name = "logs",
   user_data = NULL,
-  hash_passwords = FALSE
+  hash_passwords = FALSE,
+  verbose = TRUE
   ){
   # if user data is provided, check its validity
   if (!is.null(user_data)) {
@@ -116,6 +120,10 @@ RegLog_DBI_database_create <- function(
     warning = function(w) w
   )
   
+  if (isTRUE(verbose)) {
+    writeLines(paste0(output$user$table_name, " creation result: ", output$user$result))
+  }
+  
   # create reset code table
   
   output[["reset_code"]][["table_name"]] <- reset_code_name
@@ -135,6 +143,10 @@ RegLog_DBI_database_create <- function(
     error = function(e) e,
     warning = function(w) w
   )
+  
+  if (isTRUE(verbose)) {
+    writeLines(paste0(output$reset_code$table_name, " creation result: ", output$reset_code$result))
+  }
   
   # optionally - create log-storing table
   
@@ -156,28 +168,45 @@ RegLog_DBI_database_create <- function(
       error = function(e) e,
       warning = function(w) w
     )
+    
+    if (isTRUE(verbose)) {
+      writeLines(paste0(output$log$table_name, " creation result: ", output$log$result))
+    }
   }
   
   # optionally: insert user data
   if (!is.null(user_data)) {
     
     output[["user"]][["data_import"]] <- tryCatch({
-      # use sql template
-      sql <- paste("INSERT INTO", user_name, 
-                   "(username, password, email, create_time, update_time)",
-                   "VALUES (?username, ?password, ?email, ?time, ?time);")
-      
-      # insert data into table iteratively
-      for (i in 1:nrow(user_data)) {
-        
-        query <- DBI::sqlInterpolate(
-          conn, sql, username = user_data$username[i],
-          password = if(hash_passwords) scrypt::hashPassword(user_data$password[i]) 
-          else user_data$password[i],
-          email = user_data$email[i],
-          time = db_timestamp()
-        )
+     
+      # make sure that only required rows are present
+      user_data <- user_data[, c("username", "password", "email")]
+      # hash passwords if needed
+      if (hash_passwords) {
+        if (isTRUE(verbose)) {
+          writeLines(paste0("Hashing passwords from existing data."))
+          hash_progress <- utils::txtProgressBar(min = 0, max = nrow(user_data), initial = 0,
+                                                 style = 3)
+        }
+        # iteratively hash passwords
+        for (i in seq_along(user_data$password)) {
+         user_data$password[i] <- scrypt::hashPassword(user_data$password[i])
+         if (isTRUE(verbose)) {
+           utils::setTxtProgressBar(hash_progress, value = i)
+         }
+        }
+        close(hash_progress)
       }
+      # add create_time and update_time to the data
+      SQL_time <- db_timestamp()
+      user_data$create_time <- SQL_time
+      user_data$update_time <- SQL_time
+      
+      # append the whole table
+      DBI::dbAppendTable(conn,
+                         name = user_name,
+                         value = user_data)
+      
     },
     warning = function(w) w,
     error = function(e) e)

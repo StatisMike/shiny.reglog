@@ -24,34 +24,47 @@ into relational database.
 
 On the other hand, it may be handy for your App to allow access of
 unregistered users. If you need to secure your ShinyApp, there are
-better alternatives (mainly [shinymanager
-package](https://github.com/datastorm-open/shinymanager))
+better alternatives
+(<a href="https://github.com/datastorm-open/shinymanager" target="_blank">shinymanager</a>
+or
+<a href="https://github.com/PaulC91/shinyauthr" target="_blank">shinyauthr</a>)
 
 This package contains modules to use in your Shiny application allowing
-you to automatically insert boxes for login, register and password reset
-procedure. It currently supports two methods for database containers:
+you to automatically insert boxes for login, register, credentials edit
+and password reset and procedures.
 
--   googlesheets for easy of use (via `googlesheets4` package)
--   SQLite database for security and faster use (via `DBI` and `RSQLite`
-    packages)
+*shiny.reglog* supports as database containers either databases accessed
+with `RSQLite`, `RMariaDB`, `RMySQL` and `RPostgreSQL` drivers or
+googlesheets-based database (accessed by `googlesheets4` package).
 
-Both registration and password reset procedures require confirmation
-email to verify the user. The package allows two methods of mail
-sending:
+It is highly recommended to use one of the `DBI`-supported databases,
+though. It is much more optimized and secure, as the whole database is
+never loaded as a whole into the memory, but queried as needed.
+*googlesheets* database is much easier to set-up, but it shouldn’t be
+used when you are expecting big userbase.
 
--   via `emayili` package for more flexibility and easier setup but less
-    security
--   via `gmailr` package, allowing usage of popular gmail accounts. This
-    method is more secure but the setup can be more tricky: for more
-    information you can check vignette:
-    <a href="https://cran.r-project.org/web/packages/shiny.reglog/vignettes/auth.html" target="_blank">shiny.reglog: How to get Google API authorization</a>
+Registration, credentials edit and password reset procedures
+programmatically send email to the user of your ShinyApp - to welcome
+them, inform about change of their user ID and/or email and to give them
+a reset code to reset their password. *shiny.reglog* supports two
+methods of email sending: via `emayili` or `gmailr` packages. Both of
+them have their pros and cons, depending on your accesses: `emayili`
+allows for usage of many SMTP servers, while `gmailr` allowing using
+*gmail* messaging via Google REST API.
 
-Currently the package went into stable state, as it have potential of
-growth without danger of breaking changes. In the future I plan to widen
-the usability:
+For some informations about getting basic Google REST API authorization
+you can read vignette:
+<a href="https://cran.r-project.org/web/packages/shiny.reglog/vignettes/auth.html" target="_blank">shiny.reglog: How to get Google API authorization</a>
 
-1.  Some kind of admin / levels of authorization for users
-2.  Passphrase for SQLite database
+Currently the package is after major change in its code - basically full
+rewrite to allow more security, usage of more databases and more
+customization allowed for the end-user. Past functions are still
+available in current version, but will generate deprecation warnings.
+
+All new functions are prefixed with `RegLog`, so try to make the switch
+to them.
+
+## 2. Basic structure
 
 ## 2. Installation
 
