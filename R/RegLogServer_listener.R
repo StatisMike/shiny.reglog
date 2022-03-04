@@ -289,22 +289,6 @@ RegLogServer_listener <- function(
                                 footer = modalButton("OK")))
                 }
 
-                # send message to the dbConnector
-                message_to_send <- RegLogConnectorMessage(
-                  "resetPass_mail",
-                  username = received_message$data$user_id,
-                  email = received_message$data$user_mail,
-                  app_name = private$app_name,
-                  app_address = private$app_address,
-                  reset_code = received_message$data$reset_code
-                )
-
-                self$mailConnector$listener(message_to_send)
-                save_to_logs(message_to_send,
-                             "sent",
-                             self,
-                             session)
-
               } else {
                 #if not succesful
 

@@ -18,7 +18,9 @@ gmailr_mail_handler(self, private, message)
 \item app_name
 \item app_address
 \item reset_code (optional for reset code mails)
-}}
+}
+
+It can also contain \emph{mail_subject} and \emph{mail_body} if you want to send custom}
 }
 \description{
 Default handler function parsing and sending register confirmation

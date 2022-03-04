@@ -1,6 +1,8 @@
 library(shiny.reglog)
 
- options("RegLogServer.logs_to_database" = 1)
+googlesheets4::gs4_auth("statismike@gmail.com")
+
+ options("RegLogServer.logs_to_database" = 0)
 
 mail_message <- RegLogConnectorMessage(
   "register_mail",
@@ -42,13 +44,17 @@ server <- function(input, output, session) {
     dbname = "/home/kosin/Documents/sqlite/users.sqlite"
   )
   
+  dbConnectorgsheet <- RegLogGsheetConnector$new(
+    gsheet_ss = "1argj0wG_gBAM6VoaRwXOLoDJ6k69LfAZfBgb330vA4I"
+  )
+  
   mailConnector <- RegLogEmayiliConnector$new(
     from = "statismike@gmail.com",
     smtp = emayili::gmail("statismike@gmail.com", Sys.getenv("STATISMIKE_GMAIL_PASS"))
   )
   
   RegLog <- RegLogServer$new(
-    dbConnector = dbConnectorMariaDB,
+    dbConnector = dbConnectorgsheet,
     mailConnector = mailConnector
   )
   

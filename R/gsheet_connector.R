@@ -38,7 +38,7 @@ RegLogGsheetConnector = R6::R6Class(
       )
     },
     # method to get specified sheet of type 'user' or 'reset_code'
-    get_sheet = function(sheet, type) {
+    get_sheet = function(type) {
       switch(type,
         user = {
           private$data_user <- googlesheets4::read_sheet(
@@ -71,7 +71,7 @@ RegLogGsheetConnector = R6::R6Class(
     #' @param custom_handlers named list of custom handler functions. Custom handler
     #' should take arguments: `self` and `private` - relating to the R6 object
     #' and `message` of class `RegLogConnectorMessage`. It should return
-    #' return `RegLogConnectorMessage` object.
+    #' `RegLogConnectorMessage` object.
     #' 
     #' @return object of `RegLogDBIConnector` class
     #' 
@@ -85,15 +85,15 @@ RegLogGsheetConnector = R6::R6Class(
       # append default handlers
       self$handlers[["login"]] <- gsheet_login_handler
       self$handlers[["register"]] <- gsheet_register_handler
-      self$handlers[["credsEdit"]] <- gsheet_creds_edit_handler
+      self$handlers[["credsEdit"]] <- gsheet_credsEdit_handler
       self$handlers[["resetPass_generate"]] <- gsheet_resetPass_generation_handler
       self$handlers[["resetPass_confirm"]] <- gsheet_resetPass_confirmation_handler
       
       super$initialize(custom_handlers = custom_handlers)
       # store the arguments internally
-      private$db_tables <- table_names
-      # assign the unique ID for the module
-      self$module_id <- uuid::UUIDgenerate()
+      private$gsheet_ss <- gsheet_ss
+      private$gsheet_sheetnames <- gsheet_sheetnames
+
     }
   )
 )
