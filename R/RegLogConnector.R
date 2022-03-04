@@ -147,7 +147,8 @@ RegLogConnector = R6::R6Class(
                          save_to_logs(received_message,
                                       "received",
                                       self,
-                                      session)
+                                      session,
+                                      no_db = T)
                          # returning message to sent
                          message_to_send <-
                            self$handlers[[
@@ -161,7 +162,8 @@ RegLogConnector = R6::R6Class(
                          save_to_logs(received_message,
                                       "sent",
                                       self,
-                                      session)
+                                      session,
+                                      no_db = T)
 
                          # send message to the reactiveVal
                          self$message(message_to_send)

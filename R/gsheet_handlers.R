@@ -301,11 +301,11 @@ gsheet_resetPass_generation_handler <- function(self, private, message) {
   return(message_to_send)
 }
 
-#' DBI resetpass code confirmation handler
+#' googlesheets resetpass code confirmation handler
 #' 
 #' @description Default handler function querying database to confirm credentials
 #' edit procedure and update values saved within database. Used within object of 
-#' `RegLogDBIConnector` class internally.
+#' `RegLogGsheetConnector` class internally.
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which need to contain within its data:
@@ -313,7 +313,7 @@ gsheet_resetPass_generation_handler <- function(self, private, message) {
 #' - reset_code
 #' - password
 #' 
-#' @family DBI handler functions
+#' @family googlesheets handler functions
 #' @keywords internal
 
 gsheet_resetPass_confirmation_handler <- function(self, private, message) {

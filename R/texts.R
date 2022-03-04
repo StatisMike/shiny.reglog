@@ -98,20 +98,12 @@ RegLog_txt$en = list(
   resetPass_badId_b = "Provided user ID isn't found in our database.",
   resetPass_invalidCode_t = "Incorrect reset code",
   resetPass_invalidCode_b = "Provided reset code isn't correct. Check if the code has been copied or typed in correctly.",
-  id_nfound_reset = "Specified user ID not found in our database. Check if you typed it correctly. If the account wasn't created yet, please register a new account.",
-  reset_code_send_t = "Reset code has been sent",
-  reset_code_send_b = "Reset code has been sent to the e-mail that you provided during registration. It will be valid for the next 24 hours to reset your password.",
-  reset_code_nfound_t = "Reset code not found",
-  reset_code_nfound_b = "There is no active password reset code for specified account. The code is only active for 24 hours after generation. Check if the account ID in the box above has been typed properly or if the code was generated within 24 hours.",
-  reset_code_ncorr_t = "Reset code is not correct",
-  reset_code_ncorr_b = "Provided reset code isn't correct. Check if the code has been copied or typed correctly.",
-  reset_pass_mod_t = "Reset the password",
-  reset_pass_mod_b = "Provided reset code is valid. You can now set the new password in the form below.",
-  reset_pass_mod_bttn = "Confirm new password",
-  reset_pass_mod_nv1 = "Password is not valid. Valid password must consists of 8~25 alphanumeric characters",
-  reset_pass_mod_nv2 = "Entered passwords are not identical. Try again.",
-  reset_pass_mod_succ ="Password changed succesfully. You can use it to log-in to your account.",
-  ### mail labels ###
+  ### logout modal ####
+  logout_notLogIn_t = "Cannot log-out",
+  logout_notLogIn_b = "You aren't logged in.",
+  logout_success_t = "Logged out",
+  logout_success_b = "You have been successfully logged out",
+  ## mail labels ####
   mail_automatic = "This message was generated automatically.",
   # reset
   reset_mail_h = "password reset code",

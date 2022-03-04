@@ -24,7 +24,9 @@ procedure. Used within object of \code{RegLogGsheetConnector} class internally.
 \seealso{
 Other googlesheets handler functions: 
 \code{\link{gsheet_credsEdit_handler}()},
-\code{\link{gsheet_register_handler}()}
+\code{\link{gsheet_register_handler}()},
+\code{\link{gsheet_resetPass_confirmation_handler}()},
+\code{\link{gsheet_resetPass_generation_handler}()}
 }
 \concept{googlesheets handler functions}
 \keyword{internal}

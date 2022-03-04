@@ -43,9 +43,11 @@ check_user_mail <- function(x) {
 #' @param direction either received or sent
 #' @param self R6 object
 #' @param session shiny object
+#' @param no_db boolean: if TRUE, then inhibits inputing into database. 
+#' Defaults to FALSE
 #' @noRd
 
-save_to_logs <- function(message, direction, self, session) {
+save_to_logs <- function(message, direction, self, session, no_db = F) {
 
   # check options
   if (direction %in% c("sent", "received")) {
@@ -65,7 +67,7 @@ save_to_logs <- function(message, direction, self, session) {
   }
   
   # if log is to be input into the database
-  if (log_input) {
+  if (log_input && isFALSE(no_db)) {
     if (!is.null(self$dbConnector)) {
           self$dbConnector$.__enclos_env__$private$input_log(
       message = message,
