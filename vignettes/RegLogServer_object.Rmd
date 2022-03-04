@@ -110,6 +110,18 @@ it contains empty character string (`""`).
 RegLogServer$user_mail()
 ```
 
+## User logout
+
+You can insert an event to logout user by calling public method.
+
+```{r user_logout, eval = F}
+# if you create an actionButton "logout_button" in your UI, you can observe
+# its action and logout after press:
+observeEvent(input$logout_button, {
+  RegLogServer$logout()
+})
+```
+
 ## UI object lists
 
 There are dedicated functions for creating UI for different functionalities of the
@@ -120,6 +132,11 @@ It is expected that there will be users who would want more freedom with how
 their UI should look like. That's why there are dedicated public fields containing
 named lists of UI elements for all of these functionalities. You can use these
 to create your own, custom `renderUI` output.
+
+- `UI_list_login` containing elements of login procedure tags
+- `UI_list_register` containing elements of register procedure tags
+- `UI_list_credsEdit` containing elements of credentials edit procedure tags
+- `UI_list_resetPass` containing elements of reset password procedure tags
 
 ## Message
 
@@ -155,7 +172,7 @@ read vignette **Creating custom RegLogConnector handlers**.
 checked in for best results. 
 >Conditions written like `value == FALSE` can be checked like that - the *message*
 of given type always contains this object. Conditions written like `isFALSE(value)` 
-means that the *value* in the *message* can be `NULL`.
+means that the specified *value* in the *message* can be `NULL`.
 
 ### Type: **ping**
 
@@ -213,6 +230,7 @@ by user. It contains:
 
 - **data**:
   - success: boolean - `FALSE`
+  - input_provided: boolean - `TRUE` if all needed inputs were provided
   - valid_id: boolean - `TRUE` if provided user ID was valid
   - valid_email: boolean - `TRUE` if provided email was valid
   - valid_pass: boolean - `TRUE` if provided password was valid
@@ -221,7 +239,7 @@ by user. It contains:
 This message type is binded with default *modalDialogs*:
 
 - register_noInput (`data$input_provided == FALSE`)
-- register_nonValidID (`isFALSE(data$valid_id)`)
+- register_nonValidId (`isFALSE(data$valid_id)`)
 - register_nonValidEmail (`isFALSE(data$valid_email)`)
 - register_nonValidPass (`isFALSE(data$valid_pass)`)
 - register_notIndenticalPass (`isFALSE(data$identical_pass)`)
@@ -247,8 +265,8 @@ register procedure. It contains:
   
 This message type is binded with default *modalDialogs*:
 
-- register_existingID (`data$success == FALSE && data$username == FALSE`)
-- register_existingMail (`data$success == FALSE && data$email == FALSE`)
+- register_existingId (`data$success == FALSE && data$username == FALSE`)
+- register_existingEmail (`data$success == FALSE && data$email == FALSE`)
 - register_success (`data$success == TRUE`)
 
 ### Type: **register_mail**
@@ -280,10 +298,10 @@ This message type is binded with default *modalDialogs*:
 
 - credsEdit_noInput_pass (`data$input_provided == FALSE` && change == "pass"`)
 - credsEdit_noInput_other (`data$input_provided == FALSE` && change == "other"`)
-- credsEdit_badId (`isFALSE(data$username)`)
-- credsEdit_badPass (`isFALSE(data$password)`)
-- credsEdit_existingID (`isFALSE(data$username)`)
-- credsEdit_existingMail (`isFALSE(data$email)`)
+- credsEdit_nonValidId (`isFALSE(data$valid_id)`)
+- credsEdit_nonValidEmail (`isFALSE(data$valid_email)`)
+- credsEdit_nonValidPass (`isFALSE(data$valid_pass)`)
+- credsEdit_notIdenticalPass (`isFALSE(data$identical_pass)`)
 
 ### Type: **credsEdit**
 
@@ -309,8 +327,8 @@ This message type is binded with default *modalDialogs*:
 
 - credsEdit_badId (`data$success == FALSE && data$username == FALSE`)
 - credsEdit_badPass (`data$success == FALSE && data$password == FALSE`)
-- credsEdit_existingID (`data$success == FALSE && isFALSE(data$username)`)
-- credsEdit_existingMail (`data$success == FALSE && isFALSE(data$email)`)
+- credsEdit_existingId (`data$success == FALSE && isFALSE(data$username)`)
+- credsEdit_existingEmail (`data$success == FALSE && isFALSE(data$email)`)
 - credsEdit_success (`data$success == TRUE`)
 
 ### Type: **resetPass_front**
@@ -321,8 +339,17 @@ by user. It contains:
 
 - **data**
   - success: boolean - `FALSE` (message generated only when something is invalid)
+  - step: character - either `generate` or `confirm`, depending on the step of the process
+  - input_provided: boolean - `TRUE` if the inputs required for specific step were provided
   - valid_pass: boolean - `TRUE` if provided password was valid
   - identical_pass: boolean - `FALSE` (it is the last condition checked)
+  
+This message type is binded with default *modalDialogs*:
+
+- resetPass_noInput_generate (`data$step == "generate" && isFALSE(data$input_provided)`)
+- resetPass_noInput_confirm (`data$step == "confirm" && isFALSE(data$input_provided)`)
+- resetPass_nonValidPass (`isFALSE(data$valid_pass)`)
+- resetPass_notIdenticalPass (`isFALSE(data$identical_pass)`)
   
 ### Type:  **resetPass_generate**
 
@@ -336,6 +363,11 @@ password reset procedure - code generation step. It contains:
 - **logcontent**:
   - information about user for whom the reset code was generated and to which
   email it will be sent.
+  
+This message type is binded with default *modalDialog*:
+
+- resetPass_badId (`data$username == FALSE`)
+- resetPass_codeGenerated (`data$success == TRUE`)
   
 ### Type: **resetPass_mail**
 
@@ -359,3 +391,11 @@ password reset procedure - code confirmation step. It contains:
   - code_valid: boolean - `TRUE` if the reset code was valid (both matched and not expired)
 - **logcontent**
   - username for which the password was changed.
+  
+This message type is binded with default *modalDialogs*:
+
+- resetPass_badId (`data$username == FALSE`)
+- resetPass_invalidCode (`isFALSE(data$code_valid)`)
+- resetPass_success (`data$success == TRUE`)
+
+## 

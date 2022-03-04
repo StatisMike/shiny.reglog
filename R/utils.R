@@ -14,9 +14,15 @@ get_url_shiny <- function(session) {
   
 }
 
-modals_check <- function(private, modalname) {
+modals_check_n_show <- function(private, modalname) {
   
-  isTRUE(private$use_modals) || (is.list(private$use_modals) && !isFALSE(private$use_modals[[modalname]]))
+  if (isTRUE(private$use_modals) || (is.list(private$use_modals) && !isFALSE(private$use_modals[[modalname]]))) {
+    showModal(
+      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = paste(modalname, "t", sep = "_")),
+                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = paste(modalname, "b", sep = "_"))),
+                  footer = modalButton("OK"))
+    )
+  }
   
 }
 
