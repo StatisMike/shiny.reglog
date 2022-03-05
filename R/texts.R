@@ -1,19 +1,19 @@
-RegLog_txt <- new.env()
+RegLog_txts <- new.env()
 
 ######     for everyone who wants to add another language support:   ####
 # - add new language in '.languages_registered'
 
-RegLog_txt$.languages_registered <- c("i18", "en", "pl")
+RegLog_txts$.languages_registered <- c("i18", "en", "pl")
 
 # - update '.lang_error_call' with information about new language
 
-RegLog_txt$.lang_error_call <- "Currently, only supported languages are English 'en' and Polish 'pl'. You can also use 'i18' to get only the content identifier." 
+RegLog_txts$.lang_error_call <- "Currently, only supported languages are English 'en' and Polish 'pl'. You can also use 'i18' to get only the content identifier." 
 
 # add new labels in 'reglog_texts' environment
 # remember to escape any non-standard characters using /uXXXX with their unicode
 
 # english texts ####
-RegLog_txt$en = list(
+RegLog_txts$en = list(
   ## UI texts ####
   ### multi-used labels ####
   user_id = "User ID",
@@ -135,7 +135,7 @@ RegLog_txt$en = list(
   cred_edit_other_change_bttn = "Confirm change of user data"
 )
 
-RegLog_txt$pl = list(
+RegLog_txts$pl = list(
   ### UI labels ###
   # multi-used labels
   user_id = "Nazwa u\u017Cytkownika",
@@ -259,8 +259,8 @@ RegLog_txt <- function(
 ) {
   
   # check if the lang is in registered languages
-  if (!lang %in% reglog_texts$.languages_registered) {
-    stop(reglog_texts$.lang_error_call, call.= F)
+  if (!lang %in% RegLog_txts$.languages_registered) {
+    stop(RegLog_txts$.lang_error_call, call.= F)
   }
   
   # if custom_txts is null, acquire defaults txts
@@ -268,9 +268,9 @@ RegLog_txt <- function(
   if (is.null(custom_txts)) {
     
     if (is.null(x)) {
-      return(reglog_texts[[as.character(lang)]])
+      return(RegLog_txts[[as.character(lang)]])
     } else {
-      return(reglog_texts[[as.character(lang)]][[as.character(x)]])
+      return(RegLog_txts[[as.character(lang)]][[as.character(x)]])
     }
     
     # if custom_txts are provided, return default value only if there is no

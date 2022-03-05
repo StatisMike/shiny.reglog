@@ -395,7 +395,7 @@ password reset procedure - code confirmation step. It contains:
 This message type is binded with default *modalDialogs*:
 
 - resetPass_badId (`data$username == FALSE`)
-- resetPass_invalidCode (`isFALSE(data$code_valid)`)
+- resetPass_nonValidCode (`isFALSE(data$code_valid)`)
 - resetPass_success (`data$success == TRUE`)
 
 ### Type: **logout**
@@ -437,6 +437,61 @@ point in time in the form of *data.frame*.
 ```{r, eval = F}
 logs_df <- RegLogServer$get_logs()
 ```
+
+## Configuring RegLogServer
+
+As the whole *RegLog* system is created with elasticity in mind, there are also
+many options for customizing the behaviour of *RegLogServer* object.
+
+### Customizing messages and texts 
+
+During *RegLogServer* object initialization you can specify some arguments:
+
+- `app_name` - name of your application that will show up in default emails
+sent to your users. Defaults to the name of root folder of your application.
+- `app_address` - URL to your application that will show up in default emails
+sent to your users. Defaults to the URL that the App is accessed on the client
+side (actually: `NULL`, as the address is got on session start)
+- `lang` - language in which the default texts are presented. Defaults to "en"
+for English. You can also specify "i18" for the RegLog to show only the content
+identifiers for ease of building your own translations using external tools.
+- `custom_txts` - defaults to NULL. Can be a named list of character vectors that
+should be used in place of defined text for language of your choosing (to 
+check them out, use `RegLog_texts()` function).
+
+    You can define custom texts during initialization of *RegLogServer*:
+    ```{r, eval = F}
+        # initialize new RegLogServer object
+    RegLog <- RegLogServer$new(
+      # assign created dbConnector and mailConnector
+      dbConnector = dbConnector,
+      mailConnector = mailConnector,
+      # replace default title and body of `login_success` modalDialog
+      custom_txts = list(
+        login_success_t = "Welcome!",
+        login_success_b = "Hi! It's nice to see you logged into our ShinyApp!"
+      )
+    )
+    ```
+    
+    
+- `use_modals` - defaults to TRUE. If specified as `FALSE`, no default modals
+will be shown. You can also inhibit only specific modal dialogs by providing
+named list of FALSE values. Eg:
+
+    ```{r, eval = F}
+    # initialize new RegLogServer object
+    RegLog <- RegLogServer$new(
+      # assign created dbConnector and mailConnector
+      dbConnector = dbConnector,
+      mailConnector = mailConnector,
+      # inhibit default 'login_success' and 'register_success' modals
+      use_modals = list(
+        login_success = FALSE,
+        register_success = FALSE
+      )
+    )
+    ```
 
 ### Options related to log saving
 
