@@ -38,25 +38,26 @@ RegLogServer_listener <- function(
             ## logout messages reactions ####
             logout = {
               
-              if (modals_check(private, "logout")) {
-                showModal(
-                  modalDialog(
-                    title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "logout_mod_t"),
-                    tags$p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "logout_mod_b")),
-                    footer = modalButton("OK")
-                  )
-                )
+              if (received_message$data$success) {
+                
+                modals_check_n_show(private = private,
+                                    modalname = "logout_success")
+                # clear user data
+                self$is_logged(FALSE)
+                self$user_id(uuid:UUIDgenerate())
+                self$user_mail("")
+                
+              } else {
+                
+                modals_check_n_show(private = private,
+                                    modalname = "logout_notLogIn")
+                
               }
-              
-              # clear user data
-              self$is_logged <- reactiveVal(FALSE)
-              self$user_id <- reactiveVal(uuid::UUIDgenerate())
-              self$user_mail <- reactiveVal("")
-              #expose the message to the outside
-              self$message(received_message)
             }
           )
         })
+        #expose the message to the outside
+        self$message(received_message)
       })
       
       # observe changes in dbConnector ####
@@ -88,30 +89,19 @@ RegLogServer_listener <- function(
                 # user doesn't exist:
                 if (!received_message$data$username) {
                   # show the modal if configuration allows
-                  if (modals_check(private, "login_badId")) {
-                    showModal(
-                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_t"),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_1")),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nforun_2")),
-                                  footer = modalButton("OK")))
-                  }
+                  modals_check_n_show(private = private,
+                                      modalname = "login_badId")
                 } else {
                   # if the password is wrong
-                  if (modals_check(private, "login_badPass")) {
-                    showModal(
-                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_wrong_pass_t"),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_wrong_pass_b")),
-                                  footer = modalButton("OK")))
-                  }
+                  modals_check_n_show(private = private,
+                                      modalname = "login_badPass")
                 }
               } else {
                 # if login is successful
-                if (modals_check(private, "login_success")) {
-                  showModal(
-                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_succ_t"),
-                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_succ_b")),
-                                footer = modalButton("OK")))
-                }
+                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
+                
+                modals_check_n_show(private = private,
+                                    modalname = "login_success")
                 
                 # change the log-in state
                 self$is_logged(TRUE)
@@ -127,13 +117,10 @@ RegLogServer_listener <- function(
               # if registration is successful
               if (received_message$data$success) {
                 
+                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
+                
                 # show modal if enabled
-                if (modals_check(private, "register_success")) {
-                  showModal(
-                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_succ_t"),
-                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_succ_b")),
-                                footer = modalButton("OK")))
-                }
+                modals_check_n_show(private, "register_success")
                 
                 # send message to the mailConnector
                 message_to_send <- RegLogConnectorMessage(
@@ -153,37 +140,24 @@ RegLogServer_listener <- function(
               } else {
                 # if registering failed
                 
-                if (!received_message$data$username) {
-                  if (modals_check(private, "register_existingID")) {
-                    showModal(
-                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1_t"),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1_b")),
-                                  footer = modalButton("OK"))
-                    )
-                  }
-                } else if (!received_message$data$email) {
-                  if (modals_check(private, "register_existingMail")) {
-                    showModal(
-                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1m_t"),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1m_b")),
-                                  footer = modalButton("OK"))
-                    )
-                  }
-                }
+                modals_check_n_show(
+                  private = private,
+                  modalname = if (isFALSE(received_message$data$username)) "register_existingId"
+                         else if (isFALSE(received_message$data$email)) "register_existingEmail"
+                )
               }
             },
             
             ## data edit messages reactions ####
             credsEdit = {
 
-              # if data change is successful              
+              # if data change is successful
               if (received_message$data$success) {
-                if (modals_check(private, "credsEdit_success")) {
-                  showModal(
-                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "credEdit_mod_succ_t"),
-                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "credEdit_mod_succ_b")),
-                                footer = modalButton("OK")))
-                }
+                
+                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
+                
+                modals_check_n_show(private,
+                                    "credsEdit_success")
                 if (!is.null(received_message$data$new_user_id)) {
                   self$user_id(received_message$data$new_user_id)
                 }
@@ -192,43 +166,14 @@ RegLogServer_listener <- function(
                 }
                 # if there were any conflicts
               } else {
-                if (isFALSE(received_message$data$username)) {
-                  if (modals_check(private, "credsEdit_badId")) {
-                    showModal(
-                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_t"),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_1")),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nforun_2")),
-                                  footer = modalButton("OK")))
-                  }
-                } else if (isFALSE(received_message$data$password)) {
-                  if (modals_check(private, "credsEdit_badPass")) {
-                    showModal(
-                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_wrong_pass_t"),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "login_wrong_pass_b")),
-                                  footer = modalButton("OK")))
-                  }
-                } else if (isFALSE(received_message$data$new_username)) {
-                  if (modals_check(private, "credsEdit_existingID")) {
-                    showModal(
-                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1_t"),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1_b")),
-                                  footer = modalButton("OK"))
-                    )
-                  }
-                } else if (isFALSE(received_message$data$new_email)) {
-                  if (modals_check(private, "credsEdit_existingMail")) {
-                    showModal(
-                      modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1m_t"),
-                                  p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err1m_b")),
-                                  footer = modalButton("OK"))
-                    )
-                  }
-                }
+                modals_check_n_show(
+                  private = private,
+                  modalname = if (isFALSE(received_message$data$username)) "credsEdit_badId"
+                         else if (isFALSE(received_message$data$password)) "credsEdit_badPass"
+                         else if (isFALSE(received_message$data$new_username)) "credsEdit_existingId"
+                         else if (isFALSE(received_message$data$new_email)) "credsEdit_existingEmail"
+                  )
               }
-              # 
-              # # expose the message
-              # self$message(received_message)
-              
             },
             
             # reset password generation messages reactions ####
@@ -238,14 +183,10 @@ RegLogServer_listener <- function(
               # if generation were successful
               if (received_message$data$success) {
                 
-                # generate modal dialog if successful
-                if (modals_check(private, "resetPass_generated")) {
-                  showModal(
-                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_t"),
-                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_b")),
-                                footer = modalButton("OK")))
-                }
+                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
                 
+                modals_check_n_show(private, "resetPass_codeGenerated")
+
                 # send message to the mailConnector
                 message_to_send <- RegLogConnectorMessage(
                   "resetPass_mail",
@@ -263,15 +204,8 @@ RegLogServer_listener <- function(
                              session)
                 
               } else {
-                #if not succesful
-                
-                if (modals_check(private, "resetPass_badId")) {
-                  showModal(
-                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_t"),
-                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nfound_1")),
-                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "id_nforun_2")),
-                                footer = modalButton("OK")))
-                }
+                #if not successful
+                modals_check_n_show(private, "resetPass_badId")
               }
             },
             
@@ -280,29 +214,21 @@ RegLogServer_listener <- function(
             resetPass_confirm = {
               # if reset code was valid
               if (received_message$data$success) {
-
-                # generate modal dialog if successful
-                if (modals_check(private, "resetPass_success")) {
-                  showModal(
-                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_t"),
-                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_code_send_b")),
-                                footer = modalButton("OK")))
-                }
+                
+                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
+                
+                modals_check_n_show(private, "resetPass_success")
 
               } else {
-                #if not succesful
-
-                if (modals_check(private, "resetPass_badId")) {
-                  showModal(
-                    modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_bad_code"),
-                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_bad_code")),
-                                p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_bad_code")),
-                                footer = modalButton("OK")))
-                }
+                #if not successful
+                modals_check_n_show(
+                  private = private,
+                  modalname = if (isFALSE(received_message$data$username)) "resetPass_badId"
+                         else if (isFALSE(received_message$data$code_valid)) "resetPass_nonValidCode"
+                )
               }
             }
           )
-          
           #expose the message to the outside
           self$message(received_message)
           
@@ -319,8 +245,6 @@ RegLogServer_listener <- function(
         # receive the message
         received_message <- self$mailConnector$message()
         req(class(received_message) == "RegLogConnectorMessage")
-        # intercept only messages with "mail" suffix in `type`
-        req(grepl(x = received_message$type, pattern = "_mail$"))
         
         isolate({
           # save message to logs

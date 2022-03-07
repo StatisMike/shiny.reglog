@@ -38,7 +38,7 @@ RegLog_txts$en = list(
   ## modal texts ####
   ### login modals ####
   login_noInput_t = "Missing data",
-  login_noInput_m = "To login, please provide your User ID and password.",
+  login_noInput_b = "To login, please provide your User ID and password.",
   login_success_t = "User logged in!",
   login_success_b = "You have been logged in successfully.",
   login_badId_t = "User ID not found",
@@ -117,11 +117,6 @@ RegLog_txts$en = list(
   reg_mail_3 = "You can always visit our application at: ",
   # logout
   logout_bttn = "Log-out",
-  logout_modal_title = "Do you really want to log out?",  # deprecated
-  logout_unaccept_bttn = "Don't log me out!",             # deprecated
-  logout_impossible_modal = "You aren't logged in yet!",  # deprecated
-  logout_mod_t = "Logged out",
-  logout_mod_b = "Logged out succesfully!",
   # creds_edit
   cred_edit_ui_h1 = "Edit your information",
   cred_eidt_ui_p = "Here you can change your information. After successful change you will be relogged using your updated data.",
@@ -136,7 +131,7 @@ RegLog_txts$en = list(
 )
 
 RegLog_txts$pl = list(
-  ### UI labels ###
+  ### polish labels ####
   # multi-used labels
   user_id = "Nazwa u\u017Cytkownika",
   password = "Has\u0142o",
@@ -157,44 +152,74 @@ RegLog_txts$pl = list(
   register_ui_3 = "Nazwa u\u017Cytkownika i has\u0142o powinny sk\u0142ada\u0107 si\u0119 z 8~25 liter i/lub cyfr.",
   register_ui_4 = "Podany adres e-mail powinien dla ciebie dost\u0119pny. Po rejestracji otrzymasz wiadomo\u015B\u0107 potwierdzaj\u0105c\u0105. Co wi\u0119cej, je\u017Celi kiedykolwiek zapomnisz swojego has\u0142a, mo\u017Cesz je zresetowa\u0107 poprzez e-mail.",
   register_bttn = "Zarejestruj",
-  ### modal labels ###
-  # login
-  id_nfound_t = "Nie znaleziono u\u017Cytkownika",
-  id_nfound_1 = "Je\u017Celi konto zosta\u0142o za\u0142o\u017Cone, prosze sprawdzi\u0107 poprawno\u015B\u0107 wprowadzonej nazwy u\u017Cytkownika",
-  id_nfound_2 = "Je\u017Celi jeszcze nie utworzono konta, prosz\u0119 si\u0119 zarejestrowa\u0107.",
-  login_wrong_pass_t = "Nieprawid\u0142owe has\u0142o",
-  login_wrong_pass_b = "Wprowadzone has\u0142o jest inne ni\u017C powi\u0105zane z nazw\u0105 u\u017Cytkownika. Spr\u00F3buj wprowadzi\u0107 je ponownie lub zresetowa\u0107 has\u0142o.",
-  login_succ_t = "Zalogowano u\u017Cytkownika",
-  login_succ_b = "U\u017Cytkownik zosta\u0142 poprawnie zalogowany!",
-  # reset 
-  id_nfound_reset = "Nie odnaleziono takiej nazwy u\u017Cytkownika w naszej bazie danych. Prosz\u0119 sprawdzi\u0107 czy nazwa zosta\u0142a wprowadzona prawid\u0142owo. Je\u017Celi konto nie zosta\u0142o wcze\u015Bniej utworzone, prosz\u0119 je najpierw zarejestrowa\u0107.",
-  reset_code_send_t = "Kod resetuj\u0105cy zosta\u0142 wys\u0142any",
-  reset_code_send_b = "Kod resetuj\u0105cy zosta\u0142 wys\u0142any na adres e-mail podany podczas rejestracji. B\u0119dzie aktywny przez 24h i przez ten czas mo\u017Cna go u\u017Cy\u0107 do zresetowania has\u0142a.",
-  reset_code_nfound_t = "Nie odnaleziono kodu resetuj\u0105cego",
-  reset_code_nfound_b = "Nie odnaleziono aktywnego kodu resetuj\u0105cego has\u0142o dla okre\u015Blonego has\u0142a. Utworzony kod jest aktywny jedynie przez 24 godziny. Prosz\u0119 sprawdzi\u0107, czy nazwa u\u017Cytkownika zosta\u0142a wpisana poprawnie w polu powy\u017Cej oraz czy kod zosta\u0142 wygenerowany w ci\u0105gu ostatnic 24 godzin.",
-  reset_code_ncorr_t = "Wpisany kod jest niepoprawny",
-  reset_code_ncorr_b = "Wpisany kod resetuj\u0105cy nie jest poprawny. Sprawd\u017A czy zosta\u0142 on skopiowany lub wpisany odpowiednio.",
-  reset_pass_mod_t = "Zresetuj has\u0142o",
-  reset_pass_mod_b = "Wprowadzony kod resetuj\u0105cy jest poprawny. Mo\u017Cesz teraz ustawi\u0107 nowe has\u0142o korzystaj\u0105c z poni\u017Cszego formularza.",
-  reset_pass_mod_bttn = "Potwierd\u017A nowe has\u0142o",
-  reset_pass_mod_nv1 = "Has\u0142o jest nieprawid\u0142owe. Prawid\u0142owe has\u0142o musi sk\u0142ada\u0107 si\u0119 z 8~25 liter i/lub cyfr",
-  reset_pass_mod_nv2 = "Podane has\u0142a nie s\u0105 identyczne. Spr\u00F3buj ponownie.",
-  reset_pass_mod_succ = "Has\u0142o poprawnie zmienione. Mo\u017Cesz u\u017Cy\u0107 go, aby zalogowa\u0107 si\u0119 na zwoje konto.",
-  # register
-  reg_mod_err1_t = "Istniej\u0105ca nazwa u\u017Cytkownika",
-  reg_mod_err1_b = "Istnieje ju\u017C u\u017Cytkownik o takiej nazwie. Je\u017Celi stworzono wcze\u015Bniej konto, prosz\u0119 spr\u00F3bowa\u0107 si\u0119 zalogowa\u0107 lub zresetowa\u0107 has\u0142o. Je\u017Celi nie tworzono wcze\u015Bniej konta, prosz\u0119 u\u017Cy\u0107 innej nazwy u\u017Cytkownika",
-  reg_mod_err1m_t = "Istniej\u0105cy email u\u017Cytkownika",
-  reg_mod_err1m_b = "Istnieje ju\u017C u\u017Cytkownik o takim adresie email. Je\u017Celi stworzono wcze\u015Bniej konto, prosz\u0119 spr\u00F3bowa\u0107 si\u0119 zalogowa\u0107 lub zresetowa\u0107 has\u0142o. Je\u017Celi nie tworzono wcze\u015Bniej konta, prosz\u0119 u\u017Cy\u0107 innego adresu email",
-  reg_mod_err2_t = "Nieprawid\u0142owa nazwa u\u017Cytkownika",
-  reg_mod_err2_b = "Nazwa u\u017Cytkownika jest nieprawid\u0142owa. Powinna sk\u0142ada\u0107 si\u0119 z 8~25 liter i/lub cyfr.",
-  reg_mod_err3_t = "Niepoprawny adres e-mail",
-  reg_mod_err3_b = "Adres e-mail nie jest poprawny. Prosz\u0119 sprawdzi\u0107, czy zosta\u0142 dobrze wpisany.",
-  reg_mod_err4_t = "Nieprawid\u0142owe has\u0142o",
-  reg_mod_err4_b = "Has\u0142o jest nieprawid\u0142owe. Powinna sk\u0142ada\u0107 si\u0119 z 8~25 liter i/lub cyfr.",
-  reg_mod_err5_t = "Has\u0142a nie s\u0105 identyczne",
-  reg_mod_err5_b = "Wpisane has\u0142a nie s\u0105 identyczne. Powt\u00F3rzone has\u0142o musi by\u0107 dok\u0142adnie takie samo jak pierwsze.",
-  reg_mod_succ_t = "Zarejestrowano u\u017Cytkownika",
-  reg_mod_succ_b = "U\u017Cytkownik zosta\u0142 zarejestrowany. Na podany podczas rejestracji adres e-mail powinna dotrze\u0107 wiadomo\u015B\u0107 potwierdzaj\u0105ca rejestracj\u0119.",
+  ## modal texts ####
+  ### login modals ####
+  login_noInput_t = "Missing data",
+  login_noInput_b = "To login, please provide your User ID and password.",
+  login_success_t = "User logged in!",
+  login_success_b = "You have been logged in successfully.",
+  login_badId_t = "User ID not found",
+  login_badId_b = "If the account was registered before, please check if the user ID was typed correcty. If you haven't registered yet, please register a new account.",
+  login_badPass_t = "Wrong password",
+  login_badPass_b = "Typed password doesn't match one in our database. Try again or reset the password.",
+  ### register modals ####
+  register_noInput_t = "Missing data",
+  register_noInput_b = "To register, please provided all needed data: chosen user ID, email and password.",
+  register_nonValidId_t = "User ID non-valid",
+  register_nonValidId_b = "User ID is not valid. User ID must consist of 8~25 aphanumeric characters.",
+  register_nonValidEmail_t = "E-mail not valid",
+  register_nonValidEmail_b = "Provided e-mail address isn't valid. Please check if it is correctly typed.",
+  register_nonValidPass_t = "Non-valid password",
+  register_nonValidPass_b = "Password is not valid. It must consist of 8~25 aphanumeric characters.",
+  register_notIdenticalPass_t = "Passwords don't match",
+  register_notIdenticalPass_b = "Provided passwords don't match. Repeated password must be exactly the same as the first one.",
+  register_existingId_t = "User ID non-unique",
+  register_existingId_b = "There is an user with that ID in our database. If you have already made an account, try to log-in or reset your password. If you haven't, then please use another user ID.",
+  register_existingEmail_t = "User email non-unique",
+  register_existingEmail_b = "There is an user with that email in our database. If you have already made an account, try to log-in or reset your password. If you haven't, then please use another email.",
+  register_success_t = "User registered",
+  register_success_b = "User has been registered succesfully. You should receive an e-mail at the address you provided confirming your registration.",
+  ### credsEdit modals ####
+  credsEdit_noInput_pass_t = "Missing data",
+  credsEdit_noInput_pass_b = "To change you password, please provide both current user ID and password alongside new password.",
+  credsEdit_noInput_other_t = "Missing data",
+  credsEdit_noInput_other_b = "To change your user ID and/or email, please provide both current user ID and password alongside new user ID and/or email.",
+  credsEdit_badId_t = "User ID not found",
+  credsEdit_badId_b = "Provided current user ID isn't found in our database",
+  credsEdit_badPass_t = "Wrong password",
+  credsEdit_badPass_b = "Typed current password doesn't match the one in our database. Try again or reset the password.",
+  credsEdit_nonValidId_t = "User ID non-valid",
+  credsEdit_nonValidId_b = "Provided new user ID isn't valid. User ID must consist of 8~25 alphanumeric characters.",
+  credsEdit_nonValidPass_t = "Non-valid password",
+  credsEdit_nonValidPass_b = "Provided new password isn't valid. Password must consist of 8~25 alphanumeric characters.",
+  credsEdit_nonValidEmail_t = "Non-valid email",
+  credsEdit_nonValidEmail_b = "Provided new e-mail address isn't valid. Please check if it is correctly typed.",
+  credsEdit_notIdenticalPass_t = "Passwords don't match",
+  credsEdit_notIdenticalPass_b = "Provided passwords don't match. Repeated password must be exactly the same as the first one.",
+  credsEdit_existingId_t = "User ID non-unique",
+  credsEdit_existingId_b = "The provided new user ID already exists in our database. Please try another user ID.",
+  credsEdit_existingEmail_t = "User e-mail non-unique",
+  credsEdit_existingEmail_b = "The provided new e-mail address already exists in our database. Please try another e-mail.",
+  credsEdit_success_t = "Successful edit",
+  credsEdit_success_b = "The user data have been changed successfully.",
+  ### resetPass modals ####
+  resetPass_noInput_generate_t = "Missing data",
+  resetPass_noInput_generate_b = "To generate new reset code and have it send to your e-mail please provide your user ID",
+  resetPass_noInput_confirm_t = "Missing data",
+  resetPass_noInput_confirm_b = "To reset password with received reset code, please provide your user ID, received code and new password.",
+  resetPass_nonValidPass_t = "Non-valid password",
+  resetPass_nonValidPass_b = "Provided new password isn't valid. Password must consist of 8-25 alphanumeric characters.",
+  resetPass_notIdenticalPass_t = "Passwords don't match.",
+  resetPass_notIdenticalPass_b = "Provided passwords don't match. Repeated password must be exactly the same as the first one.",
+  resetPass_badId_t = "User ID not found",
+  resetPass_badId_b = "Provided user ID isn't found in our database.",
+  resetPass_invalidCode_t = "Incorrect reset code",
+  resetPass_invalidCode_b = "Provided reset code isn't correct. Check if the code has been copied or typed in correctly.",
+  ### logout modal ####
+  logout_notLogIn_t = "Cannot log-out",
+  logout_notLogIn_b = "You aren't logged in.",
+  logout_success_t = "Logged out",
+  logout_success_b = "You have been successfully logged out",
   ### mail labels ###
   mail_automatic = "Ta wiadomo\u015B\u0107 zosta\u0142a wygenerowana automatycznie",
   # reset

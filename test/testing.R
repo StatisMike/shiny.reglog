@@ -15,6 +15,7 @@ mail_message <- RegLogConnectorMessage(
 ui <- fluidPage(style = "max-width: 600px;",
   tabsetPanel(
     tabPanel("Login",
+             shinyjs::useShinyjs(),
              RegLog_login_UI()),
     tabPanel("Register",
              RegLog_register_UI()),

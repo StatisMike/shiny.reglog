@@ -131,10 +131,15 @@ RegLogServer <- R6::R6Class(
         
         message_to_send <- RegLogConnectorMessage(
           "logout",
+          success = TRUE,
           logcontent = paste(self$user_id(), "logged out")
         )
-        private$listener(message_to_send)
+      } else {
+        message_to_send <- RegLogConnectorMessage(
+          "logout",
+          success = FALSE)
       }
+      private$listener(message_to_send)
     },
     
     #' @description Method to receive all saved logs from the object in the form

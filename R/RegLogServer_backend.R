@@ -23,6 +23,7 @@ RegLogServer_backend <- function(
       self$user_mail <- reactiveVal("")
       private$listener <- reactiveVal()
       
+      # get app_address if not specified
       observe(
         if (is.null(private$app_address)) {
           private$app_address <- get_url_shiny(session = session)
@@ -34,133 +35,29 @@ RegLogServer_backend <- function(
       observeEvent(input$login_button, {
         
         # check if the inputs are filled
-        req(input$login_user_id, input$password_login) 
-        
-        on.exit(.blank_textInputs(inputs = c("login_user_id", "password_login"),
-                                  session = session))
-        
-        # send message
-        message_to_send <- RegLogConnectorMessage(
-          type = "login",
-          username = input$login_user_id,
-          password = input$password_login
-        )
-        
-        self$dbConnector$listener(message_to_send)
-        
-        # save into logs
-        save_to_logs(message_to_send,
-                     "sent",
-                     self,
-                     session)
-      })
-      
-      # register UI reactions ####
-      
-      observeEvent(input$register_bttn, {
-        
-        # check if the inputs are filled
-        req(input$register_user_ID, input$register_email, input$register_pass1, input$register_pass2)
-        
-        on.exit(.blank_textInputs(inputs = c("register_pass1", "register_pass2"),
-                                  session = session))
-        
-        # check validity of login
-        if (!check_user_login(input$register_user_ID)) {
+        if (!all(isTruthy(input$login_user_id), isTruthy(input$password_login))) {
           
-          if (modals_check(private, "register_nonValidID")) {
-          showModal(
-            modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_t"),
-                        p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_b")),
-                        footer = modalButton("OK")))
-          }
-          
-          # parse message to show back in the self$message
-          message_to_show <- RegLogConnectorMessage(
-            "register_front",
-            success = F, valid_id = F, valid_email = F, valid_pass = F, identical_pass = F 
-          )
-          
-          self$message(message_to_show)
-          save_to_logs(message_to_show,
-                       "shown",
-                       self,
-                       session)
-          
-          # check validity of email
-        } else if (!check_user_mail(input$register_email)) {
-          
-          if (modals_check(private, "register_nonValidEmail")) {
-          showModal(
-            modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_t"),
-                        p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_b")),
-                        footer = modalButton("OK")))
-          }
-          
-          # parse message to show back in the self$message
-          message_to_show <- RegLogConnectorMessage(
-            "register_front",
-            success = F, valid_id = T, valid_email = F, valid_pass = F, identical_pass = F 
-          )
-          
-          self$message(message_to_show)
-          save_to_logs(message_to_show,
-                       "shown",
-                       self,
-                       session)
-          
-          # check validity of password
-        } else if (!check_user_pass(input$register_pass1)) {
-          
-          if (modals_check(private, "register_nonValidPass")) {
-          showModal(
-            modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_t"),
-                        p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_b")),
-                        footer = modalButton("OK")))
-          }
-          
-          # parse message to show back in the self$message
-          message_to_show <- RegLogConnectorMessage(
-            "register_front",
-            success = F, valid_id = T, valid_email = T, valid_pass = F, identical_pass = F 
-          )
-          
-          self$message(message_to_show)
-          save_to_logs(message_to_show,
-                       "shown",
-                       self,
-                       session)
-          
-          # check if passwords are the same
-        } else if (input$register_pass1 != input$register_pass2) {
-          
-          if (modals_check(private, "register_notIndenticalPass")) {
-          showModal(
-            modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_t"),
-                        p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_b")),
-                        footer = modalButton("OK")))
-          }
-          
-          # parse message to show back in the self$message
-          message_to_show <- RegLogConnectorMessage(
-            "register_front",
-            success = F, valid_id = T, valid_email = T, valid_pass = T, identical_pass = F 
-          )
-          
-          self$message(message_to_show)
-          save_to_logs(message_to_show,
-                       "shown",
-                       self,
-                       session)
-          
-          # if everything is OK - send the message
-        } else {
+          modals_check_n_show(private = private,
+                              modalname = "login_noInput")
           
           message_to_send <- RegLogConnectorMessage(
-            type = "register",
-            username = input$register_user_ID,
-            password = input$register_pass1,
-            email = input$register_email
+            type = "login_front",
+            success = FALSE,
+            input_provided = FALSE
+          )
+          
+        } else {
+          
+          on.exit(.blank_textInputs(inputs = c("login_user_id", "password_login"),
+                                    session = session))
+          
+          shinyjs::runjs("$('.reglog_bttn').attr('disabled', true)")
+          
+          # send message
+          message_to_send <- RegLogConnectorMessage(
+            type = "login",
+            username = input$login_user_id,
+            password = input$password_login
           )
           
           self$dbConnector$listener(message_to_send)
@@ -170,61 +67,142 @@ RegLogServer_backend <- function(
                        "sent",
                        self,
                        session)
+          
+        }
+      })
+      
+      # register UI reactions ####
+      
+      observeEvent(input$register_bttn, {
+        
+        # check if the inputs are filled
+        if (!all(isTruthy(input$register_user_ID), isTruthy(input$register_email),
+                 isTruthy(input$register_pass1), isTruthy(input$register_pass2))) {
+          
+          modals_check_n_show(private = private,
+                              modalname = "register_noInput")
+          
+        } else {
+          
+          on.exit(.blank_textInputs(inputs = c("register_pass1", "register_pass2"),
+                                    session = session))
+          
+          # check validity of inputs
+          
+          if (!check_user_login(input$register_user_ID) || !check_user_mail(input$register_email) ||
+              !check_user_pass(input$register_pass1) || (input$register_pass1 != input$register_pass2)) {
+            
+            # parse message to show
+            message_to_show <- RegLogConnectorMessage(
+              "register_front",
+              success = FALSE,
+              valid_id = check_user_login(input$register_user_ID),
+              valid_email = check_user_mail(input$register_email),
+              valid_pass = check_user_pass(input$register_pass1),
+              identical_pass = input$register_pass1 == input$register_pass2
+            )
+            
+            # show modalDialog
+            modals_check_n_show(
+              private = private,
+              modalname = if (!message_to_show$data$valid_id) "register_nonValidId"
+                     else if (!message_to_show$data$valid_email) "register_nonValidEmail"
+                     else if (!message_to_show$data$valid_pass) "register_nonValidPass"
+                     else if (!message_to_show$data$identical_pass) "register_notIdenticalPass"
+              )
+            
+            # show message and save to logs if enabled
+            self$message(message_to_show)
+            save_to_logs(message_to_show,
+                         "shown",
+                         self,
+                         session)
+          } else {
+            
+            on.exit(.blank_textInputs(inputs = c("register_user_ID", "register_email"),
+                                      session = session),
+                    add = T)
+            
+            message_to_send <- RegLogConnectorMessage(
+              type = "register",
+              username = input$register_user_ID,
+              password = input$register_pass1,
+              email = input$register_email
+            )
+            
+            shinyjs::runjs("$('.reglog_bttn').attr('disabled', true)")
+            
+            self$dbConnector$listener(message_to_send)
+            
+            # save into logs
+            save_to_logs(message_to_send,
+                         "sent",
+                         self,
+                         session)
+          }
         }
       })
       
       # creds edit password change ####
       observeEvent(input$cred_edit_pass_change, {
         
-        # check if the inputs are filled
-        req(input$cred_edit_old_ID, input$cred_edit_old_pass, 
-            input$cred_edit_new_pass1, input$cred_edit_new_pass2)
+        on.exit({
+          self$message(message_to_show)
+          save_to_logs(message_to_show,
+                       "shown",
+                       self,
+                       session)
+        })
         
-        if (!check_user_pass(input$cred_edit_new_pass1)) {
+        # check if the inputs are filled
+        if (!all(isTruthy(input$cred_edit_old_ID), isTruthy(input$cred_edit_old_pass),
+                 isTruthy(input$cred_edit_new_pass1), isTruthy(input$cred_edit_new_pass2))) {
           
-          if (modals_check(private, "credsEdit_nonValidPass")) {
-            showModal(
-              modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_t"),
-                          p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_b")),
-                          footer = modalButton("OK")))
-          }
-          
-          # parse message to show back in the self$message
           message_to_show <- RegLogConnectorMessage(
-            "credsEdit_front",
-            success = F, valid_pass = F, identical_pass = F 
+            type = "credsEdit_front",
+            success = FALSE,
+            change = "pass",
+            input_provided = FALSE
           )
           
-          self$message(message_to_show)
-          save_to_logs(message_to_show,
-                       "shown",
-                       self,
-                       session)
+          modals_check_n_show(private = private,
+                              modalname = "credsEdit_noInput_pass")
           
-          # check if passwords are the same
-        } else if (input$cred_edit_new_pass1 != input$cred_edit_new_pass2) {
+          # check validity of inputs
+        } else if (!check_user_pass(input$cred_edit_new_pass1) || 
+                   input$cred_edit_new_pass1 != input$cred_edit_new_pass2) {
           
-          if (modals_check(private, "credsEdit_notIndenticalPass")) {
-            showModal(
-              modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_t"),
-                          p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_b")),
-                          footer = modalButton("OK")))
-          }
-          
-          # parse message to show back in the self$message
           message_to_show <- RegLogConnectorMessage(
-            "credsEdit_front",
-            success = F, valid_pass = T, identical_pass = F 
+            type = "credsEdit_front",
+            success = FALSE,
+            change = "pass",
+            input_provided = TRUE,
+            valid_pass = check_user_pass(input$cred_edit_new_pass1),
+            identical_pass = input$cred_edit_new_pass1 == input$cred_edit_new_pass2
           )
           
-          self$message(message_to_show)
-          save_to_logs(message_to_show,
-                       "shown",
-                       self,
-                       session)
+          .blank_textInputs(c("cred_edit_new_pass1", "cred_edit_new_pass2"),
+                            session = session)
           
+          modals_check_n_show(
+            private = private,
+            modalname = if (!message_to_show$data$valid_pass) "credsEdit_nonValidPass"
+                   else if (!message_to_show$data$identical_pass) "credsEdit_notIdenticalPass"
+          )
           # if everything is OK - send the message
         } else {
+          
+          on.exit({
+            self$dbConnector$listener(message_to_send)
+            save_to_logs(message_to_send,
+                         "sent",
+                         self,
+                         session)
+          })
+          
+          .blank_textInputs(c("cred_edit_new_pass1", "cred_edit_new_pass2", 
+                              "cred_edit_old_ID", "cred_edit_old_pass"), 
+                            session = session)
           
           message_to_send <- RegLogConnectorMessage(
             type = "credsEdit",
@@ -233,13 +211,7 @@ RegLogServer_backend <- function(
             new_password = input$cred_edit_new_pass1
           )
           
-          self$dbConnector$listener(message_to_send)
-          
-          # save into logs
-          save_to_logs(message_to_send,
-                       "sent",
-                       self,
-                       session)
+          shinyjs::runjs("$('.reglog_bttn').attr('disabled', true)")
         }
       })
       
@@ -247,180 +219,146 @@ RegLogServer_backend <- function(
       
       observeEvent(input$cred_edit_other_change, {
         
-        # check if the inputs are filled
-        if (all(isTruthy(input$cred_edit_old_ID), isTruthy(input$cred_edit_old_pass)) &&
-            any(isTruthy(input$cred_edit_new_ID), isTruthy(input$cred_edit_new_mail))) {
-          
-          # create placeholder message to show with success
-          message_to_show <- RegLogConnectorMessage(
-            "credsEdit_front",
-            success = T,
-            input_provided = T,
-            change = "other"
-          )
-          # create message to send
-          message_to_send <- RegLogConnectorMessage(
-            "credsEdit",
-            username = input$cred_edit_old_ID,
-            password = input$cred_edit_old_pass
-          )
-          
-          ## check if there is an ID to change ####
-          if (isTruthy(input$cred_edit_new_ID)) {
-            
-            # if ID is not valid
-            if (!check_user_login(input$cred_edit_new_ID)) {
-              
-              message_to_show$data$success <- FALSE
-              message_to_show$data$valid_ID <- FALSE
-            } else {
-              message_to_show$data$valid_ID <- TRUE
-              message_to_send$data$new_username <- input$cred_edit_new_ID
-            }
-          }
-          
-          ## check if there is an email to change ####
-          if (isTruthy(input$cred_edit_new_mail)) {
-            
-            # if mail is not valid
-            if (!check_user_mail(input$cred_edit_new_mail)) {
-              
-              message_to_show$data$success <- FALSE
-              message_to_show$data$valid_mail <- FALSE
-            } else {
-              message_to_show$data$valid_mail <- TRUE
-              message_to_send$data$new_email <- input$cred_edit_new_mail
-            }
-          }
-          
-          ## if not success, try to show modals ####
-          if (!message_to_show$data$success) {
-            
-            if (isFALSE(message_to_show$data$valid_ID)) {
-              if (modals_check(private, "credsEdit_nonValidID")) {
-                showModal(
-                  modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_t"),
-                              p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err2_b")),
-                              footer = modalButton("OK")))
-              } 
-            }
-            if (isFALSE(message_to_show$data$valid_mail)) {
-              if (modals_check(private, "credsEdit_nonValidMail")) {
-                showModal(
-                  modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_t"),
-                              p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err3_b")),
-                              footer = modalButton("OK")))
-              }
-            }
-            # show message back
-            self$message(message_to_show)
-            save_to_logs(message_to_show,
-                         "shown",
-                         self,
-                         session)
-            
-            # is everything is all right, send message
-          } else {
-            
-            self$dbConnector$listener(message_to_send)
-            # save into logs
-            save_to_logs(message_to_send,
-                         "sent",
-                         self,
-                         session)
-          }
-          
-          # if there are missing inputs
-        } else {
-          
-          if (modals_check(private, "credsEdit_noInput_other")) {
-            showModal(
-              modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "credsEdit_noInput_oth_h"),
-                          p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "credsEdit_noInput_oth_b")),
-                          footer = modalButton("OK")))
-          }
-          
-          message_to_show <- RegLogConnectorMessage(
-            "credsEdit_front",
-            success = F,
-            input_provided = F,
-            change = "other"
-          )
-          
+        on.exit({
           self$message(message_to_show)
           save_to_logs(message_to_show,
                        "shown",
-                       self,
                        session)
+        })
+        
+        # check if the inputs are filled
+        if (!all(isTruthy(input$cred_edit_old_ID), isTruthy(input$cred_edit_old_pass)) &&
+            !any(isTruthy(input$cred_edit_new_ID), isTruthy(input$cred_edit_new_mail))) {
+          
+          message_to_show <- RegLogConnectorMessage(
+            "credsEdit_front",
+            success = FALSE,
+            input_provided = FALSE,
+            change = "other"
+          )
+          
+          modals_check_n_show(private,
+                              modalname = "credsEdit_noInput_other")
+          
+          # check if the inputs are valid
+        } else if (isTruthy(input$cred_edit_new_ID) && !check_user_login(input$cred_edit_new_ID) ||
+                   isTruthy(input$cred_edit_new_mail) && !check_user_mail(input$cred_edit_new_mail)) {
+          
+          message_to_show <- RegLogConnectorMessage(
+            "credsEdit_front",
+            success = FALSE,
+            input_provided = TRUE,
+            change = "other",
+            valid_id = if (isTruthy(input$cred_edit_new_ID)) check_user_login(input$cred_edit_new_ID),
+            valid_email = if (isTruthy(input$cred_edit_new_mail)) check_user_mail(input$cred_edit_new_mail)
+          )
+          
+          modals_check_n_show(
+            private = private,
+            modalname = if (isFALSE(message_to_show$data$valid_id)) "credsEdit_nonValidId"
+                   else if (isFALSE(message_to_show$data$valid_email)) "credsEdit_nonValidEmail")
+          
+        } else {
+          # if everything is all right, send message to dbConnector
+          
+          on.exit({
+            self$dbConnector$listener(message_to_send)
+            save_to_logs(message_to_send,
+                         "sent",
+                         session)
+          })
+          
+          .blank_textInputs(c("cred_edit_old_ID", "cred_edit_old_pass", 
+                              "cred_edit_new_ID", "cred_edit_new_mail"),
+                            session = session)
+          
+          message_to_send <- RegLogConnectorMessage(
+            "credsEdit",
+            username = input$cred_edit_old_ID,
+            password = input$cred_edit_old_pass,
+            new_username = if (isTruthy(input$cred_edit_new_ID)) input$cred_edit_new_ID,
+            new_email = if (isTruthy(input$cred_edit_new_mail)) input$cred_edit_new_mail
+          )
+          
+          shinyjs::runjs("$('.reglog_bttn').attr('disabled', true)")
+          
         }
       })
       
       # resetPass generate observer ####
       observeEvent(input$reset_send, {
-        req(input$reset_user_ID)
         
-        message_to_send <- RegLogConnectorMessage(
-          "resetPass_generate",
-          username = input$reset_user_ID
-        )
-        
-        self$dbConnector$listener(message_to_send)
-        # save into logs
-        save_to_logs(message_to_send,
-                     "sent",
-                     self,
-                     session)
+        if (!isTruthy(input$reset_user_ID)) {
+          
+          modals_check_n_show(private, "resetPass_noInput_generate")
+          
+          message_to_show <- RegLogConnectorMessage(
+            "resetPass_front",
+            success = FALSE,
+            step = "generate",
+            input_provided = FALSE
+          )
+          
+          self$message(message_to_show)
+          save_to_logs(message_to_show, "shown", self, session)
+          
+        } else {
+          message_to_send <- RegLogConnectorMessage(
+            "resetPass_generate",
+            username = input$reset_user_ID
+          )
+          
+          shinyjs::runjs("$('.reglog_bttn').attr('disabled', true)")    
+          
+          self$dbConnector$listener(message_to_send)
+          save_to_logs(message_to_send, "sent", self, session)
+        }
       })
       
       # resetPass confirm observer ####
       observeEvent(input$reset_confirm_bttn, {
-        req(input$reset_user_ID, input$reset_code, input$reset_pass1, input$reset_pass2)
         
-        if (!check_user_pass(input$reset_pass1)) {
+        on.exit({
+          self$message(message_to_show)
+          save_to_logs(message_to_show, "shown", self, session)
+        })
+        
+        # check if the inputs are filled
+        if (!all(isTruthy(input$reset_user_ID), isTruthy(input$reset_code),
+                 isTruthy(input$reset_pass1), isTruthy(input$reset_pass2))) {
           
-          if (modals_check(private, "resetPass_nonValidPass")) {
-            showModal(
-              modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_t"),
-                          p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err4_b")),
-                          footer = modalButton("OK")))
-          }
-          
-          # parse message to show back in the self$message
+          modals_check_n_show(private, "resetPass_noInput_confirm")
           message_to_show <- RegLogConnectorMessage(
             "resetPass_front",
-            success = F, valid_pass = F, identical_pass = F 
+            success = FALSE,
+            step = "confirm",
+            input_provided = FALSE
           )
           
-          self$message(message_to_show)
-          save_to_logs(message_to_show,
-                       "shown",
-                       self,
-                       session)
+        } else if (!check_user_pass(input$reset_pass1) || input$reset_pass1 != input$reset_pass2) {
           
-          # check if passwords are the same
-        } else if (input$reset_pass1 != input$reset_pass2) {
+          modals_check_n_show(
+            private = private, 
+            modalname = if (!check_user_pass(input$reset_pass1)) "resetPass_nonValidPass"
+                   else if (input$reset_pass1 != input$reset_pass2) "resetPass_notIdenticalPass"
+            )
           
-          if (modals_check(private, "resetPass_notIndenticalPass")) {
-            showModal(
-              modalDialog(title = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_t"),
-                          p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mod_err5_b")),
-                          footer = modalButton("OK")))
-          }
-          
-          # parse message to show back in the self$message
           message_to_show <- RegLogConnectorMessage(
             "resetPass_front",
-            success = F, valid_pass = T, identical_pass = F 
+            success = FALSE,
+            step = "confirm",
+            input_provided = TRUE,
+            valid_pass = check_user_pass(input$reset_pass1),
+            identical_pass = input$reset_pass1 == input$reset_pass2
           )
           
-          self$message(message_to_show)
-          save_to_logs(message_to_show,
-                       "shown",
-                       self,
-                       session)
-          
-          # if everything is OK - send the message
         } else {
+          
+          on.exit({
+            self$dbConnector$listener(message_to_send)
+            save_to_logs(message_to_send, "sent", self, session)
+          })
+          
           message_to_send <- RegLogConnectorMessage(
             "resetPass_confirm",
             username = input$reset_user_ID,
@@ -428,12 +366,7 @@ RegLogServer_backend <- function(
             password = input$reset_pass1
           )
           
-          self$dbConnector$listener(message_to_send)
-          save_to_logs(message_to_send,
-                       "sent",
-                       self,
-                       session)
-          
+          shinyjs::runjs("$('.reglog_bttn').attr('disabled', true)")
         }
       })
     }

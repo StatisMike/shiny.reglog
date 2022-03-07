@@ -30,7 +30,8 @@ RegLogServer_frontend <- function(
           ),
           confirm_button = actionButton(
             session$ns("login_button"),
-            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="login_bttn")
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="login_bttn"),
+            class = "reglog_bttn"
           )
         )
       )
@@ -66,7 +67,8 @@ RegLogServer_frontend <- function(
           ),
           confirm_button = actionButton(
             session$ns("register_bttn"), 
-            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="register_bttn")
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="register_bttn"),
+            class = "reglog_bttn"
           )
         )
       )
@@ -104,7 +106,8 @@ RegLogServer_frontend <- function(
             label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "password_rep")),
           new_pass_confirm_button = actionButton(
             session$ns("cred_edit_pass_change"),
-            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "cred_edit_pass_change_bttn")),
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "cred_edit_pass_change_bttn"),
+            class = "reglog_bttn"),
           hr2 = tags$hr(),
           h_creds = h2(
             reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "cred_edit_ui_h2_other_change")),
@@ -118,7 +121,8 @@ RegLogServer_frontend <- function(
             label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "email")),
           new_creds_confirm_button = actionButton(
             session$ns("cred_edit_other_change"),
-            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "cred_edit_other_change_bttn"))
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "cred_edit_other_change_bttn"),
+            class = "reglog_bttn")
         )
       )
       
@@ -139,7 +143,8 @@ RegLogServer_frontend <- function(
           ),
           send_code_bttn = actionButton(
             session$ns("reset_send"),
-            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_bttn_1")),
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_bttn_1"),
+            class = "reglog_bttn"),
           desc2 = p(reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_ui_3")),
           reset_code = textInput(
             session$ns("reset_code"),
@@ -154,7 +159,8 @@ RegLogServer_frontend <- function(
             label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "password_rep")),
           confirm_code_bttn = actionButton(
             session$ns("reset_confirm_bttn"),
-            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_bttn_2")
+            label = reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x ="reset_bttn_2"),
+            class = "reglog_bttn"
           )
         )
       )
