@@ -115,6 +115,9 @@ RegLog_txts$en = list(
   reg_mail_1 = "Thank you for registering an account in our application.",
   reg_mail_2 = "Your user ID: ",
   reg_mail_3 = "You can always visit our application at: ",
+  # credentials edit
+  crededit_mail_h = "data edit confirmation",
+  crededit_mail_1 = "Credentials data has been changed for user identified by user ID:",
   # logout
   logout_bttn = "Log-out",
   # creds_edit
@@ -154,72 +157,72 @@ RegLog_txts$pl = list(
   register_bttn = "Zarejestruj",
   ## modal texts ####
   ### login modals ####
-  login_noInput_t = "Missing data",
-  login_noInput_b = "To login, please provide your User ID and password.",
-  login_success_t = "User logged in!",
-  login_success_b = "You have been logged in successfully.",
-  login_badId_t = "User ID not found",
-  login_badId_b = "If the account was registered before, please check if the user ID was typed correcty. If you haven't registered yet, please register a new account.",
-  login_badPass_t = "Wrong password",
-  login_badPass_b = "Typed password doesn't match one in our database. Try again or reset the password.",
+  login_noInput_t = "Brakuj\u0105ce dane",
+  login_noInput_b = "Aby si\u0119 zalogowa\u0107, prosz\u0119 poda\u0107 swoj\u0105 nazw\u0119 u\u017Cytkownika oraz has\u0142o.",
+  login_success_t = "Zalogowano u\u017Cytkownika!",
+  login_success_b = "Logowanie zako\u0144czono pomy\u015Blnie.",
+  login_badId_t = "Nie odnaleziono u\u017Cytkownika",
+  login_badId_b = "Je\u017Celi konto zosta\u0142o wcze\u015Bniej zarejestrowane, sprawd\u017A czy nazwa u\u017Cytkownika zosta\u0142a podana prawid\u0142owo. Je\u017Celi jeszcze nie utworzono konta, prosz\u0119 o zarejestrowanie.",
+  login_badPass_t = "Nieprawid\u0142owe has\u0142o",
+  login_badPass_b = "Podane has\u0142o nie odpowiada obecnemu w naszej bazie. Spr\u00F3buj ponownie lub zresetuj has\u0142o.",
   ### register modals ####
-  register_noInput_t = "Missing data",
-  register_noInput_b = "To register, please provided all needed data: chosen user ID, email and password.",
-  register_nonValidId_t = "User ID non-valid",
-  register_nonValidId_b = "User ID is not valid. User ID must consist of 8~25 aphanumeric characters.",
-  register_nonValidEmail_t = "E-mail not valid",
-  register_nonValidEmail_b = "Provided e-mail address isn't valid. Please check if it is correctly typed.",
-  register_nonValidPass_t = "Non-valid password",
-  register_nonValidPass_b = "Password is not valid. It must consist of 8~25 aphanumeric characters.",
-  register_notIdenticalPass_t = "Passwords don't match",
-  register_notIdenticalPass_b = "Provided passwords don't match. Repeated password must be exactly the same as the first one.",
-  register_existingId_t = "User ID non-unique",
-  register_existingId_b = "There is an user with that ID in our database. If you have already made an account, try to log-in or reset your password. If you haven't, then please use another user ID.",
-  register_existingEmail_t = "User email non-unique",
-  register_existingEmail_b = "There is an user with that email in our database. If you have already made an account, try to log-in or reset your password. If you haven't, then please use another email.",
-  register_success_t = "User registered",
-  register_success_b = "User has been registered succesfully. You should receive an e-mail at the address you provided confirming your registration.",
+  register_noInput_t = "Brakuj\u0105ce dane",
+  register_noInput_b = "Aby zarejestowa\u0107 konto, prosz\u0119 poda\u0107 wszystkie niezb\u0119dne dane: nazw\u0119 u\u017Cytkownika, e-mail oraz has\u0142o.",
+  register_nonValidId_t = "Nieprawid\u0142owa nazwa u\u017Cytkownika",
+  register_nonValidId_b = "Podana nazwa u\u017Cytkownika jest nieprawid\u0142owa. Powinna sk\u0142ada\u0107 si\u0119 z 8 do 25 liter i/lub cyfr.",
+  register_nonValidEmail_t = "Nieprawid\u0142owy adres e-mail",
+  register_nonValidEmail_b = "Podany adres e-mail jest nieprawid\u0142owy. Prosz\u0119 o upewnienie si\u0119, \u017Ce zosta\u0142 wprowadzony prawid\u0142owo.",
+  register_nonValidPass_t = "Nieprawid\u0142owe has\u0142o",
+  register_nonValidPass_b = "Has\u0142o jest nieprawid\u0142owe. Powinno sk\u0142ada\u0107 si\u0119 z 8 do 25 liter i/lub cyfr.",
+  register_notIdenticalPass_t = "Wprowadzone has\u0142a nie s\u0105 identyczne",
+  register_notIdenticalPass_b = "Wprowadzone has\u0142a si\u0119 r\u00F3\u017Cni\u0105. Has\u0142o wprowadzone w obydwu polach powinny by\u0107 jednakowe.",
+  register_existingId_t = "Nazwa u\u017Cytkownika nie jest unikalna",
+  register_existingId_b = "W naszej bazie istnieje ju\u017C u\u017Cytkownik o takiej nazwie. Je\u017Celi konto zosta\u0142o wcze\u015Bniej zarejestrowane, prosz\u0119 o zalogowanie lub zresetowanie has\u0142a.",
+  register_existingEmail_t = "Adres e-mail nie jest unikalny",
+  register_existingEmail_b = "W naszej bazie istnieje ju\u017C u\u017Cytkownik o takim adresie e-mail. Je\u017Celi utworzono ju\u017C konto, prosz\u0119 si\u0119 zalogowa\u0107 lub zresetowa\u0107 has\u0142o. Je\u017Celi konto nie zosta\u0142o jeszcze utworzone, prosz\u0119 wybra\u0107 inny adres e-mail.",
+  register_success_t = "Zarejestrowano u\u017Cytkownika",
+  register_success_b = "U\u017Cytkownik zosta\u0142 pomy\u015Blnie zarejestrowany. Na podany adres zosta\u0142a wys\u0142ana wiadomo\u015B\u0107 e-mail potwierdzaj\u0105ca rejestracj\u0119.",
   ### credsEdit modals ####
-  credsEdit_noInput_pass_t = "Missing data",
-  credsEdit_noInput_pass_b = "To change you password, please provide both current user ID and password alongside new password.",
-  credsEdit_noInput_other_t = "Missing data",
-  credsEdit_noInput_other_b = "To change your user ID and/or email, please provide both current user ID and password alongside new user ID and/or email.",
-  credsEdit_badId_t = "User ID not found",
-  credsEdit_badId_b = "Provided current user ID isn't found in our database",
-  credsEdit_badPass_t = "Wrong password",
-  credsEdit_badPass_b = "Typed current password doesn't match the one in our database. Try again or reset the password.",
-  credsEdit_nonValidId_t = "User ID non-valid",
-  credsEdit_nonValidId_b = "Provided new user ID isn't valid. User ID must consist of 8~25 alphanumeric characters.",
-  credsEdit_nonValidPass_t = "Non-valid password",
-  credsEdit_nonValidPass_b = "Provided new password isn't valid. Password must consist of 8~25 alphanumeric characters.",
-  credsEdit_nonValidEmail_t = "Non-valid email",
-  credsEdit_nonValidEmail_b = "Provided new e-mail address isn't valid. Please check if it is correctly typed.",
-  credsEdit_notIdenticalPass_t = "Passwords don't match",
-  credsEdit_notIdenticalPass_b = "Provided passwords don't match. Repeated password must be exactly the same as the first one.",
-  credsEdit_existingId_t = "User ID non-unique",
-  credsEdit_existingId_b = "The provided new user ID already exists in our database. Please try another user ID.",
-  credsEdit_existingEmail_t = "User e-mail non-unique",
-  credsEdit_existingEmail_b = "The provided new e-mail address already exists in our database. Please try another e-mail.",
-  credsEdit_success_t = "Successful edit",
-  credsEdit_success_b = "The user data have been changed successfully.",
+  credsEdit_noInput_pass_t = "Brakuj\u0105ce dane",
+  credsEdit_noInput_pass_b = "Aby zmieni\u0107 has\u0142o, prosz\u0119 poda\u0107 zar\u00F3wno obecn\u0105 nazw\u0119 u\u017Cytkownika obecne has\u0142o oraz nowe has\u0142o..",
+  credsEdit_noInput_other_t = "Brakuj\u0105ce dane",
+  credsEdit_noInput_other_b = "Aby zmieni\u0107 nazw\u0119 u\u017Cytkownika i/lub e-mail, prosz\u0119 poda\u0107 obecn\u0105 nazw\u0119 u\u017Cytkownika i has\u0142o oraz now\u0105 nazw\u0119 u\u017Cytkownika i/lub e-mail.",
+  credsEdit_badId_t = "Nie odnaleziono u\u017Cytkownika",
+  credsEdit_badId_b = "Wprowadzona nazwa u\u017Cytkownika nie istnieje w naszej bazie.",
+  credsEdit_badPass_t = "Nieprawid\u0142owe has\u0142o",
+  credsEdit_badPass_b = "Podane has\u0142o nie odpowiada obecnemu w naszej bazie. Spr\u00F3buj ponownie lub zresetuj has\u0142o.",
+  credsEdit_nonValidId_t = "Nieprawid\u0142owa nazwa u\u017Cytkownika",
+  credsEdit_nonValidId_b = "Podana nazwa u\u017Cytkownika jest nieprawid\u0142owa. Powinna sk\u0142ada\u0107 si\u0119 z 8 do 25 liter i/lub cyfr.",
+  credsEdit_nonValidPass_t = "Nieprawid\u0142owe has\u0142o",
+  credsEdit_nonValidPass_b = "Has\u0142o jest nieprawid\u0142owe. Powinno sk\u0142ada\u0107 si\u0119 z 8 do 25 liter i/lub cyfr.",
+  credsEdit_nonValidEmail_t = "Nieprawid\u0142owy adres e-mail",
+  credsEdit_nonValidEmail_b = "Podany adres e-mail jest nieprawid\u0142owy. Prosz\u0119 o upewnienie si\u0119, \u017Ce zosta\u0142 wprowadzony prawid\u0142owo.",
+  credsEdit_notIdenticalPass_t = "Wprowadzone has\u0142a nie s\u0105 identyczne",
+  credsEdit_notIdenticalPass_b = "Wprowadzone has\u0142a si\u0119 r\u00F3\u017Cni\u0105. Has\u0142o wprowadzone w obydwu polach powinny by\u0107 jednakowe.",
+  credsEdit_existingId_t = "Nazwa u\u017Cytkownika nie jest unikalna",
+  credsEdit_existingId_b = "W naszej bazie istnieje ju\u017C u\u017Cytkownik identycznej nazwie jak podana jako nowa nazwa u\u017Cytkownika.",
+  credsEdit_existingEmail_t = "Adres e-mail nie jest unikalny",
+  credsEdit_existingEmail_b = "W naszej bazie istnieje ju\u017C u\u017Cytkownik o identycznym adresie jak podany jako nowy adres e-mail.",
+  credsEdit_success_t = "Pomy\u015Blna edycja danych",
+  credsEdit_success_b = "Dane u\u017Cytkownika zosta\u0142y pomy\u015Blnie zmienione.",
   ### resetPass modals ####
-  resetPass_noInput_generate_t = "Missing data",
-  resetPass_noInput_generate_b = "To generate new reset code and have it send to your e-mail please provide your user ID",
-  resetPass_noInput_confirm_t = "Missing data",
-  resetPass_noInput_confirm_b = "To reset password with received reset code, please provide your user ID, received code and new password.",
-  resetPass_nonValidPass_t = "Non-valid password",
-  resetPass_nonValidPass_b = "Provided new password isn't valid. Password must consist of 8-25 alphanumeric characters.",
-  resetPass_notIdenticalPass_t = "Passwords don't match.",
-  resetPass_notIdenticalPass_b = "Provided passwords don't match. Repeated password must be exactly the same as the first one.",
-  resetPass_badId_t = "User ID not found",
-  resetPass_badId_b = "Provided user ID isn't found in our database.",
-  resetPass_invalidCode_t = "Incorrect reset code",
-  resetPass_invalidCode_b = "Provided reset code isn't correct. Check if the code has been copied or typed in correctly.",
+  resetPass_noInput_generate_t = "Brakuj\u0105ce dane",
+  resetPass_noInput_generate_b = "Aby wygenerowa\u0107 kod resetuj\u0105cy i przes\u0142a\u0107 je na adres e-mail prosz\u0119 poda\u0107 swoj\u0105 nazw\u0119 u\u017Cytkownika.",
+  resetPass_noInput_confirm_t = "Brakuj\u0105ce dane",
+  resetPass_noInput_confirm_b = "Aby zresetowa\u0107 has\u0142o za pomoc\u0105 otrzymanego has\u0142a, prosz\u0119 o podanie nazwy u\u017Cytkownika, otrzymanego kodu i nowe has\u0142o.",
+  resetPass_nonValidPass_t = "Nieprawid\u0142owe has\u0142o",
+  resetPass_nonValidPass_b = "Has\u0142o jest nieprawid\u0142owe. Powinno sk\u0142ada\u0107 si\u0119 z 8 do 25 liter i/lub cyfr.",
+  resetPass_notIdenticalPass_t = "Wprowadzone has\u0142a nie s\u0105 identyczne",
+  resetPass_notIdenticalPass_b = "Wprowadzone has\u0142a si\u0119 r\u00F3\u017Cni\u0105. Has\u0142o wprowadzone w obydwu polach powinny by\u0107 jednakowe.",
+  resetPass_badId_t = "Nie odnaleziono u\u017Cytkownika",
+  resetPass_badId_b = "Wprowadzona nazwa u\u017Cytkownika nie istnieje w naszej bazie.",
+  resetPass_invalidCode_t = "Nieprawid\u0142owy kod resetuj\u0105cy",
+  resetPass_invalidCode_b = "Wprowadzony kod resetuj\u0105cy nie jest prawid\u0142owy. Prosz\u0119 sprawdzi\u0107, czy kod zosta\u0142 prawid\u0142owo wprowadzony.",
   ### logout modal ####
-  logout_notLogIn_t = "Cannot log-out",
-  logout_notLogIn_b = "You aren't logged in.",
-  logout_success_t = "Logged out",
-  logout_success_b = "You have been successfully logged out",
+  logout_notLogIn_t = "Nie mo\u017Cna wylogowa\u0107",
+  logout_notLogIn_b = "Nie jeste\u015B zalogowany.",
+  logout_success_t = "Wylogowano",
+  logout_success_b = "Wylogowano poprawnie.",
   ### mail labels ###
   mail_automatic = "Ta wiadomo\u015B\u0107 zosta\u0142a wygenerowana automatycznie",
   # reset
@@ -232,25 +235,32 @@ RegLog_txts$pl = list(
   reg_mail_1 = "Dzi\u0119kujemy za zarejestrowanie konta w naszej aplikacji.",
   reg_mail_2 = "Twoja nazwa u\u017Cytkownika: ",
   reg_mail_3 = "Mo\u017Cesz odwiedzi\u0107 nasz\u0105 aplikacj\u0119 pod adresem: ",
+  # credentials edit
+  crededit_mail_h = "potwierdzenie edycji danych",
+  crededit_mail_1 = "Zmieniono dane u\u017Cytkownika identyfikowanego nazw\u0105:",
   # logout bttn
   logout_bttn = "Wyloguj",
-  logout_modal_title = "Czy na pewno chcesz si\u0119 wylogowa\u0107?",  # deprecated
-  logout_unaccept_bttn = "Nie wylogowuj!",                              # deprecated
-  logout_impossible_modal = "Nie jeste\u015B jeszcze zalogowany.",      # deprecated
   logout_mod_t = "Wylogowano",
   logout_mod_b = "Pomy\u015Blnie wylogowano!",
   # creds_edit
-  cred_edit_ui_h1 = "Zmień swoje dane",
-  cred_eidt_ui_p = "Tutaj możesz zmienić swoje dane. Po pomyślnej zmianie nastąpi przelogowanie z wykorzystaniem zaktualizowanych danych.",
-  cred_edit_ui_h2_old = "Potwierdź tożasamość",
-  cred_edit_ui_p_old = "Przed zatwierdzeniem jakichkolwiek zmian, proszę o potwierdzenie swojej tożsamości z wykorzystaniem obecnej nazwy użytkownika i hasła.",
-  cred_edit_ui_h2_pass_change = "Zmień obecne hasło",
-  cred_edit_ui_p_pass_change = "Wpisz i potwierdź nowe hasło poniżej.",
-  cred_edit_pass_change_bttn = "Zatwierdź zmianę hasła",
-  cred_edit_ui_h2_other_change = "Zmień dane użytkownika",
-  cred_edit_ui_p_other_change = "Wpisz nową nazwę użytkownika i/lub nowy adres e-mail.",
-  cred_edit_other_change_bttn = "Zatwierdź zmianę danych użytkownika"
+  cred_edit_ui_h1 = "Zmie\u0144 swoje dane",
+  cred_eidt_ui_p = "Tutaj mo\u017Cesz zmieni\u0107 swoje dane. Po pomy\u015Blnej zmianie nast\u0105pi przelogowanie z wykorzystaniem zaktualizowanych danych.",
+  cred_edit_ui_h2_old = "Potwierd\u017A to\u017Casamo\u015B\u0107",
+  cred_edit_ui_p_old = "Przed zatwierdzeniem jakichkolwiek zmian, prosz\u0119 o potwierdzenie swojej to\u017Csamo\u015Bci z wykorzystaniem obecnej nazwy u\u017Cytkownika i has\u0142a.",
+  cred_edit_ui_h2_pass_change = "Zmie\u0144 obecne has\u0142o",
+  cred_edit_ui_p_pass_change = "Wpisz i potwierd\u017A nowe has\u0142o poni\u017Cej.",
+  cred_edit_pass_change_bttn = "Zatwierd\u017A zmian\u0119 has\u0142a",
+  cred_edit_ui_h2_other_change = "Zmie\u0144 dane u\u017Cytkownika",
+  cred_edit_ui_p_other_change = "Wpisz now\u0105 nazw\u0119 u\u017Cytkownika i/lub nowy adres e-mail.",
+  cred_edit_other_change_bttn = "Zatwierd\u017A zmian\u0119 danych u\u017Cytkownika"
 )
+
+# i18 'lang'
+
+RegLog_txts$i18 <- as.list(
+  setNames(
+    names(shiny.reglog:::RegLog_txts$en), 
+    names(shiny.reglog:::RegLog_txts$en)))
 
 # also - modify documentation in RegLogServer argument `lang`
 
@@ -324,8 +334,7 @@ RegLog_txt <- function(
       custom_txt <- custom_txts[[as.character(x)]]
       
       if (is.null(custom_txt)) {
-        if (!is.null(default_txt))  return(default_txt)
-        else return(x)
+        return(default_txt)
       } else {
         return(custom_txt)
       }

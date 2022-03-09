@@ -99,6 +99,18 @@ RegLogEmayiliConnector <- R6::R6Class(
         paste("?app_name?",
               reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
               sep = " - ")
+      ## credsEdit mail ####
+      self$mails[["credsEdit_mail"]][["body"]] <-
+        paste0("<p>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "crededit_mail_1"),
+               "</p><p>",
+               "?username?",
+               "</p><hr>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+      self$mails[["credsEdit_mail"]][["subject"]] <-
+        paste("?app_name?",
+              reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
+              sep = " - ")
       
       # append all custom handlers
       super$initialize(custom_handlers = custom_handlers)
@@ -224,11 +236,18 @@ RegLogGmailrConnector <- R6::R6Class(
         paste("?app_name?",
               reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
               sep = " - ")
-      ## credEdit mail ####
-      self$mails[["credEdit_mail"]][["body"]] <-
-        paste0()
-      self$mails[["credEdit_mail"]][["subject"]] <-
-        paste0()
+      ## credsEdit mail ####
+      self$mails[["credsEdit_mail"]][["body"]] <-
+        paste0("<p>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "crededit_mail_1"),
+               "</p><p>",
+               "?username?",
+               "</p><hr>",
+               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+      self$mails[["credsEdit_mail"]][["subject"]] <-
+        paste("?app_name?",
+              reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
+              sep = " - ")
       
       # append all custom handlers
       super$initialize(custom_handlers = custom_handlers)
