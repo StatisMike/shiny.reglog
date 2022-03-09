@@ -113,9 +113,11 @@ DBI_tables_create <- function(
         "username" = "VARCHAR(255) NOT NULL UNIQUE",
         "password" = "VARCHAR(255) NOT NULL",
         "email" = "VARCHAR(255) NOT NULL UNIQUE",
-        "create_time" = "DATETIME NOT NULL",
-        "update_time" = "DATETIME NOT NULL")
-    ),
+        "create_time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+                      else "DATETIME NOT NULL",
+        "update_time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+                      else "DATETIME NOT NULL"
+    )),
     error = function(e) e,
     warning = function(w) w
   )
@@ -136,9 +138,13 @@ DBI_tables_create <- function(
         else if (class == "PostgreSQLConnection") "SERIAL PRIMARY KEY",
         "user_id" = "INT NOT NULL",
         "reset_code" = "VARCHAR(10) NOT NULL",
-        "used" = "TINYINT NOT NULL",
-        "create_time" = "DATETIME NOT NULL",
-        "update_time" = "DATETIME NOT NULL")
+        "used" = if (class == "PostgreSQLConnection") "SMALLINT NOT NULL" 
+               else "TINYINT NOT NULL",
+        "create_time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+                        else "DATETIME NOT NULL",
+        "update_time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+                        else "DATETIME NOT NULL"
+        )
       ),
     error = function(e) e,
     warning = function(w) w
@@ -160,7 +166,8 @@ DBI_tables_create <- function(
         c("id" = if (class == "SQLiteConnection") "INTEGER PRIMARY KEY"
           else if (class %in% c("MySQLConnection", "MariaDBConnection")) "INT PRIMARY KEY AUTO_INCREMENT"
           else if (class == "PostgreSQLConnection") "SERIAL PRIMARY KEY",
-          "time" = "DATETIME NOT NULL",
+          "time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+                   else "DATETIME NOT NULL",
           "session" = "VARCHAR(255) NOT NULL",
           "direction" = "VARCHAR(255) NOT NULL",
           "type" = "VARCHAR(255) NOT NULL",
