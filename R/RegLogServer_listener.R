@@ -25,10 +25,7 @@ RegLogServer_listener <- function(
         req(class(received_message) == "RegLogConnectorMessage") 
         req(received_message$type %in% c("logout"))
         # save the message to the logs
-        save_to_logs(received_message,
-                     "received",
-                     self,
-                     session)        
+        save_to_logs(received_message, "received", self, session)        
         
         ## switches for different reactions ####
         isolate({
@@ -74,10 +71,7 @@ RegLogServer_listener <- function(
         ## switches for different reactions ####
         isolate({
           # save the received message to logs
-          save_to_logs(received_message,
-                       "received",
-                       self,
-                       session)
+          save_to_logs(received_message, "received", self, session)
           switch(
             received_message$type,
             
@@ -98,8 +92,6 @@ RegLogServer_listener <- function(
                 }
               } else {
                 # if login is successful
-                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
-                
                 modals_check_n_show(private = private,
                                     modalname = "login_success")
                 
@@ -117,8 +109,6 @@ RegLogServer_listener <- function(
               # if registration is successful
               if (received_message$data$success) {
                 
-                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
-                
                 # show modal if enabled
                 modals_check_n_show(private, "register_success")
                 
@@ -133,10 +123,7 @@ RegLogServer_listener <- function(
                 )
                 
                 self$mailConnector$listener(message_to_send)
-                save_to_logs(message_to_send,
-                             "sent",
-                             self,
-                             session)
+                save_to_logs(message_to_send, "sent", self, session)
                 
               } else {
                 # if registering failed
@@ -154,8 +141,6 @@ RegLogServer_listener <- function(
 
               # if data change is successful
               if (received_message$data$success) {
-                
-                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
                 
                 modals_check_n_show(private,
                                     "credsEdit_success")
@@ -178,10 +163,7 @@ RegLogServer_listener <- function(
                 )
                 
                 self$mailConnector$listener(message_to_send)
-                save_to_logs(message_to_send,
-                             "sent",
-                             self,
-                             session)
+                save_to_logs(message_to_send, "sent", self, session)
                 
                 # if there were any conflicts
               } else {
@@ -202,8 +184,6 @@ RegLogServer_listener <- function(
               # if generation were successful
               if (received_message$data$success) {
                 
-                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
-                
                 modals_check_n_show(private, "resetPass_codeGenerated")
 
                 # send message to the mailConnector
@@ -218,10 +198,7 @@ RegLogServer_listener <- function(
                 )
                 
                 self$mailConnector$listener(message_to_send)
-                save_to_logs(message_to_send,
-                             "sent",
-                             self,
-                             session)
+                save_to_logs(message_to_send, "sent", self, session)
                 
               } else {
                 #if not successful
@@ -234,9 +211,7 @@ RegLogServer_listener <- function(
             resetPass_confirm = {
               # if reset code was valid
               if (received_message$data$success) {
-                
-                shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
-                
+
                 modals_check_n_show(private, "resetPass_success")
 
               } else {
@@ -251,6 +226,8 @@ RegLogServer_listener <- function(
           )
           #expose the message to the outside
           self$message(received_message)
+          
+          shinyjs::runjs("$('.reglog_bttn').attr('disabled', false)")
           
         })
       })
@@ -268,10 +245,7 @@ RegLogServer_listener <- function(
         
         isolate({
           # save message to logs
-          save_to_logs(received_message,
-                       "received",
-                       self,
-                       session)
+          save_to_logs(received_message, "received", self, session)
           
           #expose the message to the outside
           self$mail_message(received_message)

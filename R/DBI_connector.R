@@ -57,18 +57,21 @@ RegLogDBIConnector = R6::R6Class(
       private$db_check_n_refresh()
       
       sql <- paste("INSERT INTO", private$db_tables[3], 
-                   "(time, session, direction, type, note)",
-                   "VALUES (?time, ?session, ?direction, ?type, ?note);")
+                   "([time], [session], [direction], [type], [note])",
+                   "VALUES ($time, $session, $direction, $type, $note);")
       
-      query <- DBI::sqlInterpolate(private$db_conn,
-                                   sql,
-                                   time = message$time,
-                                   session = session$token,
-                                   direction = direction,
-                                   type = message$type,
-                                   note = message$logcontent)
+      results <- DBI::dbSendStatement(private$db_conn, sql)
       
-      DBI::dbExecute(private$db_conn, query)
+      DBI::dbBind(results,
+                  list(
+                    time = message$time,
+                    session = session$token,
+                    direction = direction,
+                    type = message$type,
+                    note = if (is.null(message$logcontent)) NA else message$logcontent
+                  ))
+      
+      DBI::dbClearResult(results)
       
     }
   ),
