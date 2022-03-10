@@ -1,55 +1,55 @@
 parse_register_subject <- function(private) {
   paste("?app_name?",
-        reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_h"))
+        RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_h"))
 }
 
 parse_register_body <- function(private) {
   paste0(
     "<p>",
-    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_1"),
+    RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_1"),
     "</p><p>",
-    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_2"),
+    RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_2"),
     "?username?",
     "</p><p>",
-    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_3"),
+    RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_3"),
     "?app_address?",
     "</p><hr>",
-    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+    RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
 }
 
 parse_resetPass_subject <- function(private) {
   paste("?app_name?",
-        reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
+        RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_h"),
         sep = " - ")
 }
 
 parse_resetPass_body <- function(private) {
   paste0(
     "<p>",
-     reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_1"),
+     RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_1"),
     "</p><p>",
-    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_2"),
+    RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_2"),
     "?reset_code?",
     "</p><p>",
-    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_3"),
+    RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_3"),
     "</p><hr>",
-    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+    RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
 }
 
 parse_credsEdit_subject <- function(private) {
   paste("?app_name?",
-        reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
+        RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "crededit_mail_h"),
         sep = " - ")
 }
 
 parse_credsEdit_body <- function(private) {
   paste0(
     "<p>",
-    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "crededit_mail_1"),
+    RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "crededit_mail_1"),
     "</p><p>",
     "?username?",
     "</p><hr>",
-    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+    RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
 }
 
 #' @docType class
