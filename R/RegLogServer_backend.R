@@ -18,6 +18,7 @@ RegLogServer_backend <- function(
       
       # initialize reactiveVals
       self$message <- reactiveVal()
+      self$mail_message <- reactiveVal()
       self$is_logged <- reactiveVal(FALSE)
       self$user_id <- reactiveVal(uuid::UUIDgenerate())
       self$user_mail <- reactiveVal("")

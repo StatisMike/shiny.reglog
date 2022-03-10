@@ -5,6 +5,7 @@
 #' object to the database. It is created to handle `DBI` compatible drivers.
 #' Provides methods than will be used by RegLogServer to get and send data.
 #' 
+#' @family dbConnectors
 #' @import R6
 #' @export
 

@@ -124,7 +124,8 @@ RegLogServer_listener <- function(
                 
                 # send message to the mailConnector
                 message_to_send <- RegLogConnectorMessage(
-                  "register_mail",
+                  "reglog_mail",
+                  process = "register",
                   username = received_message$data$user_id,
                   email = received_message$data$user_mail,
                   app_name = private$app_name,
@@ -158,12 +159,30 @@ RegLogServer_listener <- function(
                 
                 modals_check_n_show(private,
                                     "credsEdit_success")
+                
                 if (!is.null(received_message$data$new_user_id)) {
                   self$user_id(received_message$data$new_user_id)
                 }
                 if (!is.null(received_message$data$new_user_mail)) {
                   self$user_mail(received_message$data$new_user_mail)
                 }
+                
+                # send message to the mailConnector
+                message_to_send <- RegLogConnectorMessage(
+                  "reglog_mail",
+                  process = "credsEdit",
+                  username = self$user_id(),
+                  email = self$user_mail(),
+                  app_name = private$app_name,
+                  app_address = private$app_address
+                )
+                
+                self$mailConnector$listener(message_to_send)
+                save_to_logs(message_to_send,
+                             "sent",
+                             self,
+                             session)
+                
                 # if there were any conflicts
               } else {
                 modals_check_n_show(
@@ -189,7 +208,8 @@ RegLogServer_listener <- function(
 
                 # send message to the mailConnector
                 message_to_send <- RegLogConnectorMessage(
-                  "resetPass_mail",
+                  "reglog_mail",
+                  process = "resetPass",
                   username = received_message$data$user_id,
                   email = received_message$data$user_mail,
                   app_name = private$app_name,
@@ -254,7 +274,7 @@ RegLogServer_listener <- function(
                        session)
           
           #expose the message to the outside
-          self$message(received_message)
+          self$mail_message(received_message)
           
         })
       })

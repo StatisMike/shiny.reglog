@@ -1,9 +1,64 @@
+parse_register_subject <- function(private) {
+  paste("?app_name?",
+        reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_h"))
+}
+
+parse_register_body <- function(private) {
+  paste0(
+    "<p>",
+    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_1"),
+    "</p><p>",
+    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_2"),
+    "?username?",
+    "</p><p>",
+    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_3"),
+    "?app_address?",
+    "</p><hr>",
+    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+}
+
+parse_resetPass_subject <- function(private) {
+  paste("?app_name?",
+        reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
+        sep = " - ")
+}
+
+parse_resetPass_body <- function(private) {
+  paste0(
+    "<p>",
+     reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_1"),
+    "</p><p>",
+    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_2"),
+    "?reset_code?",
+    "</p><p>",
+    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_3"),
+    "</p><hr>",
+    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+}
+
+parse_credsEdit_subject <- function(private) {
+  paste("?app_name?",
+        reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
+        sep = " - ")
+}
+
+parse_credsEdit_body <- function(private) {
+  paste0(
+    "<p>",
+    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "crededit_mail_1"),
+    "</p><p>",
+    "?username?",
+    "</p><hr>",
+    reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
+}
+
 #' @docType class
 #' 
 #' @title RegLogConnector for email sending via `emayili` package
 #' @description With the use of this object, RegLogServer can send emails
 #' confirming the registration and containing code for password reset procedure.
 #'
+#' @family mailConnectors
 #' @import R6
 #' @export
 
@@ -23,10 +78,13 @@ RegLogEmayiliConnector <- R6::R6Class(
     #' 
     #' They are stored (and should be passed accordingly) in a list of structure:
     #' 
-    #' - register_mail
+    #' - register
     #'    - subject
     #'    - body
-    #' - reset_pass_mail
+    #' - resetPass
+    #'    - subject
+    #'    - body
+    #' - credsEdit
     #'    - subject
     #'    - body
 
@@ -64,53 +122,18 @@ RegLogEmayiliConnector <- R6::R6Class(
       private$custom_txts <- custom_txts
       
       # append default handlers
-      self$handlers[["register_mail"]] <- emayili_mail_handler
-      self$handlers[["resetPass_mail"]] <- emayili_mail_handler
+      self$handlers[["reglog_mail"]] <- emayili_reglog_mail_handler
+      self$handlers[["custom_mail"]] <- emayili_custom_mail_handler
       
       # append default mails ####
-      ## register mail ####
-      self$mails[["register_mail"]][["body"]] <-
-        paste0(
-          "<p>",
-          reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_1"),
-          "</p><p>",
-          reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_2"),
-          "?username?",
-          "</p><p>",
-          reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_3"),
-          "?app_address?",
-          "</p><hr>",
-          reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
-      self$mails[["register_mail"]][["subject"]] <- 
-        paste("?app_name?",
-              reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_h"))
-      ## resetPass mail ####
-      self$mails[["resetPass_mail"]][["body"]] <-
-        paste0("<p>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_1"),
-               "</p><p>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_2"),
-               "?reset_code?",
-               "</p><p>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_3"),
-               "</p><hr>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
-      self$mails[["resetPass_mail"]][["subject"]] <-
-        paste("?app_name?",
-              reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
-              sep = " - ")
-      ## credsEdit mail ####
-      self$mails[["credsEdit_mail"]][["body"]] <-
-        paste0("<p>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "crededit_mail_1"),
-               "</p><p>",
-               "?username?",
-               "</p><hr>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
-      self$mails[["credsEdit_mail"]][["subject"]] <-
-        paste("?app_name?",
-              reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
-              sep = " - ")
+      self$mails[["register"]][["body"]] <- parse_register_body(private)
+      self$mails[["register"]][["subject"]] <- parse_register_subject(private)
+
+      self$mails[["resetPass"]][["body"]] <- parse_resetPass_body(private)
+      self$mails[["resetPass"]][["subject"]] <- parse_resetPass_subject(private)
+
+      self$mails[["credsEdit"]][["body"]] <- parse_credsEdit_body(private)
+      self$mails[["credsEdit"]][["subject"]] <- parse_credsEdit_subject(private)
       
       # append all custom handlers
       super$initialize(custom_handlers = custom_handlers)
@@ -143,6 +166,7 @@ RegLogEmayiliConnector <- R6::R6Class(
 #' @description With the use of this object, RegLogServer can send emails
 #' confirming the registration and containing code for password reset procedure.
 #'
+#' @family mailConnectors
 #' @import R6
 #' @export
 
@@ -162,10 +186,13 @@ RegLogGmailrConnector <- R6::R6Class(
     #' 
     #' They are stored (and should be passed accordingly) in a list of structure:
     #' 
-    #' - register_mail
+    #' - register
     #'    - subject
     #'    - body
-    #' - reset_pass_mail
+    #' - resetPass
+    #'    - subject
+    #'    - body
+    #' - credsEdit
     #'    - subject
     #'    - body
     
@@ -200,54 +227,18 @@ RegLogGmailrConnector <- R6::R6Class(
       private$custom_txts <- custom_txts
       
       # append default handlers
-      self$handlers[["register_mail"]] <- gmailr_mail_handler
-      self$handlers[["resetPass_mail"]] <- gmailr_mail_handler
-      
+      self$handlers[["reglog_mail"]] <- gmailr_reglog_mail_handler
+      self$handlers[["custom_mail"]] <- gmailr_custom_mail_handler
       
       # append default mails ####
-      ## register mail ####
-      self$mails[["register_mail"]][["body"]] <-
-        paste0(
-          "<p>",
-          reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_1"),
-          "</p><p>",
-          reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_2"),
-          "?username?",
-          "</p><p>",
-          reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_3"),
-          "?app_address?",
-          "</p><hr>",
-          reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
-      self$mails[["register_mail"]][["subject"]] <- 
-        paste("?app_name?",
-              reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reg_mail_h"))
-      ## resetPass mail ####
-      self$mails[["resetPass_mail"]][["body"]] <-
-        paste0("<p>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_1"),
-               "</p><p>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_2"),
-               "?reset_code?",
-               "</p><p>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "reset_mail_3"),
-               "</p><hr>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
-      self$mails[["resetPass_mail"]][["subject"]] <-
-        paste("?app_name?",
-              reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
-              sep = " - ")
-      ## credsEdit mail ####
-      self$mails[["credsEdit_mail"]][["body"]] <-
-        paste0("<p>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "crededit_mail_1"),
-               "</p><p>",
-               "?username?",
-               "</p><hr>",
-               reglog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "mail_automatic"))
-      self$mails[["credsEdit_mail"]][["subject"]] <-
-        paste("?app_name?",
-              reglog_txt(lang = lang, custom_txts = custom_txts, x = "reset_mail_h"),
-              sep = " - ")
+      self$mails[["register"]][["body"]] <- parse_register_body(private)
+      self$mails[["register"]][["subject"]] <- parse_register_subject(private)
+      
+      self$mails[["resetPass"]][["body"]] <- parse_resetPass_body(private)
+      self$mails[["resetPass"]][["subject"]] <- parse_resetPass_subject(private)
+      
+      self$mails[["credsEdit"]][["body"]] <- parse_credsEdit_body(private)
+      self$mails[["credsEdit"]][["subject"]] <- parse_credsEdit_subject(private)
       
       # append all custom handlers
       super$initialize(custom_handlers = custom_handlers)

@@ -9,6 +9,11 @@ Object of this class handles all connections for the RegLogServer
 object to the database. It is created to handle \code{DBI} compatible drivers.
 Provides methods than will be used by RegLogServer to get and send data.
 }
+\seealso{
+Other dbConnectors: 
+\code{\link{RegLogGsheetConnector}}
+}
+\concept{dbConnectors}
 \section{Super class}{
 \code{\link[shiny.reglog:RegLogConnector]{shiny.reglog::RegLogConnector}} -> \code{RegLogDBIConnector}
 }

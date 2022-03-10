@@ -8,6 +8,11 @@
 With the use of this object, RegLogServer can send emails
 confirming the registration and containing code for password reset procedure.
 }
+\seealso{
+Other mailConnectors: 
+\code{\link{RegLogGmailrConnector}}
+}
+\concept{mailConnectors}
 \section{Super class}{
 \code{\link[shiny.reglog:RegLogConnector]{shiny.reglog::RegLogConnector}} -> \code{RegLogEmayiliConnector}
 }
@@ -86,12 +91,17 @@ directly into this list.
 
 They are stored (and should be passed accordingly) in a list of structure:
 \itemize{
-\item register_mail
+\item register
 \itemize{
 \item subject
 \item body
 }
-\item reset_pass_mail
+\item resetPass
+\itemize{
+\item subject
+\item body
+}
+\item credsEdit
 \itemize{
 \item subject
 \item body

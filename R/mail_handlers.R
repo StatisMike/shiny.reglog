@@ -6,30 +6,22 @@
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which should contain within its data:
+#' - process
 #' - username
 #' - email
 #' - app_name
 #' - app_address
 #' - reset_code (optional for reset code mails)
 #' 
-#' It can also contain *mail_subject* and *mail_body* if you want to send custom
-#' `RegLogEmayiliConnector` message.
+#' @return `RegLogEmayiliConnector` message.
 #' @family mail handler functions
 #' @keywords internal
 
-emayili_mail_handler <- function(self, private, message) {
-  
-  # search message for the subject
-  if (!is.null(message$data$mail_subject)) {
-    mail_subject <- message$data$mail_subject 
-  } else {
-    # if none get subject from `self$mails` of mailConnector
-    mail_subject <- self$mails[[message$type]][["subject"]]
-  }
+emayili_reglog_mail_handler <- function(self, private, message) {
   
   # interpolate subject with elements found
   mail_subject <- string_interpolate(
-    x = mail_subject,
+    x = self$mails[[message$data$process]][["subject"]],
     to_replace = list(
       username = message$data$username,
       email = message$data$email,
@@ -38,17 +30,9 @@ emayili_mail_handler <- function(self, private, message) {
       reset_code = message$data$reset_code
     ))
 
-  # search message for the body
-  if (!is.null(message$data$mail_body)) {
-    mail_body <- message$data$mail_body
-  } else {
-    # if none, get the body from `self$mails` of mailConnector
-    mail_body <- self$mails[[message$type]][["body"]]
-  }
-
   # interpolate body with elements found
   mail_body <- string_interpolate(
-    x = mail_body,
+    x = self$mails[[message$data$process]][["body"]],
     to_replace = list(
       username = message$data$username,
       email = message$data$email,
@@ -70,8 +54,10 @@ emayili_mail_handler <- function(self, private, message) {
     
     RegLogConnectorMessage(
       message$type,
+      process = process$data$process,
       success = TRUE,
-      logcontent = paste(message$data$username, message$data$email, sep = "/")
+      logcontent = paste0(message$data$username, "/", 
+                          message$data$email, ":", message$data$process)
     )
     
     }, error = function(e) {
@@ -79,10 +65,77 @@ emayili_mail_handler <- function(self, private, message) {
       # if error, parse the error message accordingly
       RegLogConnectorMessage(
         message$type,
+        process = message$data$process,
         success = FALSE,
-        logcontent = paste0(message$data$username, "/", message$data$email, "_", e)
+        logcontent = paste0(message$data$username, "/",
+                            message$data$email, ":", 
+                            message$data$process, "|", e[1])
       )
     }
+  )
+  
+  # send the RegLogConnectorMessage
+  return(message_to_send)
+  
+}
+
+#' Emayili custom email sending handler
+#' 
+#' @description Default handler function parsing and sending email.
+#' Used within object of `RegLogEmayiliConnector` class internally. It can
+#' send custom emails using 
+#' 
+#' @param self R6 object element
+#' @param private R6 object element
+#' @param message RegLogConnectorMessage which should contain within its data:
+#' - process
+#' - username
+#' - email
+#' - mail_subject
+#' - mail_body
+#' 
+#' @return `RegLogEmayiliConnector` message.
+#' @family mail handler functions
+#' @keywords internal
+
+emayili_custom_mail_handler <- function(self, private, message) {
+  
+  # parse the email
+  mail <- emayili::envelope() |>
+    emayili::from(private$from) |>
+    emayili::to(message$data$email) |>
+    emayili::subject(message$data$mail_subject) |>
+    emayili::html(content = message$data$mail_body)
+  
+  if (!is.null(message$data$mail_attachment)) {
+    mail <- mail |>
+      emayili::attachment(message$data$mail_attachment)
+  }
+  
+  # and send it!
+  message_to_send <- tryCatch({
+    private$smtp(mail)
+    
+    RegLogConnectorMessage(
+      message$type,
+      process = message$data$process,
+      success = TRUE,
+      logcontent = paste0(message$data$username, "/", 
+                          message$data$email, ":", message$data$process)
+    )
+    
+  }, error = function(e) {
+    
+    # if error, parse the error message accordingly
+    RegLogConnectorMessage(
+      message$type,
+      process = message$data$process,
+      success = FALSE,
+      logcontent = paste0(message$data$username, "/",
+                          message$data$email, ":", 
+                          message$data$process, "|", e[1])
+    )
+  }
   )
   
   # send the RegLogConnectorMessage
@@ -99,29 +152,22 @@ emayili_mail_handler <- function(self, private, message) {
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which should contain within its data:
+#' - process
 #' - username
 #' - email
 #' - app_name
 #' - app_address
 #' - reset_code (optional for reset code mails)
 #' 
-#' It can also contain *mail_subject* and *mail_body* if you want to send custom
+#' @return `RegLogEmayiliConnector` message.
 #' @family mail handler functions
 #' @keywords internal
 
-gmailr_mail_handler <- function(self, private, message) {
-  
-  # search message for the subject
-  if (!is.null(message$data$mail_subject)) {
-    mail_subject <- message$data$mail_subject 
-  } else {
-    # if none get subject from `self$mails` of mailConnector
-    mail_subject <- self$mails[[message$type]][["subject"]]
-  }
+gmailr_reglog_mail_handler <- function(self, private, message) {
   
   # interpolate subject with elements found
   mail_subject <- string_interpolate(
-    x = mail_subject,
+    x = self$mails[[message$data$process]][["subject"]],
     to_replace = list(
       username = message$data$username,
       email = message$data$email,
@@ -130,17 +176,9 @@ gmailr_mail_handler <- function(self, private, message) {
       reset_code = message$data$reset_code
     ))
   
-  # search message for the body
-  if (!is.null(message$data$mail_body)) {
-    mail_body <- message$data$mail_body
-  } else {
-    # if none, get the body from `self$mails` of mailConnector
-    mail_body <- self$mails[[message$type]][["body"]]
-  }
-  
   # interpolate body with elements found
   mail_body <- string_interpolate(
-    x = mail_body,
+    x = self$mails[[message$data$process]][["body"]],
     to_replace = list(
       username = message$data$username,
       email = message$data$email,
@@ -153,8 +191,8 @@ gmailr_mail_handler <- function(self, private, message) {
   mail <- gmailr::gm_mime() |>
     gmailr::gm_from(private$from) |>
     gmailr::gm_to(message$data$email) |>
-    gmailr::gm_subject(message$data$mail_subject) |>
-    gmailr::gm_html_body(body = message$data$mail_body)
+    gmailr::gm_subject(mail_subject) |>
+    gmailr::gm_html_body(body = mail_body)
   
   # send message using gmailr
   message_to_send <- tryCatch({
@@ -162,20 +200,91 @@ gmailr_mail_handler <- function(self, private, message) {
     
     RegLogConnectorMessage(
       message$type,
+      process = message$data$process,
       success = TRUE,
-      logcontent = paste(message$username, message$mail, sep = "/")
+      logcontent = paste0(message$data$username, "/", 
+                          message$data$email, ":", message$data$process)
     )
     
   }, error = function(e) {
     
     RegLogConnectorMessage(
       message$type,
+      process = message$data$process,
       success = FALSE,
-      logcontent = paste0(message$username, "/", message$mail, "_", e)
+      logcontent = paste0(message$data$username, "/",
+                          message$data$email, ":", 
+                          message$data$process, "|", e[1])
     )
   }
   )
   
+  return(message_to_send)
+  
+}
+
+#' Gmailr custom email sending handler
+#' 
+#' @description Default handler function parsing and sending email.
+#' Used within object of `RegLogGmailrConnector` class internally. It can
+#' send custom emails using subject, body and attachments from 
+#' `RegLogConnectorMessage`,
+#' 
+#' @param self R6 object element
+#' @param private R6 object element
+#' @param message RegLogConnectorMessage which should contain within its data:
+#' - process
+#' - username
+#' - email
+#' - mail_subject
+#' - mail_body
+#' - mail_attachment (optional)
+#' 
+#' @return `RegLogEmayiliConnector` message.
+#' @family mail handler functions
+#' @keywords internal
+
+gmailr_custom_mail_handler <- function(self, private, message) {
+  
+  # parse the email
+  mail <- gmailr::gm_mime() |>
+    gmailr::gm_from(private$from) |>
+    gmailr::gm_to(message$data$email) |>
+    gmailr::gm_subject(message$data$mail_subject) |>
+    gmailr::gm_html_body(body = message$data$mail_body)
+  
+  if (!is.null(message$data$mail_attachment)) {
+    mail <- mail |>
+      gmailr::gm_attach_file(message$data$mail_attachment)
+  }
+  
+  # and send it!
+  message_to_send <- tryCatch({
+    private$smtp(mail)
+    
+    RegLogConnectorMessage(
+      message$type,
+      process = message$data$process,
+      success = TRUE,
+      logcontent = paste0(message$data$username, "/", 
+                          message$data$email, ":", message$data$process)
+    )
+    
+  }, error = function(e) {
+    
+    # if error, parse the error message accordingly
+    RegLogConnectorMessage(
+      message$type,
+      process = message$data$process,
+      success = FALSE,
+      logcontent = paste0(message$data$username, "/",
+                          message$data$email, ":", 
+                          message$data$process, "|", e[1])
+    )
+  }
+  )
+  
+  # send the RegLogConnectorMessage
   return(message_to_send)
   
 }
