@@ -56,22 +56,27 @@ RegLogDBIConnector = R6::R6Class(
       
       private$db_check_n_refresh()
       
-      sql <- paste("INSERT INTO", private$db_tables[3], 
-                   "([time], [session], [direction], [type], [note])",
-                   "VALUES ($time, $session, $direction, $type, $note);")
+      sql <- paste0("INSERT INTO ", private$db_tables[3], 
+                   " (time, session, direction, type", 
+                   if (!is.null(message$logcontent)) ", note", 
+                   ") VALUES (?time, ?session, ?direction, ?type",
+                   if (!is.null(message$logcontent)) ", ?note",
+                   ");")
       
-      results <- DBI::dbSendStatement(private$db_conn, sql)
+      log_data <- list(time = message$time,
+                       session = session$token,
+                       direction = direction,
+                       type = message$type)
       
-      DBI::dbBind(results,
-                  list(
-                    time = message$time,
-                    session = session$token,
-                    direction = direction,
-                    type = message$type,
-                    note = if (is.null(message$logcontent)) NA else message$logcontent
-                  ))
+      if (!is.null(message$logcontent)) {
+        log_data[["note"]] <- message$logcontent
+      }
       
-      DBI::dbClearResult(results)
+      query <- DBI::sqlInterpolate(private$db_conn,
+                                   sql,
+                                   .dots = log_data)
+      
+      DBI::dbExecute(private$db_conn, query)
       
     }
   ),
@@ -97,7 +102,7 @@ RegLogDBIConnector = R6::R6Class(
     initialize = function(
       driver,
       ...,
-      table_names = c("user", "reset_code", "logs"),
+      table_names = c("account", "reset_code", "logs"),
       custom_handlers = NULL
     ) {
       

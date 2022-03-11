@@ -43,7 +43,7 @@ to the database.
 \if{html}{\out{<div class="r">}}\preformatted{RegLogDBIConnector$new(
   driver,
   ...,
-  table_names = c("user", "reset_code", "logs"),
+  table_names = c("account", "reset_code", "logs"),
   custom_handlers = NULL
 )}\if{html}{\out{</div>}}
 }

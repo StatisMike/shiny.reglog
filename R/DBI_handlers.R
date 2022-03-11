@@ -75,7 +75,8 @@ DBI_register_handler = function(self, private, message) {
   on.exit(private$db_disconnect())
   
   # firstly check if user or email exists
-  sql <- paste0("SELECT * FROM ", private$db_tables[1], " WHERE username = ?username OR email = ?email;")
+  sql <- paste0("SELECT * FROM ", private$db_tables[1], 
+                " WHERE username = ?username OR email = ?email;")
   query <- DBI::sqlInterpolate(private$db_conn, sql, 
                                username = message$data$username, 
                                email = message$data$email)

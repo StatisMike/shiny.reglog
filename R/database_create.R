@@ -24,8 +24,8 @@ check_user_data <- function(user_data) {
 #' Create RegLog-valid database tables with DBI
 #' 
 #' @param conn DBI connection object
-#' @param user_name Name of the table for storing user credentials. Defaults to
-#' 'user'. Mandatory table.
+#' @param account_name Name of the table for storing user accounts credentials. 
+#' Defaults to 'account'. Mandatory table.
 #' @param reset_code_name Name of the table for storing generated password reset
 #' codes. Defaults to 'reset_code'. Mandatory table.
 #' @param use_log Should the table for keeping RegLogServer logs be 
@@ -48,7 +48,7 @@ check_user_data <- function(user_data) {
 #' 
 #' Created tables should have following structure:
 #' 
-#' - user (default name)
+#' - account (default name)
 #'   - id: integer, primary key, auto-increment
 #'   - username: varchar(255), NOT NULL, unique
 #'   - password: varchar(255), NOT NULL
@@ -77,7 +77,7 @@ check_user_data <- function(user_data) {
 
 DBI_tables_create <- function(
   conn,
-  user_name = "user",
+  account_name = "account",
   reset_code_name = "reset_code",
   use_log = FALSE,
   log_name = "logs",
@@ -102,11 +102,11 @@ DBI_tables_create <- function(
   
   # create user table
   
-  output[["user"]][["table_name"]] <- user_name
-  output[["user"]][["result"]] <- tryCatch(
+  output[["account"]][["table_name"]] <- account_name
+  output[["account"]][["result"]] <- tryCatch(
     DBI::dbCreateTable(
       conn,
-      user_name,
+      account_name,
       c("id" = if (class == "SQLiteConnection") "INTEGER PRIMARY KEY"
         else if (class %in% c("MySQLConnection", "MariaDBConnection")) "INT PRIMARY KEY AUTO_INCREMENT"
         else if (class == "PostgreSQLConnection") "SERIAL PRIMARY KEY",
@@ -184,7 +184,7 @@ DBI_tables_create <- function(
   # optionally: insert user data
   if (!is.null(user_data)) {
     
-    output[["user"]][["data_import"]] <- tryCatch({
+    output[["account"]][["data_import"]] <- tryCatch({
      
       # make sure that only required rows are present
       user_data <- user_data[, c("username", "password", "email")]
@@ -211,7 +211,7 @@ DBI_tables_create <- function(
       
       # append the whole table
       DBI::dbAppendTable(conn,
-                         name = user_name,
+                         name = account_name,
                          value = user_data)
       
     },
@@ -224,8 +224,8 @@ DBI_tables_create <- function(
 
 #' Create RegLog-valid database tables with googlesheets4
 #' 
-#' @param user_name Name of the sheet for storing user credentials. Defaults to
-#' 'user'. Mandatory spreadsheet.
+#' @param account_name Name of the sheet for storing user accounts credentials. 
+#' Defaults to 'account'. Mandatory spreadsheet.
 #' @param reset_code_name Name of the sheet for storing generated password reset
 #' codes. Defaults to 'reset_code'. Mandatory table.
 #' @param use_log Should the sheet for keeping RegLogServer logs be 
@@ -253,7 +253,7 @@ DBI_tables_create <- function(
 #' 
 #' Created spreadsheets will have following structure:
 #' 
-#' - user (default name)
+#' - account (default name)
 #'   - username: character
 #'   - password: character
 #'   - email: character
@@ -278,7 +278,7 @@ DBI_tables_create <- function(
 #' @family RegLog databases
 
 gsheet_tables_create <- function(
-  user_name = "user",
+  account_name = "user",
   reset_code_name = "reset_code",
   use_log = FALSE,
   log_name = "logs",
@@ -327,7 +327,7 @@ gsheet_tables_create <- function(
     )[-1, ]
   }
   # append prepared data to the tables
-  tables[[user_name]] <- user_data
+  tables[[account_name]] <- user_data
   
   # table with reset codes
   tables[[reset_code_name]] <- data.frame(

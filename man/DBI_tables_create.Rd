@@ -6,7 +6,7 @@
 \usage{
 DBI_tables_create(
   conn,
-  user_name = "user",
+  account_name = "account",
   reset_code_name = "reset_code",
   use_log = FALSE,
   log_name = "logs",
@@ -18,8 +18,8 @@ DBI_tables_create(
 \arguments{
 \item{conn}{DBI connection object}
 
-\item{user_name}{Name of the table for storing user credentials. Defaults to
-'user'. Mandatory table.}
+\item{account_name}{Name of the table for storing user accounts credentials.
+Defaults to 'account'. Mandatory table.}
 
 \item{reset_code_name}{Name of the table for storing generated password reset
 codes. Defaults to 'reset_code'. Mandatory table.}
@@ -55,7 +55,7 @@ DBI-supported database, you need to create tables in other ways.
 
 Created tables should have following structure:
 \itemize{
-\item user (default name)
+\item account (default name)
 \itemize{
 \item id: integer, primary key, auto-increment
 \item username: varchar(255), NOT NULL, unique

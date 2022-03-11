@@ -5,7 +5,7 @@
 \title{Create RegLog-valid database tables with googlesheets4}
 \usage{
 gsheet_tables_create(
-  user_name = "user",
+  account_name = "user",
   reset_code_name = "reset_code",
   use_log = FALSE,
   log_name = "logs",
@@ -17,8 +17,8 @@ gsheet_tables_create(
 )
 }
 \arguments{
-\item{user_name}{Name of the sheet for storing user credentials. Defaults to
-'user'. Mandatory spreadsheet.}
+\item{account_name}{Name of the sheet for storing user accounts credentials.
+Defaults to 'account'. Mandatory spreadsheet.}
 
 \item{reset_code_name}{Name of the sheet for storing generated password reset
 codes. Defaults to 'reset_code'. Mandatory table.}
@@ -59,7 +59,7 @@ Create RegLog-valid database tables with googlesheets4
 \details{
 Created spreadsheets will have following structure:
 \itemize{
-\item user (default name)
+\item account (default name)
 \itemize{
 \item username: character
 \item password: character
