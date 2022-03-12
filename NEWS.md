@@ -64,7 +64,7 @@ widen the usability
 - `DBI_tables_create` function replaces `create_sqlite_db` with added functionality
 - `gsheet_tables_create` replaces `create_gsheet_db`
 - `RegLogConnectorMessage` function to parse your own messages to *connectors*
-- `RegLogConnector` class to create your own *connectors*
+- `RegLogConnector` class to inherit from during creation of your own *connectors*
 
 Deprecated without direct replacement:
 

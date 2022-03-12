@@ -113,17 +113,19 @@ RegLogServer_listener <- function(
                 modals_check_n_show(private, "register_success")
                 
                 # send message to the mailConnector
-                message_to_send <- RegLogConnectorMessage(
-                  "reglog_mail",
-                  process = "register",
-                  username = received_message$data$user_id,
-                  email = received_message$data$user_mail,
-                  app_name = private$app_name,
-                  app_address = private$app_address
-                )
-                
-                self$mailConnector$listener(message_to_send)
-                save_to_logs(message_to_send, "sent", self, session)
+                if (isTRUE(getOption("RegLogServer.register_mail", TRUE))) {
+                  message_to_send <- RegLogConnectorMessage(
+                    "reglog_mail",
+                    process = "register",
+                    username = received_message$data$user_id,
+                    email = received_message$data$user_mail,
+                    app_name = private$app_name,
+                    app_address = private$app_address
+                  )
+                  
+                  self$mailConnector$listener(message_to_send)
+                  save_to_logs(message_to_send, "sent", self, session)
+                }
                 
               } else {
                 # if registering failed
@@ -153,18 +155,19 @@ RegLogServer_listener <- function(
                 }
                 
                 # send message to the mailConnector
-                message_to_send <- RegLogConnectorMessage(
-                  "reglog_mail",
-                  process = "credsEdit",
-                  username = self$user_id(),
-                  email = self$user_mail(),
-                  app_name = private$app_name,
-                  app_address = private$app_address
-                )
-                
-                self$mailConnector$listener(message_to_send)
-                save_to_logs(message_to_send, "sent", self, session)
-                
+                if (isTRUE(getOption("RegLogServer.credsEdit_mail", TRUE))) {
+                  message_to_send <- RegLogConnectorMessage(
+                    "reglog_mail",
+                    process = "credsEdit",
+                    username = self$user_id(),
+                    email = self$user_mail(),
+                    app_name = private$app_name,
+                    app_address = private$app_address
+                  )
+                  
+                  self$mailConnector$listener(message_to_send)
+                  save_to_logs(message_to_send, "sent", self, session)
+                }
                 # if there were any conflicts
               } else {
                 modals_check_n_show(

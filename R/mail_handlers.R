@@ -21,6 +21,12 @@ emayili_reglog_mail_handler <- function(self, private, message) {
   
   check_namespace("emayili")
   
+  if (!is.character(message$data$process) || length(message$data$process) != 1) {
+    stop(call. = F, 
+         paste0("The 'RegLogConnectorMessage' object provided to the mailConnector",
+                "need to contain character string in its 'process' data field."))
+  }
+  
   # interpolate subject with elements found
   mail_subject <- string_interpolate(
     x = self$mails[[message$data$process]][["subject"]],
@@ -104,6 +110,12 @@ emayili_custom_mail_handler <- function(self, private, message) {
   
   check_namespace("emayili")
   
+  if (!is.character(message$data$process) || length(message$data$process) != 1) {
+    stop(call. = F, 
+         paste0("The 'RegLogConnectorMessage' object provided to the mailConnector",
+                "need to contain character string in its 'process' data field."))
+  }
+  
   # parse the email
   mail <- emayili::envelope() |>
     emayili::from(private$from) |>
@@ -168,6 +180,12 @@ emayili_custom_mail_handler <- function(self, private, message) {
 #' @keywords internal
 
 gmailr_reglog_mail_handler <- function(self, private, message) {
+  
+  if (!is.character(message$data$process) || length(message$data$process) != 1) {
+    stop(call. = F, 
+         paste0("The 'RegLogConnectorMessage' object provided to the mailConnector",
+                "need to contain character string in its 'process' data field."))
+  }
   
   check_namespace("gmailr")
   
@@ -253,6 +271,12 @@ gmailr_reglog_mail_handler <- function(self, private, message) {
 gmailr_custom_mail_handler <- function(self, private, message) {
   
   check_namespace("gmailr")
+  
+  if (!is.character(message$data$process) || length(message$data$process) != 1) {
+    stop(call. = F, 
+         paste0("The 'RegLogConnectorMessage' object provided to the mailConnector",
+                "need to contain character string in its 'process' data field."))
+  }
   
   # parse the email
   mail <- gmailr::gm_mime() |>
