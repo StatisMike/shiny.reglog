@@ -20,16 +20,16 @@
 
 .sqlite_new_user <- function(sqlite_db, temp_row){
 
-  sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
+  sq_db <- DBI::dbConnect(DBI::SQLite(), sqlite_db)
 
-  new_query <-RSQLite::dbSendQuery(sq_db,
+  new_query <-DBI::dbSendQuery(sq_db,
                                    "INSERT INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass)
                          ON CONFLICT (user_id) DO UPDATE SET user_pass = :user_pass;",
                                    temp_row)
 
-  RSQLite::dbClearResult(new_query)
+  DBI::dbClearResult(new_query)
 
-  RSQLite::dbDisconnect(sq_db)
+  DBI::dbDisconnect(sq_db)
 
 }
 
@@ -37,33 +37,33 @@
 
 .sqlite_send_reset <- function(sqlite_db, temp_row){
 
-  sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
+  sq_db <- DBI::dbConnect(DBI::SQLite(), sqlite_db)
 
-  res_query <- RSQLite::dbSendQuery(sq_db,
+  res_query <- DBI::dbSendQuery(sq_db,
                                     "INSERT INTO reset_db (timestamp, user_id, reset_code) VALUES (:timestamp, :user_id, :reset_code)
                                     ON CONFLICT (user_id) DO UPDATE SET reset_code = :reset_code;",
                                     temp_row)
 
-  RSQLite::dbClearResult(res_query)
+  DBI::dbClearResult(res_query)
 
-  RSQLite::dbDisconnect(sq_db)
+  DBI::dbDisconnect(sq_db)
 }
 
 # SQLite send new pass
 
 .sqlite_new_pass <- function(sqlite_db, temp_row){
 
-  sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
+  sq_db <- DBI::dbConnect(DBI::SQLite(), sqlite_db)
 
-  pass_query <- RSQLite::dbSendQuery(sq_db,
+  pass_query <- DBI::dbSendQuery(sq_db,
                                      "INSERT INTO user_db (timestamp, user_mail, user_id, user_pass)
                                      VALUES (:timestamp, :user_mail, :user_id, :user_pass)
                                      ON CONFLICT(user_id) DO UPDATE SET user_pass = :user_pass;",
                                      temp_row)
 
-  RSQLite::dbClearResult(pass_query)
+  DBI::dbClearResult(pass_query)
 
-  RSQLite::dbDisconnect(sq_db)
+  DBI::dbDisconnect(sq_db)
 
 }
 
@@ -79,15 +79,16 @@
   }
 }
 
-#### main server module of the package ####
 #' @title Login server module
 #' @name login_server
-#' @description DEPRACATED: Shiny server module for the optional login/registration system
-#'
+#' @description 
+#' `lifecycle::badge("deprecated")`
+#' 
+#' This function has become deprecated. New RegLog system is based on [RegLogServer] R6 class.
+#' 
+#' Shiny server module for the optional login/registration system
 #' This function creates a server module to handle other modules of the system: \code{login_UI()}, \code{password_reset_UI()} and \code{register_UI}
-#'
 #' It uses database contained in 'googlesheet' file on your 'gdrive' or 'SQLite' database locally to read and write data of the users. You need to create a 'googlesheet' or 'SQLite' using \code{create_gsheet_db()} or \code{create_sqlite_db()} respectively.
-#'
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param db_method the character string containing chosen database container, either: \code{"gsheet"} (needing installation of 'googlesheets4' package) or \code{"sqlite"} (needing installation of 'DBI' and 'RSQLite' packages)
@@ -173,8 +174,7 @@ login_server <- function(id = "login_system",
                                                  Success = T)
 ){
   
-  .Deprecated("RegLogServer", 
-              msg = R6switch_deprecate_mssg)
+  lifecycle::deprecate_warn("0.5.0", "login_server()", "RegLogServer$new()")
 
   moduleServer(
     id,

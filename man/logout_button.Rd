@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_login_UI.R
 \name{logout_button}
 \alias{logout_button}
-\title{DEPRECATED Action Button for logging out}
+\title{Action Button for logging out}
 \usage{
 logout_button(id = "login_system", lang = "en", custom_txts = NULL)
 }
@@ -20,5 +20,9 @@ every 'shiny.reglog' function}
 'actionButton' for logout
 }
 \description{
-Simple action button - after pressing it, the user will be logged out
+\code{lifecycle::badge("deprecated")}
+
+To be used in conjuction with deprecated \code{\link[=login_server]{login_server()}}
+Simple action button - after pressing it, the user will be logged out.
 }
+\keyword{internal}

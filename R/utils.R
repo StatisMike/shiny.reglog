@@ -1,3 +1,23 @@
+check_namespace <- function(package) {
+  if (!requireNamespace(package, quietly = T)) {
+    stop(call. = F, 
+         paste0("To use this functionality, you need to additionally install package: '",
+                package,
+                "'. You can do it by typing `install.packages('",
+                package, "')`."))
+  }
+}
+
+blank_textInputs <- function(inputs, session){
+  for(input in inputs){
+    
+    updateTextInput(session,
+                    inputId = input,
+                    value = "")
+    
+  }
+}
+
 get_url_shiny <- function(session) {
   
   clientData <- reactiveValuesToList(session$clientData)
@@ -27,15 +47,21 @@ modals_check_n_show <- function(private, modalname) {
 }
 
 check_user_login <- function(x){
-  nchar(x) >= 8 & nchar(x) <= 25 & grepl("^[[:alnum:]]+$", x)
+  nchar(x) >= 8 & nchar(x) <= 30 & grepl("^[[:alnum:]]+$", x)
 }
 
 check_user_pass <- function(x){
-  nchar(x) >= 8 & nchar(x) <= 25 & grepl("^[[:alnum:]]+$", x)
+  pass_length <- nchar(x) >= 8 & nchar(x) <= 30
+  small_letter <- stringi::stri_detect(str = x, regex = "(?=.*[a-z])")
+  big_letter <- stringi::stri_detect(str = x, regex = "(?=.*[A-Z])")
+  pass_number <- stringi::stri_detect(str = x, regex = "(?=.*\\d)")
+  pass_symbols <- stringi::stri_detect(str = x, regex = "[-+_!@#$%^&*.,?]")
+  
+  pass_length && sum(small_letter, big_letter, pass_number, pass_symbols) >= 3
 }
 
 check_user_mail <- function(x) {
-  grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>", as.character(x), ignore.case=TRUE)
+  grepl("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z-a-z]{2,}$", as.character(x))
 }
 
 #' function to save message to logs

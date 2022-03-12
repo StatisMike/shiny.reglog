@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_login_UI.R
 \name{password_reset_UI}
 \alias{password_reset_UI}
-\title{DEPRACEATED Shiny UI module for password reset}
+\title{Shiny UI module for password reset}
 \usage{
 password_reset_UI(id = "login_system", lang = "en", custom_txts = NULL)
 }
@@ -20,12 +20,14 @@ every 'shiny.reglog' function}
 'tags$div' containing all elements for password reset procedure
 }
 \description{
+\code{lifecycle::badge("deprecated")}
+
+It need to be used in conjuction with \code{\link[=login_server]{login_server()}} function and is suggested to be used alongside \code{\link[=login_UI]{login_UI()}} and \code{\link[=register_UI]{register_UI()}} for full potential.
+
 This function creates a UI div() element containing informations and input necessary for user to reset password.
 As it outputs a div() element, you can put it inside container of your choosing (be it some tabItem, fluidPage, fluidRow etc.). It is important to mention that password reset procedure invokes modalDialog(), so it should be avoided to contain this function inside one.
-}
-\details{
-It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{login_UI()} and \code{register_UI()} for full potential.
 }
 \seealso{
 login_server() for more details and example
 }
+\keyword{internal}

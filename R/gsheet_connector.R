@@ -9,7 +9,7 @@
 #' @import R6
 #' @export
 
-RegLogGsheetConnector = R6::R6Class(
+RegLogGsheetConnector <- R6::R6Class(
   "RegLogGsheetConnector",
   inherit = RegLogConnector,
   # private elements ####
@@ -82,6 +82,8 @@ RegLogGsheetConnector = R6::R6Class(
       gsheet_sheetnames = c("user", "reset_code", "logs"),
       custom_handlers = NULL
     ) {
+      
+      check_namespace("googlesheets4")
       
       # append default handlers
       self$handlers[["login"]] <- gsheet_login_handler

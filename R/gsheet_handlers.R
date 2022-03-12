@@ -13,6 +13,8 @@
 
 gsheet_login_handler <- function(self, private, message) {
   
+  check_namespace("googlesheets4")
+  
   # download the database into the private
   private$get_sheet("user")
   
@@ -67,6 +69,8 @@ gsheet_login_handler <- function(self, private, message) {
 #' @keywords internal
 
 gsheet_register_handler = function(self, private, message) {
+  
+  check_namespace("googlesheets4")
   
   # download the database into the private
   private$get_sheet("user")
@@ -138,6 +142,8 @@ gsheet_register_handler = function(self, private, message) {
 #' @keywords internal
 
 gsheet_credsEdit_handler <- function(self, private, message) {
+  
+  check_namespace("googlesheets4")
   
   # download the database into the private
   private$get_sheet("user")
@@ -253,6 +259,8 @@ gsheet_credsEdit_handler <- function(self, private, message) {
 
 gsheet_resetPass_generation_handler <- function(self, private, message) {
   
+  check_namespace("googlesheets4")
+  
   # download the database into the private
   private$get_sheet("user")
   
@@ -318,6 +326,7 @@ gsheet_resetPass_generation_handler <- function(self, private, message) {
 
 gsheet_resetPass_confirmation_handler <- function(self, private, message) {
   
+  check_namespace("googlesheets4")
   
   # download the database into the private
   private$get_sheet("user")

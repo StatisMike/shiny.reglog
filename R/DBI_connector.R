@@ -106,6 +106,8 @@ RegLogDBIConnector = R6::R6Class(
       custom_handlers = NULL
     ) {
       
+      check_namespace("DBI")
+      
       # append default handlers
       self$handlers[["login"]] <- DBI_login_handler
       self$handlers[["register"]] <- DBI_register_handler

@@ -42,7 +42,8 @@ check_user_data <- function(user_data) {
 #' @param verbose Boolean specific if the actions made by function should be
 #' printed back to the console. Defaults to `TRUE`.
 #' 
-#' @details Currently, the function is tested and working correctly for
+#' @details
+#' Currently, the function is tested and working correctly for
 #' SQLite, MySQL, MariaDB and PostrgreSQL databases. If you want to use another 
 #' DBI-supported database, you need to create tables in other ways. 
 #' 
@@ -85,6 +86,9 @@ DBI_tables_create <- function(
   hash_passwords = FALSE,
   verbose = TRUE
   ){
+  
+  check_namespace("DBI")
+  
   # if user data is provided, check its validity
   if (!is.null(user_data)) {
     check_user_data(user_data)
@@ -249,9 +253,7 @@ DBI_tables_create <- function(
 #' generated messages. To silence them, use `options(googlesheets4_quiet = TRUE)`
 #' in the script before.
 #' 
-#' @details 
-#' 
-#' Created spreadsheets will have following structure:
+#' @details Created spreadsheets will have following structure:
 #' 
 #' - account (default name)
 #'   - username: character
@@ -288,6 +290,9 @@ gsheet_tables_create <- function(
   gsheet_name = NULL,
   verbose = TRUE
 ){
+  
+  check_namespace("googlesheets4")
+  
   # if user data is provided, check its validity
   if (!is.null(user_data)) {
     check_user_data(user_data)

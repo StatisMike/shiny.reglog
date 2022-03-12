@@ -73,10 +73,12 @@ reactiveValues() object with three elements:
 \code{last_state_change}, containing string describing last change of login system state. Currently only supports state changes during login procedure
 }
 \description{
-DEPRACATED: Shiny server module for the optional login/registration system
+\code{lifecycle::badge("deprecated")}
 
+This function has become deprecated. New RegLog system is based on \link{RegLogServer} R6 class.
+
+Shiny server module for the optional login/registration system
 This function creates a server module to handle other modules of the system: \code{login_UI()}, \code{password_reset_UI()} and \code{register_UI}
-
 It uses database contained in 'googlesheet' file on your 'gdrive' or 'SQLite' database locally to read and write data of the users. You need to create a 'googlesheet' or 'SQLite' using \code{create_gsheet_db()} or \code{create_sqlite_db()} respectively.
 }
 \details{

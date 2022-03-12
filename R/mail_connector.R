@@ -117,6 +117,8 @@ RegLogEmayiliConnector <- R6::R6Class(
       custom_mails = NULL
     ) {
       
+      check_namespace("emayili")
+      
       # language
       private$lang <- lang
       private$custom_txts <- custom_txts
@@ -221,6 +223,8 @@ RegLogGmailrConnector <- R6::R6Class(
       custom_handlers = NULL,
       custom_mails = NULL
     ) {
+      
+      check_namespace("gmailr")
       
       # language
       private$lang <- lang

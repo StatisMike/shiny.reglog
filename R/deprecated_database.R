@@ -14,13 +14,18 @@
  
 }
 
-#' Function to create new 'SQLite' database
+#' @title Create new 'SQLite' reglog database 
+#' 
+#' @description 
+#' `r lifecycle::badge('deprecated')`
+#' 
+#' Used to match deprecated 'login_server' function. Use [DBI_tables_create()]
+#' to create tables in 'DBI' supported database for new 'RegLogServer' object.
 #' 
 #' @param output_file path to new 'SQLite' database. After creation you need to provide it to \code{login_server()}
 #' @param credentials you can pass credentials data to create already populated tables. Provide data.frame object containing variables: timestamp, user_id, user_mail and user_pass. If there are multiple records with the same user_id, the most recent will be kept only.
 #' @param credentials_pass_hashed specify if you put in some credentials data. Are the passwords already hashed with 'scrypt' package? Takes TRUE (if hashed) or FALSE (if not hashed and need hashing)
-#' @importFrom DBI dbConnect 
-#' @importFrom RSQLite SQLite dbExecute dbDisconnect
+#' @keywords internal
 #' 
 #' @export
 #' 
@@ -28,6 +33,10 @@
 #' 
 
 create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_hashed){
+  
+  lifecycle::deprecate_warn("0.5.0", "create_sqlite_db()", "DBI_tables_create()")
+  
+  check_namespace("RSQLite")
 
   conn <- DBI::dbConnect(RSQLite::SQLite(), output_file)
 
@@ -45,7 +54,7 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
 
   # create user_db table
   
-  query <- RSQLite::dbSendQuery(
+  query <- DBI::dbSendQuery(
     conn,
     "CREATE TABLE user_db (
      timestamp INTEGER,
@@ -54,7 +63,7 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
      user_pass TEXT
      );")
   
-  RSQLite::dbClearResult(query)
+  DBI::dbClearResult(query)
   
   if(!is.null(credentials)){
 
@@ -62,42 +71,51 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
 
     temp_row <- cred_db[n,]
 
-    query <- RSQLite::dbSendQuery(
+    query <- DBI::dbSendQuery(
       conn,
       "INSERT INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass)
        ON CONFLICT (user_id) DO UPDATE SET user_pass = :user_pass;",
        temp_row)
     
-    RSQLite::dbClearResult(query)
+    DBI::dbClearResult(query)
     }
 
   }
 
   # create reset_db table
-  query <- RSQLite::dbSendQuery(conn,
+  query <- DBI::dbSendQuery(conn,
                      "CREATE TABLE reset_db (
                    timestamp INTEGER,
                    user_id TEXT PRIMARY KEY,
                    reset_code TEXT);")
   
-  RSQLite::dbClearResult(query)
+  DBI::dbClearResult(query)
 
 }
 
 
-#' Function to create new empty 'googlesheet' database
+#' @title Create new 'googlesheet' reglog database 
+#' 
+#' @description 
+#' `r lifecycle::badge('deprecated')`
+#' 
+#' Used to match deprecated 'login_server' function. Use [gsheet_tables_create()]
+#' to create 'googlesheet'-based database for new 'RegLogServer' object.
 #' 
 #' @param name specify name for 'googlesheet' file. Defaults to random name.
 #' @return id of the 'googlesheet' file. After creation you need to provide it to \code{login_server()}.
 #' @param credentials you can pass credentials data to create already populated tables. Provide data.frame object containing variables: timestamp, user_id, user_mail and user_pass. If there are multiple records with the same user_id, the most recent will be kept only.
 #' @param credentials_pass_hashed mandatory when putting some credentials data. Are the passwords already hashed with 'scrypt' package? Takes TRUE (if hashed) or FALSE (if not hashed and need hashing)
-#' @import googlesheets4
-#' 
 #' @export
+#' @keywords internal
 #' 
 #' @example examples/create_gsheet_db.R
 
 create_gsheet_db <- function(name = NULL, credentials = NULL, credentials_pass_hashed){
+  
+  lifecycle::deprecate_warn("0.5.0", "create_gsheet_db()", "gsheet_tables_create()")
+  
+  check_namespace("googlesheets4")
 
   if(!is.null(credentials)){
 
@@ -146,21 +164,34 @@ create_gsheet_db <- function(name = NULL, credentials = NULL, credentials_pass_h
 
 #' Function to read SQLite shiny.reglog database
 #' 
+#' @description 
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' As the new version of RegLog system allows for much more flexibility
+#' old functionalities for reading data is deprecated. Please use functions
+#' from adequate package: in this instance, 'DBI' package.
+#' 
 #' @param sqlite_db path to your 'SQLite' database
 #' 
 #' @return list containing \code{user_db} and \code{reset_db} dataframes
 #' 
-#' @importFrom DBI dbConnect 
-#' @importFrom DBI dbDisconnect
-#' @importFrom RSQLite SQLite
 #' @importFrom dplyr collect
 #' @importFrom dplyr mutate
 #' 
 #' @export
+#' @keywords internal
 #' @seealso create_sqlite_db
 #' 
 
 sqlite_get_db <- function(sqlite_db){
+  
+  lifecycle::deprecate_warn(
+    "0.5.0", "sqlite_get_db()", "DBI::dbReadTable()",
+    paste("As the new version of RegLog system allows for much more flexibility",
+          "old functionalities for reading data is deprecated. Please use functions",
+          "from adequate package: in this instance, 'DBI' package."))
+  
+  check_namespace("RSQLite")
   
   sq_db <- DBI::dbConnect(RSQLite::SQLite(), dbname = sqlite_db)
   
@@ -184,18 +215,33 @@ sqlite_get_db <- function(sqlite_db){
 
 #' Function to read googlesheets shiny.reglog database
 #' 
+#' @description 
+#' `r lifecycle::badge("deprecated")`
+#' 
+#' As the new version of RegLog system allows for much more flexibility
+#' old functionalities for reading data is deprecated. Please use functions
+#' from adequate package: in this instance, 'googlesheets4' package.
+#' 
 #' @param gsheet_db ID of your 'googlesheets' database
 #' 
 #' @return list containing \code{user_db} and \code{reset_db} dataframes
 #' 
-#' @importFrom googlesheets4 read_sheet
 #' @importFrom dplyr arrange group_by slice_head ungroup
 #' 
+#' @keywords internal
 #' @export
 #' @seealso create_sqlite_db
 #' 
 
 gsheet_get_db <- function(gsheet_db){
+  
+  lifecycle::deprecate_warn(
+    "0.5.0", "gsheet_get_db()", "googlesheets4::read_sheet()",
+    paste("As the new version of RegLog system allows for much more flexibility",
+          "old functionalities for reading data is deprecated. Please use functions",
+          "from adequate package: in this instance, 'googlesheets4' package."))
+  
+  check_namespace("googlesheets4")
   
   user_db <- googlesheets4::read_sheet(ss = gsheet_db, 
                                        sheet = "user_db",

@@ -19,6 +19,8 @@
 
 emayili_reglog_mail_handler <- function(self, private, message) {
   
+  check_namespace("emayili")
+  
   # interpolate subject with elements found
   mail_subject <- string_interpolate(
     x = self$mails[[message$data$process]][["subject"]],
@@ -100,6 +102,8 @@ emayili_reglog_mail_handler <- function(self, private, message) {
 
 emayili_custom_mail_handler <- function(self, private, message) {
   
+  check_namespace("emayili")
+  
   # parse the email
   mail <- emayili::envelope() |>
     emayili::from(private$from) |>
@@ -164,6 +168,8 @@ emayili_custom_mail_handler <- function(self, private, message) {
 #' @keywords internal
 
 gmailr_reglog_mail_handler <- function(self, private, message) {
+  
+  check_namespace("gmailr")
   
   # interpolate subject with elements found
   mail_subject <- string_interpolate(
@@ -245,6 +251,8 @@ gmailr_reglog_mail_handler <- function(self, private, message) {
 #' @keywords internal
 
 gmailr_custom_mail_handler <- function(self, private, message) {
+  
+  check_namespace("gmailr")
   
   # parse the email
   mail <- gmailr::gm_mime() |>

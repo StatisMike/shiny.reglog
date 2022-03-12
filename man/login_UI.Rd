@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_login_UI.R
 \name{login_UI}
 \alias{login_UI}
-\title{DEPRECATED Shiny UI module for login box}
+\title{Shiny UI module for login box}
 \usage{
 login_UI(id = "login_system", lang = "en", custom_txts = NULL)
 }
@@ -20,12 +20,14 @@ every 'shiny.reglog' function}
 'tags$div' containing all elements for login procedure
 }
 \description{
+\code{lifecycle::badge("deprecated")}
+
+It need to be used in conjuction with \code{\link[=login_server]{login_server()}} function and is suggested to be used alongside \code{\link[=password_reset_UI]{password_reset_UI()}} and \code{\link[=register_UI]{register_UI()}} for full potential.
+
 This function creates a UI div() element containing informations and input necessary for user to log-in.
 As it outputs a div() element, you can put it inside container of your choosing (be it some tabItem, fluidPage, fluidRow etc.)
-}
-\details{
-It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{password_reset_UI()} and \code{register_UI()} for full potential.
 }
 \seealso{
 login_server() for more details and example
 }
+\keyword{internal}

@@ -13,6 +13,8 @@
 
 DBI_login_handler <- function(self, private, message) {
   
+  check_namespace("DBI")
+  
   private$db_check_n_refresh()
   on.exit(private$db_disconnect())
   
@@ -70,6 +72,8 @@ DBI_login_handler <- function(self, private, message) {
 #' @keywords internal
 
 DBI_register_handler = function(self, private, message) {
+  
+  check_namespace("DBI")
   
   private$db_check_n_refresh()
   on.exit(private$db_disconnect())
@@ -146,6 +150,8 @@ DBI_register_handler = function(self, private, message) {
 #' @keywords internal
 
 DBI_credsEdit_handler <- function(self, private, message) {
+  
+  check_namespace("DBI")
   
   private$db_check_n_refresh()
   on.exit(private$db_disconnect())
@@ -295,6 +301,8 @@ DBI_credsEdit_handler <- function(self, private, message) {
 
 DBI_resetPass_generation_handler <- function(self, private, message) {
   
+  check_namespace("DBI")
+  
   private$db_check_n_refresh()
   on.exit(private$db_disconnect())
   
@@ -356,6 +364,8 @@ DBI_resetPass_generation_handler <- function(self, private, message) {
 #' @keywords internal
 
 DBI_resetPass_confirmation_handler <- function(self, private, message) {
+  
+  check_namespace("DBI")
   
   private$db_check_n_refresh()
   on.exit(private$db_disconnect())

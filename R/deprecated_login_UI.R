@@ -1,11 +1,13 @@
-#### UI module for login window ####
-
-#' DEPRECATED Shiny UI module for login box
+#' Shiny UI module for login box
+#'
+#' @description 
+#' `lifecycle::badge("deprecated")`
+#' 
+#' It need to be used in conjuction with [login_server()] function and is suggested to be used alongside [password_reset_UI()] and [register_UI()] for full potential.
 #'
 #' This function creates a UI div() element containing informations and input necessary for user to log-in.
 #' As it outputs a div() element, you can put it inside container of your choosing (be it some tabItem, fluidPage, fluidRow etc.)
 #'
-#' It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{password_reset_UI()} and \code{register_UI()} for full potential.
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
@@ -17,13 +19,15 @@
 #' @return 'tags$div' containing all elements for login procedure 
 #'
 #' @seealso login_server() for more details and example
-#'
+#' @keywords internal
 #' @export
 #'
 
 login_UI <- function(id = "login_system",
                      lang = "en",
                      custom_txts = NULL) {
+  
+  .Deprecated("RegLog_login_UI")
 
   ns <- NS(id)
   
@@ -40,14 +44,16 @@ login_UI <- function(id = "login_system",
       )
 }
 
-#### UI module for password reset ####
-
-#' DEPRACEATED Shiny UI module for password reset
+#' Shiny UI module for password reset
+#'
+#' @description 
+#' `lifecycle::badge("deprecated")`
+#' 
+#' It need to be used in conjuction with [login_server()] function and is suggested to be used alongside [login_UI()] and [register_UI()] for full potential.
 #'
 #' This function creates a UI div() element containing informations and input necessary for user to reset password.
 #' As it outputs a div() element, you can put it inside container of your choosing (be it some tabItem, fluidPage, fluidRow etc.). It is important to mention that password reset procedure invokes modalDialog(), so it should be avoided to contain this function inside one.
 #'
-#' It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{login_UI()} and \code{register_UI()} for full potential.
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
@@ -57,7 +63,7 @@ login_UI <- function(id = "login_system",
 #' every 'shiny.reglog' function
 #' 
 #' @return 'tags$div' containing all elements for password reset procedure 
-#'
+#' @keywords internal
 #' @seealso login_server() for more details and example
 #'
 #' @export
@@ -65,6 +71,8 @@ login_UI <- function(id = "login_system",
 password_reset_UI <- function(id = "login_system",
                               lang = "en",
                               custom_txts = NULL) {
+  
+  .Deprecated("RegLog_resetPass_UI")
   
   ns <- NS(id)
 
@@ -88,12 +96,15 @@ password_reset_UI <- function(id = "login_system",
 
 #### UI module for registration ####
 
-#' DEPRECATED Shiny UI module for registration box
+#' Shiny UI module for registration box
 #'
+#' @description 
+#' `lifecycle::badge("deprecated")`
+#' 
+#' It need to be used in conjuction with [login_server()] function and is suggested to be used alongside [login_UI()] and [password_reset_UI()] for full potential.
+#' 
 #' This function creates a UI div() element containing informations and input necessary for user to register new account.
 #' As it outputs a div() element, you can put it inside container of your choosing (be it some tabItem, fluidPage, fluidRow etc.)
-#'
-#' It need to be used in conjuction with \code{login_server()} function and is suggested to be used alongside \code{login_UI()} and \code{password_reset_UI()} for full potential.
 #'
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
@@ -103,7 +114,7 @@ password_reset_UI <- function(id = "login_system",
 #' every 'shiny.reglog' function
 #'
 #' @return 'tags$div' containing all elements for registration procedure
-#'
+#' @keywords internal
 #' @seealso login_server() for more details and example
 #'
 #' @export
@@ -111,6 +122,11 @@ password_reset_UI <- function(id = "login_system",
 register_UI <- function(id = "login_system",
                         lang = "en",
                         custom_txts = NULL){
+  
+  lifecycle::deprecate_warn(
+    "0.5.0",
+    "register_UI()",
+    "RegLog_register_UI()")
 
   ns <- NS(id)
 
@@ -139,11 +155,12 @@ register_UI <- function(id = "login_system",
 
 }
 
-#### UI button for logout ####
-
-#' DEPRECATED Action Button for logging out
+#' Action Button for logging out
 #' 
-#' Simple action button - after pressing it, the user will be logged out
+#' @description `lifecycle::badge("deprecated")`
+#' 
+#' To be used in conjuction with deprecated [login_server()]
+#' Simple action button - after pressing it, the user will be logged out. 
 #' 
 #' @param id the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.
 #' @param lang lang specifies the app used language. Accepts "en" or "pl". Defaults to "en"
@@ -153,6 +170,7 @@ register_UI <- function(id = "login_system",
 #' every 'shiny.reglog' function
 #' 
 #' @return 'actionButton' for logout
+#' @keywords internal
 #'
 #' @export
 #'
@@ -160,6 +178,14 @@ register_UI <- function(id = "login_system",
 logout_button <- function(id = "login_system",
                           lang = "en",
                           custom_txts = NULL){
+  
+  lifecycle::deprecate_warn(
+    "0.5.0",
+    "logout_button()",
+    details = paste(
+      "New 'RegLogServer' class allows to logout using",
+      "the 'RegLogServer$logout()' method. Create 'observeEvent' logic",
+      "to call this method."))
   
   ns <- NS(id)
   
