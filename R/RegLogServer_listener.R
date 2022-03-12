@@ -41,7 +41,7 @@ RegLogServer_listener <- function(
                                     modalname = "logout_success")
                 # clear user data
                 self$is_logged(FALSE)
-                self$user_id(uuid:UUIDgenerate())
+                self$user_id(uuid::UUIDgenerate())
                 self$user_mail("")
                 
               } else {

@@ -182,7 +182,7 @@ RegLogConnector = R6::R6Class(
 #' 
 #' @param type character string declaring the type of message
 #' @param ... named arguments that will be passed as data
-#' @param logconent character string. Optional description to save into logs.
+#' @param logcontent character string. Optional description to save into logs.
 #' 
 #' @return object of `RegLogConnector` class, containing fields:
 #' 

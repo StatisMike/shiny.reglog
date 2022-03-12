@@ -110,7 +110,7 @@ DBI::dbListTables(conn = conn)
 
 # check the "user" table for user data
 DBI::dbReadTable(conn = conn,
-                 "user")
+                 "account")
 
 # disconnect
 DBI::dbDisconnect(conn = conn)

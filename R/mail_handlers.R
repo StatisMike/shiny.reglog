@@ -56,7 +56,7 @@ emayili_reglog_mail_handler <- function(self, private, message) {
     
     RegLogConnectorMessage(
       message$type,
-      process = process$data$process,
+      process = message$data$process,
       success = TRUE,
       logcontent = paste0(message$data$username, "/", 
                           message$data$email, ":", message$data$process)
@@ -71,7 +71,7 @@ emayili_reglog_mail_handler <- function(self, private, message) {
         success = FALSE,
         logcontent = paste0(message$data$username, "/",
                             message$data$email, ":", 
-                            message$data$process, "|", e[1])
+                            message$data$process, "|", paste(e, collapse = ";"))
       )
     }
   )
@@ -137,7 +137,7 @@ emayili_custom_mail_handler <- function(self, private, message) {
       success = FALSE,
       logcontent = paste0(message$data$username, "/",
                           message$data$email, ":", 
-                          message$data$process, "|", e[1])
+                          message$data$process, "|", paste(e, collapse = ";"))
     )
   }
   )
@@ -220,7 +220,7 @@ gmailr_reglog_mail_handler <- function(self, private, message) {
       success = FALSE,
       logcontent = paste0(message$data$username, "/",
                           message$data$email, ":", 
-                          message$data$process, "|", e[1])
+                          message$data$process, "|", paste(e, collapse = ";"))
     )
   }
   )
@@ -287,7 +287,7 @@ gmailr_custom_mail_handler <- function(self, private, message) {
       success = FALSE,
       logcontent = paste0(message$data$username, "/",
                           message$data$email, ":", 
-                          message$data$process, "|", e[1])
+                          message$data$process, "|", paste(e, collapse = ";"))
     )
   }
   )

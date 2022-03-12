@@ -11,7 +11,7 @@ RegLogConnectorMessage(type, ..., logcontent = NULL)
 
 \item{...}{named arguments that will be passed as data}
 
-\item{logconent}{character string. Optional description to save into logs.}
+\item{logcontent}{character string. Optional description to save into logs.}
 }
 \value{
 object of \code{RegLogConnector} class, containing fields:

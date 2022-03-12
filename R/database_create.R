@@ -274,13 +274,13 @@ DBI_tables_create <- function(
 #'   - type: character
 #'   - note: character
 #' 
-#' @return ID of the created googlesheet
+#' @return ID of the googlesheet
 #' @example examples/gsheet_tables_create.R
 #' @export
 #' @family RegLog databases
 
 gsheet_tables_create <- function(
-  account_name = "user",
+  account_name = "account",
   reset_code_name = "reset_code",
   use_log = FALSE,
   log_name = "logs",

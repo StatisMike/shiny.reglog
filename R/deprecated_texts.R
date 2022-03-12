@@ -90,18 +90,7 @@ reglog_texts$en = list(
  logout_unaccept_bttn = "Don't log me out!",             # deprecated
  logout_impossible_modal = "You aren't logged in yet!",  # deprecated
  logout_mod_t = "Logged out",
- logout_mod_b = "Logged out succesfully!",
- # creds_edit
- cred_edit_ui_h1 = "Edit your information",
- cred_eidt_ui_p = "Here you can change your information. After successful change you will be relogged using your updated data.",
- cred_edit_ui_h2_old = "Your current data",
- cred_edit_ui_p_old = "As you are going to edit your information, please provide your current username and password below to confirm your identity before trying to trigger any changes.",
- cred_edit_ui_h2_pass_change = "Change your current password",
- cred_edit_ui_p_pass_change = "Provide your new password below to change your password.",
- cred_edit_pass_change_bttn = "Confirm password change",
- cred_edit_ui_h2_other_change = "Change user data",
- cred_edit_ui_p_other_change = "Provide new user ID and/or new email to change them.",
- cred_edit_other_change_bttn = "Confirm change of user data"
+ logout_mod_b = "Logged out succesfully!"
 )
 
 reglog_texts$pl = list(
@@ -182,18 +171,7 @@ reglog_texts$pl = list(
  logout_unaccept_bttn = "Nie wylogowuj!",                              # deprecated
  logout_impossible_modal = "Nie jeste\u015B jeszcze zalogowany.",      # deprecated
  logout_mod_t = "Wylogowano",
- logout_mod_b = "Pomy\u015Blnie wylogowano!",
- # creds_edit
- cred_edit_ui_h1 = "Zmień swoje dane",
- cred_eidt_ui_p = "Tutaj możesz zmienić swoje dane. Po pomyślnej zmianie nastąpi przelogowanie z wykorzystaniem zaktualizowanych danych.",
- cred_edit_ui_h2_old = "Potwierdź tożasamość",
- cred_edit_ui_p_old = "Przed zatwierdzeniem jakichkolwiek zmian, proszę o potwierdzenie swojej tożsamości z wykorzystaniem obecnej nazwy użytkownika i hasła.",
- cred_edit_ui_h2_pass_change = "Zmień obecne hasło",
- cred_edit_ui_p_pass_change = "Wpisz i potwierdź nowe hasło poniżej.",
- cred_edit_pass_change_bttn = "Zatwierdź zmianę hasła",
- cred_edit_ui_h2_other_change = "Zmień dane użytkownika",
- cred_edit_ui_p_other_change = "Wpisz nową nazwę użytkownika i/lub nowy adres e-mail.",
- cred_edit_other_change_bttn = "Zatwierdź zmianę danych użytkownika"
+ logout_mod_b = "Pomy\u015Blnie wylogowano!"
 )
 
 # also - modify documentation in quetzio_server argument `lang`
@@ -219,6 +197,7 @@ reglog_texts$pl = list(
 #' you are willing to replace.
 #'
 #' @export
+#' @rdname depr_txts
 #'
 
 reglog_txt <- function(

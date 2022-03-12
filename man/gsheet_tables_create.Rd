@@ -5,7 +5,7 @@
 \title{Create RegLog-valid database tables with googlesheets4}
 \usage{
 gsheet_tables_create(
-  account_name = "user",
+  account_name = "account",
   reset_code_name = "reset_code",
   use_log = FALSE,
   log_name = "logs",
@@ -51,7 +51,7 @@ generated messages. To silence them, use \code{options(googlesheets4_quiet = TRU
 in the script before.}
 }
 \value{
-ID of the created googlesheet
+ID of the googlesheet
 }
 \description{
 Create RegLog-valid database tables with googlesheets4
@@ -86,27 +86,29 @@ Created spreadsheets will have following structure:
 }
 }
 \examples{
-library(shiny.reglog)
-
-# mockup user data
-user_data <- 
-  data.frame(username = c("Whatever", "Hanuka", "Helsinki", "How_come"), 
-             password = c("&f5*MSYj^niDt=V'3.[dyEX.C/", "\%}&B[fs\\\\}5PKE@,*+V\\\\tx9\"at]", 
-                          "35z*ofW\\\\'G_8,@vCC`]~?e$Jm\%", "s:;r_eLn?-D6;oA-=\"^R(-Ew<x"), 
-             email = c("what@mil.com", "hehe@soso.so", "nider@what.no", "crazzz@simpsy.com"))
-
-# create the tables and input the data (hashing the passwords in the process)
-id <- gsheet_tables_create(user_data = user_data,
-                           hash_passwords = TRUE)
-
-# check generated googlesheet
-googlesheets4::gs4_get(id)
-
-# check the "user" sheet for user data
-googlesheets4::read_sheet(id, "user")
-
-# disconnect
-googledrive::drive_trash(id)
+if (googlesheets4::gs4_has_token()) {
+  library(shiny.reglog)
+  
+  # mockup user data
+  user_data <- 
+    data.frame(username = c("Whatever", "Hanuka", "Helsinki", "How_come"), 
+               password = c("&f5*MSYj^niDt=V'3.[dyEX.C/", "\%}&B[fs\\\\}5PKE@,*+V\\\\tx9\"at]", 
+                            "35z*ofW\\\\'G_8,@vCC`]~?e$Jm\%", "s:;r_eLn?-D6;oA-=\"^R(-Ew<x"), 
+               email = c("what@mil.com", "hehe@soso.so", "nider@what.no", "crazzz@simpsy.com"))
+  
+  # create the tables and input the data (hashing the passwords in the process)
+  id <- gsheet_tables_create(user_data = user_data,
+                             hash_passwords = TRUE)
+  
+  # check generated googlesheet
+  googlesheets4::gs4_get(id)
+  
+  # check the "account" sheet for credentials data
+  googlesheets4::read_sheet(id, "account")
+  
+  # remove example googlesheets
+  googledrive::drive_trash(id)
+}
 }
 \seealso{
 Other RegLog databases: 

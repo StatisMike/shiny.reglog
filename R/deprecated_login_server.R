@@ -20,7 +20,7 @@
 
 .sqlite_new_user <- function(sqlite_db, temp_row){
 
-  sq_db <- DBI::dbConnect(DBI::SQLite(), sqlite_db)
+  sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
 
   new_query <-DBI::dbSendQuery(sq_db,
                                    "INSERT INTO user_db (timestamp, user_id, user_mail, user_pass) VALUES (:timestamp, :user_id, :user_mail, :user_pass)
@@ -37,7 +37,7 @@
 
 .sqlite_send_reset <- function(sqlite_db, temp_row){
 
-  sq_db <- DBI::dbConnect(DBI::SQLite(), sqlite_db)
+  sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
 
   res_query <- DBI::dbSendQuery(sq_db,
                                     "INSERT INTO reset_db (timestamp, user_id, reset_code) VALUES (:timestamp, :user_id, :reset_code)
@@ -53,7 +53,7 @@
 
 .sqlite_new_pass <- function(sqlite_db, temp_row){
 
-  sq_db <- DBI::dbConnect(DBI::SQLite(), sqlite_db)
+  sq_db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_db)
 
   pass_query <- DBI::dbSendQuery(sq_db,
                                      "INSERT INTO user_db (timestamp, user_mail, user_id, user_pass)
@@ -149,8 +149,6 @@
 #'
 #' @export
 #' @import shiny
-#' @import DBI
-#' @import RSQLite
 #'
 #' @example examples/apps/shinybase_sqlite_emayili.R
 
