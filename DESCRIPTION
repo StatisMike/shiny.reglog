@@ -23,12 +23,12 @@ Imports:
     scrypt,
     shinyjs,
     stringi,
-    DBI,
-    googlesheets4,
     lubridate,
     lifecycle,
     uuid
 Suggests:
+    DBI,
+    googlesheets4,
     shinydashboard,
     googledrive,
     gmailr,
