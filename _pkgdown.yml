@@ -33,17 +33,30 @@ reference:
   - DBI_tables_create
   - gsheet_tables_create
 - title: Advanced functions and objects 
-  desc: To better understand the underlying logic and create customizations
+- subtitle: Customizing texts
+  desc: >- 
+   This function is used mostly internally, but you can also use it interactively
+   to check which texts are used to provide custom ones to the `RegLogServer`
 - contents:
   - RegLog_txt
+- subtitle: Customizing connectors and messages
+  desc: >-
+   Parse connector messages yourself to trigger default handler functions
+   or custom ones (read vignettes for more information). 
+   You can also create your own connector!
+- contents:
   - RegLogConnectorMessage
   - RegLogConnector
-- title: Default handler functions
+- subtitle: Various utility functions
+- contents:
+  - db_timestamp
+- subtitle: Default handler functions
   desc: >- 
    All of these are used only internally and aren't exported. You can read these
    to better understand inner-workings of the RegLog system to create custom
    handler functions.
 - contents:
-  - has_concept("DBI handler functions")
-  - has_concept("googlesheets handler functions")
-  - has_concept("mail handler functions")
+  - has_concept("gsheet_handler", internal = TRUE)
+  - has_concept("DBI_handler", internal = TRUE)
+  - has_concept("mail_handler", internal = TRUE)
+

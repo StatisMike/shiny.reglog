@@ -198,6 +198,7 @@ reglog_texts$pl = list(
 #'
 #' @export
 #' @rdname depr_txts
+#' @keywords internal
 #'
 
 reglog_txt <- function(

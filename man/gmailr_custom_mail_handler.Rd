@@ -37,4 +37,5 @@ Other mail handler functions:
 \code{\link{gmailr_reglog_mail_handler}()}
 }
 \concept{mail handler functions}
+\concept{mail_handler}
 \keyword{internal}

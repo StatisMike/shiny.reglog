@@ -194,3 +194,4 @@ shinyApp(ui = ui, server = server)
 
 \code{\link[=register_UI]{register_UI()}} for the registration window in UI
 }
+\keyword{internal}

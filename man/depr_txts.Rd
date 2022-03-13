@@ -30,3 +30,4 @@ and calling this function in console.
 Values of list provided should be named in the same way as the default text
 you are willing to replace.
 }
+\keyword{internal}

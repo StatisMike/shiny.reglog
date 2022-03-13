@@ -27,7 +27,7 @@ get_url_shiny <- function(session) {
                 clientData$url_hostname,
                 sep = "//")
   
-  if (!is.null(clientData$url_port))
+  if (nchar(clientData$url_port) > 0)
     path <- paste(path, clientData$url_port, sep = ":")
   
   return(paste0(path, clientData$url_pathname))

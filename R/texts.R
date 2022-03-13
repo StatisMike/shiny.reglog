@@ -25,7 +25,7 @@ RegLog_txts$en = list(
   ### resetpass module specific labels ####
   reset_ui_1 = "Reset your password",
   reset_ui_2 = "To reset your password, type in your user ID and press the 'Send code' button. The code to reset your password will be sent to the e-mail that you provided during registration.",
-  reset_ui_3 = "After receiving a reset e-mail, enter the code in the box below and press the 'Confirm code' button. The reset code will be active for 24 hours.",
+  reset_ui_3 = "After receiving a reset e-mail, enter the code in the box below and press the 'Confirm code' button. The reset code will be active for 4 hours.",
   reset_ui_4 = "Received code",
   reset_bttn_1 = "Send code",
   reset_bttn_2 = "Confirm code",
@@ -33,7 +33,7 @@ RegLog_txts$en = list(
   register_ui_1 = "Registration form",
   register_ui_2 = "In the form below you can register a new account. Choose a user ID, provide a valid e-mail adress and choose a password for your account.",
   register_ui_3 = "User ID and password should consist of 8~30 characters. For user ID every alphanumeric characters are valid. Password should contain at least three out of four following types of characters: big letter, small letter, number, special character.",
-  register_ui_4 = "You should have access to the provided e-mail address. After registration you will receive a confirmation e-mail. Moreover, if you ever forget your password you can reset it with your e-mail.",
+  register_ui_4 = "You should have access to the provided e-mail address. After registration you will receive a confirmation e-mail. Moreover, if you ever forget your password you can reset it with reset code send to provided e-mail.",
   register_bttn = "Register",
   ## modal texts ####
   ### login modals ####
@@ -149,7 +149,7 @@ RegLog_txts$pl = list(
   # resetpass_ui specific label
   reset_ui_1 = "Reset has\u0142a",
   reset_ui_2 = "Aby zresetowa\u0107 has\u0142o, wprowad\u017A swoj\u0105 nazw\u0119 u\u017Cytkownika i wci\u015Bnij przycisk 'Wy\u015Blij kod'. Kod do zresetowania has\u0142a zostanie wys\u0142any na e-mail podany podczas rejestracji. Wiadomo\u015B\u0107 powinna dotrze\u0107 w ci\u0105gu kilku minut.",
-  reset_ui_3 = "Po otrzymaniu wiadomo\u015Bci wprowad\u017A otrzymany kod w pole poni\u017Cej i wci\u015Bnij przycisk 'Potwierd\u017A kod'. Kod b\u0119dzie aktywny przez 24 godziny.",
+  reset_ui_3 = "Po otrzymaniu wiadomo\u015Bci wprowad\u017A otrzymany kod w pole poni\u017Cej i wci\u015Bnij przycisk 'Potwierd\u017A kod'. Kod b\u0119dzie aktywny przez 4 godziny.",
   reset_ui_4 = "Otrzymany kod",
   reset_bttn_1 = "Wy\u015Blij kod",
   reset_bttn_2 = "Potwierd\u017A kod",
@@ -157,7 +157,7 @@ RegLog_txts$pl = list(
   register_ui_1 = "Formularz rejestracyjny",
   register_ui_2 = "W poni\u017Cszym formularzu mo\u017Cna zarejetrowa\u0107 nowe konto. Wybierz nazw\u0119 u\u017Cytkownika, podaj poprawny adres e-mail i wybierz has\u0142o dla swojego konta.",
   register_ui_3 = "Nazwa u\u017Cytkownika i has\u0142o powinny sk\u0142ada\u0107 si\u0119 z 8~30 znak\u00F3w. Nazwa u\u017Cytkownika mo\u017Ce zawiera\u0107 litery oraz cyfry. Has\u0142o powinno zawiera\u0107 co najmniej 3 z 4 nast\u0119puj\u0105cych typ\u00F3w znak\u00F3w: ma\u0142\u0105 liter\u0119, du\u017C\u0105 liter\u0119, cyfr\u0119, znak specjalny.",
-  register_ui_4 = "Podany adres e-mail powinien dla ciebie dost\u0119pny. Po rejestracji otrzymasz wiadomo\u015B\u0107 potwierdzaj\u0105c\u0105. Co wi\u0119cej, je\u017Celi kiedykolwiek zapomnisz swojego has\u0142a, mo\u017Cesz je zresetowa\u0107 poprzez e-mail.",
+  register_ui_4 = "Podany adres e-mail powinien dla ciebie dost\u0119pny. Po rejestracji otrzymasz wiadomo\u015B\u0107 potwierdzaj\u0105c\u0105. Co wi\u0119cej, je\u017Celi kiedykolwiek zapomnisz swojego has\u0142a, mo\u017Cesz je zresetowa\u0107 poprzez kod resetujący wysłany na podany adres e-mail.",
   register_bttn = "Zarejestruj",
   ## modal texts ####
   ### login modals ####

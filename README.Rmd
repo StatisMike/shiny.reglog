@@ -38,12 +38,12 @@ This package contains modules to use in your Shiny application allowing you to
 automatically insert boxes for login, register, credentials edit and password 
 reset and procedures.
 
-*shiny.reglog* supports as database containers either databases accessed with
+*shiny.reglog* supports as data containers either databases accessed with
 `RSQLite`, `RMariaDB`, `RMySQL` and `RPostgreSQL` drivers or googlesheets-based
 database (accessed by `googlesheets4` package).
 
 It is highly recommended to use one of the `DBI`-supported databases, though. It
-is much more optimized and secure, as the whole database is never loaded as a whole
+is much more optimized and secure, as the database is never loaded as a whole
 into the memory, but queried as needed. *googlesheets* database is much easier to
 set-up, but it shouldn't be used when you are expecting big userbase.
 
@@ -55,15 +55,14 @@ or `gmailr` packages. Both of them have their pros and cons, depending on your
 accesses: `emayili` allows for usage of many SMTP servers, while `gmailr` allowing
 using *gmail* messaging via Google REST API. 
 
-For some informations about getting basic Google REST API authorization you can
-read vignette: [shiny.reglog: How to get Google API authorization](https://cran.r-project.org/web/packages/shiny.reglog/vignettes/auth.html){target="_blank"}
+The `emayili` is recommended for most applications. `gmailr` can be useful
+if you already have application registered and authorized with mail sending
+scope.
 
 Currently the package is after major change in its code - basically full rewrite
-to allow more security, usage of more databases and more customization allowed
-for the end-user. Past functions are still available in current version, but will 
+to allow more security, usage of more databases and more customization. Past 
+functions are still available in current version, but will 
 generate deprecation warnings. 
-
-All new functions are prefixed with `RegLog`, so try to make the switch to them.
 
 ## 2. Basic structure 
 
@@ -79,86 +78,104 @@ will handle all automatical emailing to the user emails.
 reactivity of the login and registration system. It uses *dbConnector* and
 *mailConnector* for actions external of R.
 
-## 2. Installation
+## 3. Installation
 
 You can install this version of shiny.reglog from GitHub with:
 
 ```{r installation, eval=FALSE}
-# install version 0.4.0.1 from CRAN 
-install.packages("shiny.reglog")
+# install version 0.5.0 from GitHub 
+install.packages("devtools")
+devtools::install_github("StatisMike/shiny.reglog")
 
-# or install latest version from GitHub
-# install.packages("devtools")
-# devtools::install_github("StatisMike/shiny.reglog")
+# or install old version from CRAN
+# install.packages("shiny.reglog")
 ```
 
-## 3. Setup
+## 4. Setup
 
-To use the contents of this package, can use helper functions included in the package.
+To set-up the database for *RegLog* system, you can use helper functions
+included in this package. They are tested and guarantee compatible structure
+of the data.
 
-### 3.1 Googlesheet database method
+### 4.1 Googlesheet database method
 
-1. Create googlesheet file on your googledrive to support database. It creates empty spreadsheet.
+1. Create googlesheet file on your googledrive to support database. You can use
+`gsheet_tables_create()` function, which by default creates empty spreadsheets
+configured correctly.
 
 ```{r creating gsheet, eval = F}
 # create googlesheet and gather its id for later usage
 # you can also specify optional 'name' argument for custom gsheet name
 
-gsheet_id <- create_gsheet_db()
+gsheet_id <- gsheet_tables_create()
 
-# save you gsheet_id - you need to provide it later to login_server()
+# save you gsheet_id - you need to provide it later to your dbConnector
 ```
 
-If you wish to import some credentials, you can do it by giving the `data.frame` object to the `credentials` argument:
+If you wish to import some existing credentials, you can do it by giving the 
+`data.frame` object to the `user_data` argument:
 
 ```{r, eval = F}
 # get some credentials
 credentials <- data.frame(
-  timestamp = Sys.time(),
-  user_id = "ShinyReglogTest",
-  user_mail = "shinyreglog@test",
-  user_pass = "VeryHardPassword"
+  username = "ShinyReglogTest",
+  password = "VeryHardPassword",
+  email = "shinyreglog@test"
   )
 
 # create gsheet database with some credentials
-gsheet_id <- create_gsheet_db(
-  credentials = credentials,
-  # when giving some credentials, you need to specify if the passwords were hashed by 'scrypt` package
-  credentials_pass_hashed = F)
+gsheet_id <- gsheet_tables_create(
+  user_data = credentials,
+  # as the password was not hashed with `script` before, it need to be
+  # hashed now
+  hash_passwords = T)
 
 ```
 
-2. Configure googlesheets4 package to use out-of-band (non-interactive) auth. For more information about it visit [googlesheets4 documentation](https://googlesheets4.tidyverse.org/) or vignette provided with `shiny.reglog`
+2. Configure googlesheets4 package to use out-of-band (non-interactive) auth. For more information about it visit [googlesheets4 documentation](https://googlesheets4.tidyverse.org/).
 
-### 3.2 SQLite database method
+### 4.2 `DBI` compatible SQL database
 
-Create an SQLite database that your Shiny App will have access to. It creates empty database.
+*RegLog system* out of the box supports *SQLite*, *MySQL*, *MariaDB* and *PostgreSQL*
+databases. You can use `DBI_tables_create` function, which by default creates empty 
+tables configured correctly.
 
 ```{r creating SQLite, eval = F}
-# create SQLite database and gather its filepath for later usage
+# create a connection to the database. Remember to use user with CREATE TABLE
+# scope enabled when useing MySQL, MariaDB or PostgreSQL connection
 
-create_sqlite_db("path/to/db.sqlite")
+conn <- DBI::dbConnect(
+  RSQLite::SQLite(),
+  dbname = "reglog_db.sqlite"
+)
 
-# you need to provide 'path/to/db.sqlite' later to login_server()
+# using this connection create the tables.
+DBI_tables_create(conn = conn)
+
+# disconnect from the database after creation
+DBI::dbDisconnect(conn)
 ```
 
-If you wish to import some credentials, you can do it by giving the `data.frame` object to the `credentials` argument:
+If you wish to import some credentials, you can do it by providing the `data.frame` 
+object to the `user_data` argument:
 
 ```{r, eval = F}
 # get some credentials
 credentials <- data.frame(
-  timestamp = Sys.time(),
-  user_id = "ShinyReglogTest",
-  user_mail = "shinyreglog@test",
-  user_pass = "VeryHardPassword"
-  )
+  username = "ShinyReglogTest",
+  password = "VeryHardPassword",
+  email = "shinyreglog@test")
 
-# create SQLite database with some credentials
-create_sqlite_db(
-  "path/to/db.sqlite",
-  credentials = credentials,
-  # when giving some credentials, you need to specify if the passwords were hashed by 'scrypt` package
-  credentials_pass_hashed = F)
+conn <- DBI::dbConnect(
+  RSQLite::SQLite(),
+  dbname = "reglog_db.sqlite"
+)
+
+# create database using the connection
+DBI_tables_create(conn = conn,
+                  user_data = credentials)
+
+DBI::dbDisconnect(conn)
 ```
 
 ## 4. Information about functions

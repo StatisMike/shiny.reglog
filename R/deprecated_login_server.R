@@ -148,6 +148,7 @@
 #' @seealso [register_UI()] for the registration window in UI
 #'
 #' @export
+#' @keywords internal
 #' @import shiny
 #'
 #' @example examples/apps/shinybase_sqlite_emayili.R

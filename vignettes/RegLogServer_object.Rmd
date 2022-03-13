@@ -147,7 +147,7 @@ of *S3* class **RegLogConnectorMessage**, that the *RegLogServer* received from 
 
 >Messages received from mailConnector aren't exposed in this field. Instead, they
 are exposed in `RegLogServer$mail_message()` field. They are separated because
-they don't idicate a change in state of RegLog itself - instead, they just
+they don't idicate a change in state of *RegLog system* itself - instead, they just
 show the feedback from mail sending service.
 
 Creation of custom logic depending on its change isn't at all necessary. It can
@@ -418,7 +418,7 @@ processess. It contains:
 ### Type: **custom_mail**
 
 This type of message isn't received during regular *RegLog* run. It is a response
-to message that you can use to sent a custom e-mail. It contains the same
+to message that you can use to send a custom e-mail. It contains the same
 responses as **reglog_mail** message.
 
 To send a custom email using *mailConnector*, pass to its *listener* a 
@@ -434,9 +434,9 @@ observeEvent(input$send_custom_email, {
   
   message_to_send <- RegLogConnectorMessage(
     type = "custom_mail",
-    # name your process in some way - it will be tracked by the app and saved
-    # into logs
-    process = "custom mail with attachment!",
+    # name your process in some unique way - it will be tracked by the app 
+    # and saved into logs
+    process = "attachement_mail!",
     # username and email can be gotten from RegLogServer
     username = RegLogServer$user_id(),
     email = RegLogServer$user_mail(),
@@ -493,7 +493,8 @@ sent to your users. Defaults to the URL that the App is accessed on the client
 side (actually: `NULL`, as the address is got on session start)
 - `lang` - language in which the default texts are presented. Defaults to "en"
 for English. You can also specify "i18" for the RegLog to show only the content
-identifiers for ease of building your own translations using external tools.
+identifiers for ease of building your own translations using external tools, eg.
+[shiny.i18n](https://github.com/Appsilon/shiny.i18n).
 - `custom_txts` - defaults to NULL. Can be a named list of character vectors that
 should be used in place of defined text for language of your choosing (to 
 check them out, use `RegLog_texts()` function).
@@ -554,7 +555,7 @@ options("RegLogServer.logs_to_database" = 0)
 Possible values:
 
 - 0: no message is saved into logs/database
-- 1: messages **send** and **received** are saved
+- 1: messages **sent** and **received** are saved
 - 2: all messages are saved
 
 > It isn't recommended to save any logs into database when using *RegLogGsheetConnector* 
@@ -569,7 +570,7 @@ them with their reset code) and after changing their user ID or e-mail during th
 credentials edit procedure.
 
 As the e-mail sending is mandatory during reset password procedure, there is no
-option to inhibit it, but the other messages are only recommended and are
+option to inhibit it, but the other messages are only recommended as they are
 enriching the user experience. If you are concerned with the amount of e-mails
 that can be sent from your app, you can inhibit these messages using following
 options:

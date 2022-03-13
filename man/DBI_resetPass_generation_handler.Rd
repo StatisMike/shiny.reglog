@@ -29,4 +29,5 @@ Other DBI handler functions:
 \code{\link{DBI_resetPass_confirmation_handler}()}
 }
 \concept{DBI handler functions}
+\concept{DBI_handler}
 \keyword{internal}

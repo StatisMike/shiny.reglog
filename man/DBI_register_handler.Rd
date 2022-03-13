@@ -30,4 +30,5 @@ Other DBI handler functions:
 \code{\link{DBI_resetPass_generation_handler}()}
 }
 \concept{DBI handler functions}
+\concept{DBI_handler}
 \keyword{internal}

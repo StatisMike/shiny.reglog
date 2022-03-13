@@ -9,6 +9,7 @@
 #' - username
 #' - password
 #' @family DBI handler functions
+#' @concept DBI_handler
 #' @keywords internal
 
 DBI_login_handler <- function(self, private, message) {
@@ -69,6 +70,7 @@ DBI_login_handler <- function(self, private, message) {
 #' - password
 #' - email
 #' @family DBI handler functions
+#' @concept DBI_handler
 #' @keywords internal
 
 DBI_register_handler = function(self, private, message) {
@@ -147,6 +149,7 @@ DBI_register_handler = function(self, private, message) {
 #' - new_email
 #' - new_password
 #' @family DBI handler functions
+#' @concept DBI_handler
 #' @keywords internal
 
 DBI_credsEdit_handler <- function(self, private, message) {
@@ -297,6 +300,7 @@ DBI_credsEdit_handler <- function(self, private, message) {
 #' - username
 #' 
 #' @family DBI handler functions
+#' @concept DBI_handler
 #' @keywords internal
 
 DBI_resetPass_generation_handler <- function(self, private, message) {
@@ -361,6 +365,7 @@ DBI_resetPass_generation_handler <- function(self, private, message) {
 #' - password
 #' 
 #' @family DBI handler functions
+#' @concept DBI_handler
 #' @keywords internal
 
 DBI_resetPass_confirmation_handler <- function(self, private, message) {

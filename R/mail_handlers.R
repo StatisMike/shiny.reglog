@@ -15,6 +15,7 @@
 #' 
 #' @return `RegLogEmayiliConnector` message.
 #' @family mail handler functions
+#' @concept mail_handler
 #' @keywords internal
 
 emayili_reglog_mail_handler <- function(self, private, message) {
@@ -104,6 +105,7 @@ emayili_reglog_mail_handler <- function(self, private, message) {
 #' 
 #' @return `RegLogEmayiliConnector` message.
 #' @family mail handler functions
+#' @concept mail_handler
 #' @keywords internal
 
 emayili_custom_mail_handler <- function(self, private, message) {
@@ -177,6 +179,7 @@ emayili_custom_mail_handler <- function(self, private, message) {
 #' 
 #' @return `RegLogEmayiliConnector` message.
 #' @family mail handler functions
+#' @concept mail_handler
 #' @keywords internal
 
 gmailr_reglog_mail_handler <- function(self, private, message) {
@@ -266,6 +269,7 @@ gmailr_reglog_mail_handler <- function(self, private, message) {
 #' 
 #' @return `RegLogEmayiliConnector` message.
 #' @family mail handler functions
+#' @concept mail_handler
 #' @keywords internal
 
 gmailr_custom_mail_handler <- function(self, private, message) {

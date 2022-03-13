@@ -9,6 +9,7 @@
 #' - username
 #' - password
 #' @family googlesheets handler functions
+#' @concept gsheet_handler
 #' @keywords internal
 
 gsheet_login_handler <- function(self, private, message) {
@@ -66,6 +67,7 @@ gsheet_login_handler <- function(self, private, message) {
 #' - password
 #' - email
 #' @family googlesheets handler functions
+#' @concept gsheet_handler
 #' @keywords internal
 
 gsheet_register_handler = function(self, private, message) {
@@ -139,6 +141,7 @@ gsheet_register_handler = function(self, private, message) {
 #' - new_email
 #' - new_password
 #' @family googlesheets handler functions
+#' @concept gsheet_handler
 #' @keywords internal
 
 gsheet_credsEdit_handler <- function(self, private, message) {
@@ -255,6 +258,7 @@ gsheet_credsEdit_handler <- function(self, private, message) {
 #' - username
 #' 
 #' @family googlesheets handler functions
+#' @concept gsheet_handler
 #' @keywords internal
 
 gsheet_resetPass_generation_handler <- function(self, private, message) {
@@ -322,6 +326,7 @@ gsheet_resetPass_generation_handler <- function(self, private, message) {
 #' - password
 #' 
 #' @family googlesheets handler functions
+#' @concept gsheet_handler
 #' @keywords internal
 
 gsheet_resetPass_confirmation_handler <- function(self, private, message) {

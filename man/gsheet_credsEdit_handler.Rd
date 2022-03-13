@@ -37,4 +37,5 @@ Other googlesheets handler functions:
 \code{\link{gsheet_resetPass_generation_handler}()}
 }
 \concept{googlesheets handler functions}
+\concept{gsheet_handler}
 \keyword{internal}

@@ -36,4 +36,5 @@ Other mail handler functions:
 \code{\link{gmailr_custom_mail_handler}()}
 }
 \concept{mail handler functions}
+\concept{mail_handler}
 \keyword{internal}
