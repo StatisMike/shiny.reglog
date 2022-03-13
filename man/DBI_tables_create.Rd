@@ -103,7 +103,8 @@ user_data <-
 # create the tables and input the data (hashing the passwords in the process)
 DBI_tables_create(conn = conn,
                   user_data = user_data,
-                  hash_passwords = TRUE)
+                  hash_passwords = TRUE,
+                  verbose = FALSE)
 
 # check generater tables
 DBI::dbListTables(conn = conn)

@@ -61,7 +61,7 @@ check_user_pass <- function(x){
 }
 
 check_user_mail <- function(x) {
-  grepl("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z-a-z]{2,}$", as.character(x))
+  stringi::stri_detect(regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z-a-z]{2,}$", str = as.character(x))
 }
 
 #' function to save message to logs

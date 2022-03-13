@@ -10,3 +10,4 @@ cache
 tests
 .secrets
 inst/doc
+docs

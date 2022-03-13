@@ -98,7 +98,8 @@ if (googlesheets4::gs4_has_token()) {
   
   # create the tables and input the data (hashing the passwords in the process)
   id <- gsheet_tables_create(user_data = user_data,
-                             hash_passwords = TRUE)
+                             hash_passwords = TRUE,
+                             verbose = FALSE)
   
   # check generated googlesheet
   googlesheets4::gs4_get(id)
