@@ -157,7 +157,7 @@ RegLogServer <- R6::R6Class(
       for (i in seq_along(self$log)) {
         
         binded_logs[[names(self$log)[i]]] <-
-          data.table::rbindlist(self$log[[i]], idcol = "time")
+          dplyr::bind_rows(self$log[[i]], .id = "time")
         
       }
       
