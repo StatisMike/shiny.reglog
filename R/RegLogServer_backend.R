@@ -41,11 +41,15 @@ RegLogServer_backend <- function(
           modals_check_n_show(private = private,
                               modalname = "login_noInput")
           
-          message_to_send <- RegLogConnectorMessage(
+          message_to_show <- RegLogConnectorMessage(
             type = "login_front",
             success = FALSE,
             input_provided = FALSE
           )
+          
+          # show message and save to logs if enabled
+          self$message(message_to_show)
+          save_to_logs(message_to_show, "shown", self, session)
           
         } else {
           
@@ -80,6 +84,17 @@ RegLogServer_backend <- function(
           modals_check_n_show(private = private,
                               modalname = "register_noInput")
           
+          # parse message to show
+          message_to_show <- RegLogConnectorMessage(
+            "register_front",
+            success = FALSE,
+            input_provided = FALSE
+          )
+          
+          # show message and save to logs if enabled
+          self$message(message_to_show)
+          save_to_logs(message_to_show, "shown", self, session)
+          
         } else {
           
           on.exit(blank_textInputs(inputs = c("register_pass1", "register_pass2"),
@@ -94,6 +109,7 @@ RegLogServer_backend <- function(
             message_to_show <- RegLogConnectorMessage(
               "register_front",
               success = FALSE,
+              input_provided = TRUE,
               valid_id = check_user_login(input$register_user_ID),
               valid_email = check_user_mail(input$register_email),
               valid_pass = check_user_pass(input$register_pass1),
@@ -112,6 +128,7 @@ RegLogServer_backend <- function(
             # show message and save to logs if enabled
             self$message(message_to_show)
             save_to_logs(message_to_show, "shown", self, session)
+            
           } else {
             
             on.exit(blank_textInputs(inputs = c("register_user_ID", "register_email"),
