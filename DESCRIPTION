@@ -1,6 +1,6 @@
 Package: shiny.reglog
 Title: Optional Login and Registration Module System for ShinyApps
-Version: 0.5.0.9024
+Version: 0.5.0.9025
 Authors@R: 
     person(given = "Michal",
            family = "Kosinski",
@@ -16,26 +16,27 @@ Description: Package creates UI modules for Login, Register and Password Reset
     to access your application, but when logged-in the user data can be used 
     to read from and write to relational databases.
 Depends:
-    shiny,
     R6
+    shiny
 Imports:
     dplyr,
+    lubridate,
+    lifecycle,
     scrypt,
     shinyjs,
     stringi,
-    lubridate,
-    lifecycle,
     uuid
 Suggests:
     DBI,
-    googlesheets4,
-    shinydashboard,
-    googledrive,
-    gmailr,
+    DT,
     emayili,
+    gmailr,
+    googledrive,
+    googlesheets4,
+    knitr
+    rmarkdown,
     RSQLite,
-    knitr,
-    rmarkdown
+    shinydashboard
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
