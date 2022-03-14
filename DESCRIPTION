@@ -16,7 +16,7 @@ Description: Package creates UI modules for Login, Register and Password Reset
     to access your application, but when logged-in the user data can be used 
     to read from and write to relational databases.
 Depends:
-    R6
+    R6,
     shiny
 Imports:
     dplyr,
@@ -33,7 +33,7 @@ Suggests:
     gmailr,
     googledrive,
     googlesheets4,
-    knitr
+    knitr,
     rmarkdown,
     RSQLite,
     shinydashboard
