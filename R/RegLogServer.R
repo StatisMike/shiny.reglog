@@ -169,7 +169,7 @@ RegLogServer <- R6::R6Class(
         
       }
       
-      binded_logs <- data.table::rbindlist(binded_logs, idcol = "direction")
+      binded_logs <- dplyr::bind_rows(binded_logs, .id = "direction")
       binded_logs <- as.data.frame(binded_logs[order(binded_logs$time),])
       
       return(binded_logs)
