@@ -41,6 +41,7 @@ gsheet_login_handler <- function(self, private, message) {
         "login", success = TRUE, username = TRUE, password = TRUE,
         user_id = user_data$username,
         user_mail = user_data$email,
+        account_id = which(private$data_user$username == user_data$username) - 1,
         logcontent = paste(message$data$username, "logged in")
       )
       

@@ -21,7 +21,8 @@ RegLogServer_backend <- function(
       self$mail_message <- reactiveVal()
       self$is_logged <- reactiveVal(FALSE)
       self$user_id <- reactiveVal(uuid::UUIDgenerate())
-      self$user_mail <- reactiveVal("")
+      self$user_mail <- reactiveVal()
+      self$account_id <- reactiveVal()
       private$listener <- reactiveVal()
       
       # get app_address if not specified

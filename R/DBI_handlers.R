@@ -44,6 +44,7 @@ DBI_login_handler <- function(self, private, message) {
         "login", success = TRUE, username = TRUE, password = TRUE,
         user_id = user_data$username,
         user_mail = user_data$email,
+        account_id = user_data$id,
         logcontent = paste(message$data$username, "logged in")
       )
       
