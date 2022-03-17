@@ -41,7 +41,7 @@ RegLogGsheetConnector <- R6::R6Class(
     # method to get specified sheet of type 'user' or 'reset_code'
     get_sheet = function(type) {
       switch(type,
-        user = {
+        account = {
           private$data_user <- googlesheets4::read_sheet(
             ss = private$gsheet_ss,
             sheet = private$gsheet_sheetnames[1],

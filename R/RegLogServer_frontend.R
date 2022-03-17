@@ -87,9 +87,6 @@ RegLogServer_frontend <- function(
             RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "cred_edit_ui_h2_old")),
           desc_current = p(
             RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "cred_edit_ui_p_old")),
-          id_current_input = textInput(
-            session$ns("cred_edit_old_ID"),
-            label = RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "user_id")),
           pass_current_input = passwordInput(
             session$ns("cred_edit_old_pass"),
             label = RegLog_txt(lang = private$lang, custom_txts = private$custom_txts, x = "password")),

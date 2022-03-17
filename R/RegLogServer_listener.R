@@ -149,12 +149,10 @@ RegLogServer_listener <- function(
                 modals_check_n_show(private,
                                     "credsEdit_success")
                 
-                if (!is.null(received_message$data$new_user_id) &&
-                    self$is_logged()) {
+                if (!is.null(received_message$data$new_user_id)) {
                   self$user_id(received_message$data$new_user_id)
                 }
-                if (!is.null(received_message$data$new_user_mail) &&
-                    self$is_logged()) {
+                if (!is.null(received_message$data$new_user_mail)) {
                   self$user_mail(received_message$data$new_user_mail)
                 }
                 

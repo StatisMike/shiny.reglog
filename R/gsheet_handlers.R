@@ -17,7 +17,7 @@ gsheet_login_handler <- function(self, private, message) {
   check_namespace("googlesheets4")
   
   # download the database into the private
-  private$get_sheet("user")
+  private$get_sheet("account")
   
   user_data <- private$data_user[private$data_user$username == message$data$username, ]
   
@@ -76,7 +76,7 @@ gsheet_register_handler = function(self, private, message) {
   check_namespace("googlesheets4")
   
   # download the database into the private
-  private$get_sheet("user")
+  private$get_sheet("account")
   
   user_data <- private$data_user[private$data_user$username == message$data$username |
                                    private$data_user$email == message$data$email, ]
@@ -150,100 +150,87 @@ gsheet_credsEdit_handler <- function(self, private, message) {
   check_namespace("googlesheets4")
   
   # download the database into the private
-  private$get_sheet("user")
+  private$get_sheet("account")
 
-  # firstly check login credentials
-  user_data <- private$data_user[private$data_user$username == message$data$username, ]
-  # check condition and create output message accordingly
-  
-  if (nrow(user_data) == 0) {
-    # if don't return any, then nothing happens
+  user_data <- private$data_user[message$data$account_id, ]
+
+  # check password
+    
+  if (isFALSE(scrypt::verifyPassword(user_data$password, message$data$password))) {
+    # if FALSE: don't allow changes
     message_to_send <- RegLogConnectorMessage(
-      "credsEdit", success = FALSE, username = FALSE, password = FALSE,
-      logcontent = paste(message$data$username, "don't exist")
+      "credsEdit", success = FALSE, password = FALSE,
+      logcontent = paste(user_data$username, "bad pass")
     )
   } else {
-    # if there is a row present, check password
+    # if TRUE: allow changes
     
-    if (isFALSE(scrypt::verifyPassword(user_data$password, message$data$password))) {
-      # if FALSE: don't allow changes
-      message_to_send <- RegLogConnectorMessage(
-        "credsEdit", success = FALSE, username = TRUE, password = FALSE,
-        logcontent = paste(message$data$username, "bad pass")
-      )
-    } else {
-      # if TRUE: allow changes
-      # get the user id
-      user_id <- which(private$data_user$username == message$data$username)
+    ## Additional checks: if unique values (username, email) that are to be changed
+    ## are already present in the database
+    matches <- 0
+    # check if there is an username existing
+    if (!is.null(message$data$new_username)) {
+      matches <- matches + message$data$new_username %in% private$data_user$username 
+    }
+    # check if there is an email existing
+    if (!is.null(message$data$new_email)) {
+      matches <- matches + message$data$new_email %in% private$data_user$email
+    }
+    # if something is returned, send fail back
+    if (matches > 0) {
       
-      ## Additional checks: if unique values (username, email) that are to be changed
-      ## are already present in the database
-      matches <- 0
-      # check if there is an username existing
-      if (!is.null(message$data$new_username)) {
-        matches <- matches + message$data$new_username %in% private$data_user$username 
-      }
-      # check if there is an email existing
-      if (!is.null(message$data$new_email)) {
-        matches <- matches + message$data$new_email %in% private$data_user$email
-      }
-      # if something is returned, send fail back
-      if (matches > 0) {
-        
-        message_to_send <- RegLogConnectorMessage(
-          "credsEdit", success = FALSE,
-          username = TRUE, password = TRUE,
-          # if there is a conflict, these returns FALSE
-          new_username = !isTRUE(message$data$new_username %in% private$data_user$username),
-          new_email = !isTRUE(message$data$new_email %in% private$data_user$email))
-        
-        message_to_send$logcontent <-
-          paste0(message$data$username, " conflict:",
-                 if (!message_to_send$data$new_username) paste(" username:", message$data$new_username),
-                 if (!message_to_send$data$new_email) paste(" email:", message$data$new_email), "." )
-        
-      } else {
-        # if nothing is returned, update can be made!
-        # generate row that need to be updated
-        row_to_update <- data.frame(
-          username = if (is.null(message$data$new_username)) private$data_user[user_id, "username"]
-                     else message$data$new_username,
-          password = if (is.null(message$data$new_password)) private$data_user[user_id, "password"]
-                     else scrypt::hashPassword(message$data$new_password),
-          email = if (is.null(message$data$new_email)) private$data_user[user_id, "email"]
-                  else message$data$new_email,
-          create_time = private$data_user[user_id, "create_time"],
-          update_time = db_timestamp()
+      message_to_send <- RegLogConnectorMessage(
+        "credsEdit", success = FALSE, password = TRUE,
+        # if there is a conflict, these returns FALSE
+        new_username = !isTRUE(message$data$new_username %in% private$data_user$username),
+        new_email = !isTRUE(message$data$new_email %in% private$data_user$email))
+      
+      message_to_send$logcontent <-
+        paste0(user_data$username, " conflict:",
+               if (!message_to_send$data$new_username) paste(" username:", message$data$new_username),
+               if (!message_to_send$data$new_email) paste(" email:", message$data$new_email), "." )
+      
+    } else {
+      # if nothing is returned, update can be made!
+      # generate row that need to be updated
+      row_to_update <- data.frame(
+        username = if (is.null(message$data$new_username)) private$data_user[message$data$account_id, "username"]
+        else message$data$new_username,
+        password = if (is.null(message$data$new_password)) private$data_user[message$data$account_id, "password"]
+        else scrypt::hashPassword(message$data$new_password),
+        email = if (is.null(message$data$new_email)) private$data_user[message$data$account_id, "email"]
+        else message$data$new_email,
+        create_time = private$data_user[user_id, "create_time"],
+        update_time = db_timestamp()
+      )
+      # range write
+      googlesheets4::range_write(
+        ss = private$gsheet_ss,
+        sheet = private$gsheet_sheetname[1],
+        range = paste0("A", message$data$account_id +1, ":E", message$data$account_id + 1),
+        data = row_to_update,
+        col_names = F
+      )
+      
+      message_to_send <- RegLogConnectorMessage(
+        "credsEdit", success = TRUE, password = TRUE,
+        new_user_id = message$data$new_username,
+        new_user_mail = message$data$new_email,
+        new_user_pass = if(!is.null(message$data$new_password)) TRUE else NULL)
+      
+      info_to_log <- 
+        c(message_to_send$data$new_user_id,
+          message_to_send$data$new_user_mail,
+          if (!is.null(message_to_send$new_user_pass)) "pass_change")
+      
+      message_to_send$logcontent <-
+        paste(user_data$username, "updated",
+              paste(info_to_log,
+                    collapse = "/")
         )
-        # range write
-        googlesheets4::range_write(
-          ss = private$gsheet_ss,
-          sheet = private$gsheet_sheetname[1],
-          range = paste0("A", user_id+1, ":E", user_id+1),
-          data = row_to_update,
-          col_names = F
-        )
-        
-        message_to_send <- RegLogConnectorMessage(
-          "credsEdit", success = TRUE,
-          username = TRUE, password = TRUE,
-          new_user_id = message$data$new_username,
-          new_user_mail = message$data$new_email,
-          new_user_pass = if(!is.null(message$data$new_password)) TRUE else NULL)
-        
-        info_to_log <- 
-          c(message_to_send$data$new_user_id,
-            message_to_send$data$new_user_mail,
-            if (!is.null(message_to_send$new_user_pass)) "pass_change")
-        
-        message_to_send$logcontent <-
-          paste(message$data$username, "updated",
-                paste(info_to_log,
-                      collapse = "/")
-          )
-      }
     }
   }
+  
   
   return(message_to_send)
 }
@@ -267,7 +254,7 @@ gsheet_resetPass_generation_handler <- function(self, private, message) {
   check_namespace("googlesheets4")
   
   # download the database into the private
-  private$get_sheet("user")
+  private$get_sheet("account")
   
   # firstly check login credentials
   user_data <- private$data_user[private$data_user$username == message$data$username, ]
@@ -335,7 +322,7 @@ gsheet_resetPass_confirmation_handler <- function(self, private, message) {
   check_namespace("googlesheets4")
   
   # download the database into the private
-  private$get_sheet("user")
+  private$get_sheet("account")
   
   # firstly check login credentials
   user_data <- private$data_user[private$data_user$username == message$data$username, ]

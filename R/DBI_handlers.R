@@ -142,7 +142,6 @@ DBI_register_handler = function(self, private, message) {
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which need to contain within its data:
-#' - username
 #' - password
 #' 
 #' It can also contain elements for change:
@@ -162,127 +161,114 @@ DBI_credsEdit_handler <- function(self, private, message) {
   
   # firstly check login credentials
   
-  sql <- paste0("SELECT * FROM ", private$db_tables[1], " WHERE username = ?username;")
-  query <- DBI::sqlInterpolate(private$db_conn, sql, username = message$data$username)
+  sql <- paste0("SELECT * FROM ", private$db_tables[1], " WHERE id = ?id;")
+  query <- DBI::sqlInterpolate(private$db_conn, sql, id = message$data$account_id)
   
   user_data <- DBI::dbGetQuery(private$db_conn, query)
-  user_id <- user_data$id
-  
-  # check condition and create output message accordingly
-  
-  if (nrow(user_data) == 0) {
-    # if don't return any, then nothing happens
+
+  # check password
+    
+  if (isFALSE(scrypt::verifyPassword(user_data$password, message$data$password))) {
+    # if FALSE: don't allow changes
     
     message_to_send <- RegLogConnectorMessage(
-      "credsEdit", success = FALSE, username = FALSE, password = FALSE,
-      logcontent = paste(message$data$username, "don't exist")
+      "credsEdit", success = FALSE, password = FALSE,
+      logcontent = paste(user_data$username, "bad pass")
     )
     
   } else {
-    # if there is a row present, check password
+    # if TRUE: allow changes
     
-    if (isFALSE(scrypt::verifyPassword(user_data$password, message$data$password))) {
-      # if FALSE: don't allow changes
+    ## Additional checks: if unique values (username, email) that are to be changed
+    ## are already present in the database
+    
+    # firsty parse veryfifying SQL query correctly
+    verify <- ""
+    
+    if (!is.null(message$data$new_username)) {
+      verify <- paste(verify ,"username = ?username", sep = if (nchar(verify) == 0) " " else " OR ")
+    }
+    if (!is.null(message$data$new_email)) {
+      verify <- paste(verify, "email = ?email", sep = if (nchar(verify) == 0) " " else " OR ")
+    }
+    
+    # if there is anything to verify...
+    if (nchar(verify) > 0) {
+      
+      sql <- paste0("SELECT * FROM ", private$db_tables[1], " WHERE ", verify, ";")
+      
+      # interpolate correct fields for check
+      if (!is.null(message$data$new_username) && !is.null(message$data$new_email)) {
+        query <- DBI::sqlInterpolate(private$db_conn, sql, 
+                                     username = message$data$new_username,
+                                     email = message$data$new_email)
+      } else if (!is.null(message$data$new_username)) {
+        query <- DBI::sqlInterpolate(private$db_conn, sql, 
+                                     username = message$data$new_username)
+      } else if (!is.null(message$data$new_email)) {
+        query <- DBI::sqlInterpolate(private$db_conn, sql,
+                                     email = message$data$new_email)
+      }
+      user_data <- DBI::dbGetQuery(private$db_conn, query)
+    }
+    
+    # if something is returned, send fail back
+    if (nchar(verify) > 0 && nrow(user_data) > 0) {
       
       message_to_send <- RegLogConnectorMessage(
-        "credsEdit", success = FALSE, username = TRUE, password = FALSE,
-        logcontent = paste(message$data$username, "bad pass")
-      )
+        "credsEdit", success = FALSE,
+        password = TRUE,
+        # if there is a conflict, these returns FALSE
+        new_username = !isTRUE(message$data$new_username %in% user_data$username),
+        new_email = !isTRUE(message$data$new_email %in% user_data$email))
+      
+      message_to_send$logcontent <-
+        paste0(user_data$username, " conflict:",
+               if (!message_to_send$data$new_username) paste(" username:", message$data$new_username),
+               if (!message_to_send$data$new_email) paste(" email:", message$data$new_email), "." )
       
     } else {
-      # if TRUE: allow changes
-      
-      ## Additional checks: if unique values (username, email) that are to be changed
-      ## are already present in the database
-      
-      # firsty parse veryfifying SQL query correctly
-      verify <- ""
-      
+      # if nothing is returned, update can be made!
+      update_query <- paste("UPDATE", private$db_tables[1], "SET update_time = ?update_time")
+      interpolate_vals <- list("update_time" = db_timestamp())
+      # for every field to update popupalte query and interpolate vals
       if (!is.null(message$data$new_username)) {
-        verify <- paste(verify ,"username = ?username", sep = if (nchar(verify) == 0) " " else " OR ")
+        update_query <- paste(update_query, "username = ?username", sep = ", ")
+        interpolate_vals[["username"]] <- message$data$new_username
+      }
+      if (!is.null(message$data$new_password)) {
+        update_query <- paste(update_query, "password = ?password", sep = ", ")
+        interpolate_vals[["password"]] <- scrypt::hashPassword(message$data$new_password)
       }
       if (!is.null(message$data$new_email)) {
-        verify <- paste(verify, "email = ?email", sep = if (nchar(verify) == 0) " " else " OR ")
+        update_query <- paste(update_query, "email = ?email", sep = ", ")
+        interpolate_vals[["email"]] <- message$data$new_email
       }
+      update_query <- paste(update_query, "WHERE id = ?user_id;")
+      interpolate_vals[["user_id"]] <- message$data$account_id
       
-      # if there is anything to verify...
-      if (nchar(verify) > 0) {
-        
-        sql <- paste0("SELECT * FROM ", private$db_tables[1], " WHERE ", verify, ";")
-        
-        # interpolate correct fields for check
-        if (!is.null(message$data$new_username) && !is.null(message$data$new_email)) {
-          query <- DBI::sqlInterpolate(private$db_conn, sql, 
-                                       username = message$data$new_username,
-                                       email = message$data$new_email)
-        } else if (!is.null(message$data$new_username)) {
-          query <- DBI::sqlInterpolate(private$db_conn, sql, 
-                                       username = message$data$new_username)
-        } else if (!is.null(message$data$new_email)) {
-          query <- DBI::sqlInterpolate(private$db_conn, sql,
-                                       email = message$data$new_email)
-        }
-        user_data <- DBI::dbGetQuery(private$db_conn, query)
-      }
+      query <- DBI::sqlInterpolate(private$db_conn, update_query,
+                                   .dots = interpolate_vals)
       
-      # if something is returned, send fail back
-      if (nchar(verify) > 0 && nrow(user_data) > 0) {
-        
-        message_to_send <- RegLogConnectorMessage(
-          "credsEdit", success = FALSE,
-          username = TRUE, password = TRUE,
-          # if there is a conflict, these returns FALSE
-          new_username = !isTRUE(message$data$new_username %in% user_data$username),
-          new_email = !isTRUE(message$data$new_email %in% user_data$email))
-        
-        message_to_send$logcontent <-
-          paste0(message$data$username, " conflict:",
-                 if (!message_to_send$data$new_username) paste(" username:", message$data$new_username),
-                 if (!message_to_send$data$new_email) paste(" email:", message$data$new_email), "." )
-        
-      } else {
-        # if nothing is returned, update can be made!
-        update_query <- paste("UPDATE", private$db_tables[1], "SET update_time = ?update_time")
-        interpolate_vals <- list("update_time" = db_timestamp())
-        # for every field to update popupalte query and interpolate vals
-        if (!is.null(message$data$new_username)) {
-          update_query <- paste(update_query, "username = ?username", sep = ", ")
-          interpolate_vals[["username"]] <- message$data$new_username
-        }
-        if (!is.null(message$data$new_password)) {
-          update_query <- paste(update_query, "password = ?password", sep = ", ")
-          interpolate_vals[["password"]] <- scrypt::hashPassword(message$data$new_password)
-        }
-        if (!is.null(message$data$new_email)) {
-          update_query <- paste(update_query, "email = ?email", sep = ", ")
-          interpolate_vals[["email"]] <- message$data$new_email
-        }
-        update_query <- paste(update_query, "WHERE id = ?user_id;")
-        interpolate_vals[["user_id"]] <- user_id
-        
-        query <- DBI::sqlInterpolate(private$db_conn, update_query,
-                                     .dots = interpolate_vals)
-        
-        DBI::dbExecute(private$db_conn, query)
-        
-        message_to_send <- RegLogConnectorMessage(
-          "credsEdit", success = TRUE,
-          username = TRUE, password = TRUE,
-          new_user_id = message$data$new_username,
-          new_user_mail = message$data$new_email,
-          new_user_pass = if(!is.null(message$data$new_password)) TRUE else NULL)
-        
-        info_to_log <- 
-          c(message_to_send$data$new_user_id,
-            message_to_send$data$new_user_mail,
-            if (!is.null(message_to_send$new_user_pass)) "pass_change")
-        
-        message_to_send$logcontent <-
-          paste(message$data$username, "updated",
-                paste(info_to_log,
-                      collapse = "/")
-          )
-      }
+      DBI::dbExecute(private$db_conn, query)
+      
+      message_to_send <- RegLogConnectorMessage(
+        "credsEdit", success = TRUE,
+        password = TRUE,
+        new_user_id = message$data$new_username,
+        new_user_mail = message$data$new_email,
+        new_user_pass = if(!is.null(message$data$new_password)) TRUE else NULL)
+      
+      info_to_log <- 
+        c(message_to_send$data$new_user_id,
+          message_to_send$data$new_user_mail,
+          if (!is.null(message_to_send$new_user_pass)) "pass_change")
+      
+      message_to_send$logcontent <-
+        paste(user_data$username, "updated",
+              paste(info_to_log,
+                    collapse = "/")
+        )
     }
   }
   

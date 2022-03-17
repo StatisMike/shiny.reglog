@@ -123,17 +123,14 @@ RegLogDemo <- function(emayili_smtp = NULL,
     )
     
     output$user_data <- renderPrint(
-      list("RegLogServer$is_logged()" = RegLog$is_logged(),
-           "RegLogServer$user_id()" = RegLog$user_id(),
-           "RegLogServer$user_mail()" = RegLog$user_mail())
+      list("is_logged" = RegLog$is_logged(),
+           "user_id" = RegLog$user_id(),
+           "user_mail" = RegLog$user_mail(),
+           "account_id" = RegLog$account_id())
     )
     
     output$reglog_message <- renderPrint(
-      if (isTRUE(getOption("RegLogServer.demotestrun", FALSE))) {
-        req(RegLog$message()$type != "ping")
-        RegLog$message()[-1] 
-      }
-      else RegLog$message()
+      RegLog$message()
     )
     
     observeEvent(input$logs, {
@@ -156,6 +153,65 @@ RegLogDemo <- function(emayili_smtp = NULL,
       req(RegLog$message()$type == "get_table")
       RegLog$message()$data$table},
       options = list(scrollX = TRUE))
+  }
+  
+  shinyApp(ui = ui,
+           server = server)
+  
+}
+
+#' Bare RegLog ShinyApp to use for testing purposes
+#' 
+#' @param dbConnector unevaluated dbConnector
+#' @param mailConnector unevaluated mailConnector
+#' @noRd
+
+RegLogTest <- function(dbConnector,
+                       mailConnector) {
+  
+  # create an UI
+  
+  ui <- fluidPage(
+    column(width = 6,
+           tabsetPanel(
+             tabPanel("Register", RegLog_register_UI()),
+             tabPanel("Login", RegLog_login_UI()),
+             tabPanel("Credentials edit", RegLog_credsEdit_UI()),
+             tabPanel("Password reset", RegLog_resetPass_UI()))),
+    column(width = 6,
+           h2("RegLogServer state"),
+           tags$h2("Current user data"),
+           verbatimTextOutput("user_data"),
+           tags$h2("Current 'RegLogServer$message()' contents"),
+           verbatimTextOutput("reglog_message"),
+           actionButton("logs", "Get logs")))
+  
+  server <- function(input, output, server) {
+    
+    dbConnector <- eval(dbConnector)
+    mailConnector <- eval(dbConnector)
+    
+    # initialize main module
+    RegLog <- RegLogServer$new(
+      dbConnector = dbConnector,
+      mailConnector = mailConnector,
+      use_modals = F
+    )
+    
+    output$user_data <- renderPrint(
+      list("RegLogServer$is_logged()" = RegLog$is_logged(),
+           "RegLogServer$user_id()" = RegLog$user_id(),
+           "RegLogServer$user_mail()" = RegLog$user_mail())
+    )
+    
+    output$reglog_message <- renderPrint({
+      req(RegLog$message()$type != "ping")
+      RegLog$message()[-1] 
+    })
+    
+    observeEvent(input$logs, {
+      RegLog$get_logs()
+    })
   }
   
   shinyApp(ui = ui,

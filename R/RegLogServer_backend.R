@@ -163,15 +163,33 @@ RegLogServer_backend <- function(
                        session)
         })
         
-        # check if the inputs are filled
-        if (!all(isTruthy(input$cred_edit_old_ID), isTruthy(input$cred_edit_old_pass),
+        # check if the user is logged in currently
+        if (!isTRUE(self$is_logged())) {
+          
+          message_to_show <- RegLogConnectorMessage(
+            "credsEdit_front",
+            success = FALSE,
+            user_logged = FALSE,
+            change = "other"
+          )
+          
+          modals_check_n_show(private,
+                              modalname = "credsEdit_notLogged")
+          blank_textInputs(c("cred_edit_old_pass", 
+                             "cred_edit_new_pass1", "cred_edit_new_pass2"),
+                           session = session)
+          
+          
+          # check if the inputs are filled
+        } else if (!all(isTruthy(input$cred_edit_old_pass),
                  isTruthy(input$cred_edit_new_pass1), isTruthy(input$cred_edit_new_pass2))) {
           
           message_to_show <- RegLogConnectorMessage(
             type = "credsEdit_front",
             success = FALSE,
-            change = "pass",
-            input_provided = FALSE
+            user_logged = TRUE,
+            input_provided = FALSE,
+            change = "pass"
           )
           
           modals_check_n_show(private = private,
@@ -184,8 +202,9 @@ RegLogServer_backend <- function(
           message_to_show <- RegLogConnectorMessage(
             type = "credsEdit_front",
             success = FALSE,
-            change = "pass",
+            user_logged = TRUE,
             input_provided = TRUE,
+            change = "pass",
             valid_pass = check_user_pass(input$cred_edit_new_pass1),
             identical_pass = input$cred_edit_new_pass1 == input$cred_edit_new_pass2
           )
@@ -207,12 +226,12 @@ RegLogServer_backend <- function(
           })
           
           blank_textInputs(c("cred_edit_new_pass1", "cred_edit_new_pass2", 
-                              "cred_edit_old_ID", "cred_edit_old_pass"), 
+                              "cred_edit_old_pass"), 
                             session = session)
           
           message_to_send <- RegLogConnectorMessage(
             type = "credsEdit",
-            username = input$cred_edit_old_ID,
+            account_id = self$account_id(),
             password = input$cred_edit_old_pass,
             new_password = input$cred_edit_new_pass1
           )
@@ -230,13 +249,31 @@ RegLogServer_backend <- function(
           save_to_logs(message_to_show, "shown", self, session)
         })
         
-        # check if the inputs are filled
-        if (!all(isTruthy(input$cred_edit_old_ID), isTruthy(input$cred_edit_old_pass)) &&
+        # check if the user is logged in currently
+        if (!isTRUE(self$is_logged())) {
+          
+          message_to_show <- RegLogConnectorMessage(
+            "credsEdit_front",
+            success = FALSE,
+            user_logged = FALSE,
+            change = "other"
+          )
+          
+          modals_check_n_show(private,
+                              modalname = "credsEdit_notLogged")
+          blank_textInputs(c("cred_edit_old_pass", 
+                             "cred_edit_new_ID", "cred_edit_new_mail"),
+                           session = session)
+          
+          
+          # check if the inputs are filled
+        } else if (!isTruthy(input$cred_edit_old_pass) &&
             !any(isTruthy(input$cred_edit_new_ID), isTruthy(input$cred_edit_new_mail))) {
           
           message_to_show <- RegLogConnectorMessage(
             "credsEdit_front",
             success = FALSE,
+            user_logged = TRUE,
             input_provided = FALSE,
             change = "other"
           )
@@ -251,6 +288,7 @@ RegLogServer_backend <- function(
           message_to_show <- RegLogConnectorMessage(
             "credsEdit_front",
             success = FALSE,
+            user_logged = TRUE,
             input_provided = TRUE,
             change = "other",
             valid_id = if (isTruthy(input$cred_edit_new_ID)) check_user_login(input$cred_edit_new_ID),
@@ -276,13 +314,13 @@ RegLogServer_backend <- function(
           
           message_to_send <- RegLogConnectorMessage(
             "credsEdit",
-            username = input$cred_edit_old_ID,
+            account_id = self$account_id(),
             password = input$cred_edit_old_pass,
             new_username = if (isTruthy(input$cred_edit_new_ID)) input$cred_edit_new_ID,
             new_email = if (isTruthy(input$cred_edit_new_mail)) input$cred_edit_new_mail
           )
           
-          blank_textInputs(c("cred_edit_old_ID", "cred_edit_old_pass", 
+          blank_textInputs(c("cred_edit_old_pass", 
                               "cred_edit_new_ID", "cred_edit_new_mail"),
                             session = session)
           

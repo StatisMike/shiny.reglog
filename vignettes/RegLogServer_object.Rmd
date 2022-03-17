@@ -281,6 +281,7 @@ by user. It contains:
 
 - **data**:
   - success: boolean - `FALSE` (generated only when something is invalid)
+  - user_logged: boolean - `TRUE` if user is currently logged in
   - input_provided: boolean - `TRUE` if required inputs are not empty
   - valid_id: boolean - `TRUE` if provided user ID was valid
   - valid_email: boolean - `TRUE` if provided email was valid
@@ -289,8 +290,9 @@ by user. It contains:
   
 This message type is binded with default *modalDialogs*:
 
-- credsEdit_noInput_pass (`data$input_provided == FALSE` && change == "pass"`)
-- credsEdit_noInput_other (`data$input_provided == FALSE` && change == "other"`)
+- credsEdit_notLogged (`data$user_logged == FALSE`)
+- credsEdit_noInput_pass (`isFALSE(data$input_provided) && change == "pass"`)
+- credsEdit_noInput_other (`isFALSE(data$input_provided) && change == "other"`)
 - credsEdit_nonValidId (`isFALSE(data$valid_id)`)
 - credsEdit_nonValidEmail (`isFALSE(data$valid_email)`)
 - credsEdit_nonValidPass (`isFALSE(data$valid_pass)`)
