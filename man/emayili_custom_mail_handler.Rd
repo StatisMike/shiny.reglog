@@ -18,6 +18,7 @@ emayili_custom_mail_handler(self, private, message)
 \item email
 \item mail_subject
 \item mail_body
+\item mail_attachment (optional)
 }}
 }
 \value{
@@ -26,7 +27,8 @@ emayili_custom_mail_handler(self, private, message)
 \description{
 Default handler function parsing and sending email.
 Used within object of \code{RegLogEmayiliConnector} class internally. It can
-send custom emails using
+send custom emails using subject, body and attachments from
+\code{RegLogConnectorMessage} of type \code{custom_mail}.
 }
 \seealso{
 Other mail handler functions: 

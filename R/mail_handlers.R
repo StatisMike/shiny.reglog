@@ -92,7 +92,8 @@ emayili_reglog_mail_handler <- function(self, private, message) {
 #' 
 #' @description Default handler function parsing and sending email.
 #' Used within object of `RegLogEmayiliConnector` class internally. It can
-#' send custom emails using 
+#' send custom emails using subject, body and attachments from 
+#' `RegLogConnectorMessage` of type `custom_mail`.
 #' 
 #' @param self R6 object element
 #' @param private R6 object element
@@ -102,6 +103,7 @@ emayili_reglog_mail_handler <- function(self, private, message) {
 #' - email
 #' - mail_subject
 #' - mail_body
+#' - mail_attachment (optional)
 #' 
 #' @return `RegLogEmayiliConnector` message.
 #' @family mail handler functions
@@ -255,7 +257,7 @@ gmailr_reglog_mail_handler <- function(self, private, message) {
 #' @description Default handler function parsing and sending email.
 #' Used within object of `RegLogGmailrConnector` class internally. It can
 #' send custom emails using subject, body and attachments from 
-#' `RegLogConnectorMessage`,
+#' `RegLogConnectorMessage` of type `custom_mail`.
 #' 
 #' @param self R6 object element
 #' @param private R6 object element

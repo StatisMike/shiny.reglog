@@ -79,7 +79,7 @@ RegLogGsheetConnector <- R6::R6Class(
     
     initialize = function(
       gsheet_ss,
-      gsheet_sheetnames = c("user", "reset_code", "logs"),
+      gsheet_sheetnames = c("account", "reset_code", "logs"),
       custom_handlers = NULL
     ) {
       

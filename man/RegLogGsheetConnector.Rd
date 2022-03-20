@@ -42,7 +42,7 @@ to the database.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RegLogGsheetConnector$new(
   gsheet_ss,
-  gsheet_sheetnames = c("user", "reset_code", "logs"),
+  gsheet_sheetnames = c("account", "reset_code", "logs"),
   custom_handlers = NULL
 )}\if{html}{\out{</div>}}
 }

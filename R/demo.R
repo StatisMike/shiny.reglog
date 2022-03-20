@@ -164,16 +164,19 @@ RegLogDemo <- function(emayili_smtp = NULL,
 #' 
 #' @param dbConnector unevaluated dbConnector
 #' @param mailConnector unevaluated mailConnector
+#' @param onStart unevaluated expression to run before initializing session
 #' @noRd
 
 RegLogTest <- function(dbConnector,
-                       mailConnector) {
+                       mailConnector,
+                       onStart = NULL) {
   
   # create an UI
   
   ui <- fluidPage(
+    shinyjs::useShinyjs(),
     column(width = 6,
-           tabsetPanel(
+           tabsetPanel(id = "reglogtabset",
              tabPanel("Register", RegLog_register_UI()),
              tabPanel("Login", RegLog_login_UI()),
              tabPanel("Credentials edit", RegLog_credsEdit_UI()),
@@ -184,12 +187,16 @@ RegLogTest <- function(dbConnector,
            verbatimTextOutput("user_data"),
            tags$h2("Current 'RegLogServer$message()' contents"),
            verbatimTextOutput("reglog_message"),
-           actionButton("logs", "Get logs")))
+           actionButton("logout", "Log-out"),
+           actionButton("logs", "Get logs"),
+           actionButton("browser", "Debug")))
   
   server <- function(input, output, server) {
     
+    eval(onStart)
+    
     dbConnector <- eval(dbConnector)
-    mailConnector <- eval(dbConnector)
+    mailConnector <- eval(mailConnector)
     
     # initialize main module
     RegLog <- RegLogServer$new(
@@ -199,9 +206,10 @@ RegLogTest <- function(dbConnector,
     )
     
     output$user_data <- renderPrint(
-      list("RegLogServer$is_logged()" = RegLog$is_logged(),
-           "RegLogServer$user_id()" = RegLog$user_id(),
-           "RegLogServer$user_mail()" = RegLog$user_mail())
+      list("is_logged" = RegLog$is_logged(),
+           "user_id" = if (isTRUE(RegLog$is_logged())) RegLog$user_id() else "not_logged",
+           "user_mail" = RegLog$user_mail(),
+           "account_id" = RegLog$account_id())
     )
     
     output$reglog_message <- renderPrint({
@@ -209,9 +217,11 @@ RegLogTest <- function(dbConnector,
       RegLog$message()[-1] 
     })
     
-    observeEvent(input$logs, {
-      RegLog$get_logs()
-    })
+    observeEvent(input$logs, RegLog$get_logs())
+    
+    observeEvent(input$logout, RegLog$logout())
+    
+    observeEvent(input$browser, browser())
   }
   
   shinyApp(ui = ui,

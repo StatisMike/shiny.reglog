@@ -244,8 +244,8 @@ DBI_credsEdit_handler <- function(self, private, message) {
         update_query <- paste(update_query, "email = ?email", sep = ", ")
         interpolate_vals[["email"]] <- message$data$new_email
       }
-      update_query <- paste(update_query, "WHERE id = ?user_id;")
-      interpolate_vals[["user_id"]] <- message$data$account_id
+      update_query <- paste(update_query, "WHERE id = ?account_id;")
+      interpolate_vals[["account_id"]] <- message$data$account_id
       
       query <- DBI::sqlInterpolate(private$db_conn, update_query,
                                    .dots = interpolate_vals)

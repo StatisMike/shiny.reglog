@@ -159,7 +159,7 @@ RegLogConnector = R6::R6Class(
                               message = received_message)
                          
                          # save sent message to the logs
-                         save_to_logs(received_message,
+                         save_to_logs(message_to_send,
                                       "sent",
                                       self,
                                       session,

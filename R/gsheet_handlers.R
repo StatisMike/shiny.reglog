@@ -41,7 +41,7 @@ gsheet_login_handler <- function(self, private, message) {
         "login", success = TRUE, username = TRUE, password = TRUE,
         user_id = user_data$username,
         user_mail = user_data$email,
-        account_id = which(private$data_user$username == user_data$username) - 1,
+        account_id = which(private$data_user$username == user_data$username),
         logcontent = paste(message$data$username, "logged in")
       )
       
@@ -200,13 +200,13 @@ gsheet_credsEdit_handler <- function(self, private, message) {
         else scrypt::hashPassword(message$data$new_password),
         email = if (is.null(message$data$new_email)) private$data_user[message$data$account_id, "email"]
         else message$data$new_email,
-        create_time = private$data_user[user_id, "create_time"],
+        create_time = private$data_user[message$data$account_id, "create_time"],
         update_time = db_timestamp()
       )
       # range write
       googlesheets4::range_write(
         ss = private$gsheet_ss,
-        sheet = private$gsheet_sheetname[1],
+        sheet = private$gsheet_sheetnames[1],
         range = paste0("A", message$data$account_id +1, ":E", message$data$account_id + 1),
         data = row_to_update,
         col_names = F
@@ -359,7 +359,7 @@ gsheet_resetPass_confirmation_handler <- function(self, private, message) {
         username =user_data$username,
         password = scrypt::hashPassword(message$data$password),
         email = user_data$email,
-        create_date = user_data$create_time,
+        create_time = user_data$create_time,
         update_time = db_timestamp()
       )
       

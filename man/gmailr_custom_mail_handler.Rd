@@ -28,7 +28,7 @@ gmailr_custom_mail_handler(self, private, message)
 Default handler function parsing and sending email.
 Used within object of \code{RegLogGmailrConnector} class internally. It can
 send custom emails using subject, body and attachments from
-\code{RegLogConnectorMessage},
+\code{RegLogConnectorMessage} of type \code{custom_mail}.
 }
 \seealso{
 Other mail handler functions: 
