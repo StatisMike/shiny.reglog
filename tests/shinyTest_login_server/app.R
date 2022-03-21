@@ -1,3 +1,3 @@
 library(shiny.reglog)
 
-shiny.reglog:::login_server_test()
+suppressWarnings(shiny.reglog:::login_server_test())

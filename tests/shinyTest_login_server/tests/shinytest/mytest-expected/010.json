@@ -2,7 +2,7 @@
   "input": {
     "login_system-login_button": 4,
     "login_system-login_user_id": "",
-    "login_system-logout_accept": 2,
+    "login_system-logout_accept": 1,
     "login_system-logout_bttn": 2,
     "login_system-password_login": "",
     "login_system-register_bttn": 1,
