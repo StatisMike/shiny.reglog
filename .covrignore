@@ -1,1 +1,5 @@
 demo.R
+deprecated_database.R
+deprecated_login_server.R
+deprecated_login_UI.R
+deprecated_texts.R
