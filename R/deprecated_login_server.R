@@ -82,7 +82,7 @@
 #' @title Login server module
 #' @name login_server
 #' @description 
-#' `lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("deprecated")`
 #' 
 #' This function has become deprecated. New RegLog system is based on [RegLogServer] R6 class.
 #' 

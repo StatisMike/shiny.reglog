@@ -2,7 +2,7 @@
 % Please edit documentation in R/deprecated_texts.R
 \name{reglog_txt}
 \alias{reglog_txt}
-\title{DEPRECATED Get texts for given language}
+\title{Get texts for given language. Used within deprecated \code{login_server}}
 \usage{
 reglog_txt(lang, x = NULL, custom_txts = NULL)
 }
@@ -16,7 +16,7 @@ recovered}
 specific languages.}
 }
 \description{
-DEPRECATED Get texts for given language
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \details{
 'RegLog_txt' outside of internal usage should be used only for getting the

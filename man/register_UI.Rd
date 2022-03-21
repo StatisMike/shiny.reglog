@@ -20,7 +20,7 @@ every 'shiny.reglog' function}
 'tags$div' containing all elements for registration procedure
 }
 \description{
-\code{lifecycle::badge("deprecated")}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 It need to be used in conjuction with \code{\link[=login_server]{login_server()}} function and is suggested to be used alongside \code{\link[=login_UI]{login_UI()}} and \code{\link[=password_reset_UI]{password_reset_UI()}} for full potential.
 

@@ -176,7 +176,10 @@ reglog_texts$pl = list(
 
 # also - modify documentation in quetzio_server argument `lang`
 
-#' DEPRECATED Get texts for given language
+#' Get texts for given language. Used within deprecated `login_server`
+#' 
+#' @description 
+#' `r lifecycle::badge("deprecated")`
 #'
 #' @param lang character to identify the language
 #' @param x character to identify the txt to get. If NULL, all labels are
@@ -206,6 +209,8 @@ reglog_txt <- function(
   x = NULL,
   custom_txts = NULL
 ) {
+  
+  
   
   # check if the lang is in registered languages
   if (!lang %in% reglog_texts$.languages_registered) {

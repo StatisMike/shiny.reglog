@@ -1,7 +1,7 @@
 #' Shiny UI module for login box
 #'
 #' @description 
-#' `lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("deprecated")`
 #' 
 #' It need to be used in conjuction with [login_server()] function and is suggested to be used alongside [password_reset_UI()] and [register_UI()] for full potential.
 #'
@@ -27,7 +27,10 @@ login_UI <- function(id = "login_system",
                      lang = "en",
                      custom_txts = NULL) {
   
-  .Deprecated("RegLog_login_UI")
+  lifecycle::deprecate_warn(
+    "0.5.0",
+    "login_UI()",
+    "RegLog_login_UI()")
 
   ns <- NS(id)
   
@@ -47,7 +50,7 @@ login_UI <- function(id = "login_system",
 #' Shiny UI module for password reset
 #'
 #' @description 
-#' `lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("deprecated")`
 #' 
 #' It need to be used in conjuction with [login_server()] function and is suggested to be used alongside [login_UI()] and [register_UI()] for full potential.
 #'
@@ -72,7 +75,10 @@ password_reset_UI <- function(id = "login_system",
                               lang = "en",
                               custom_txts = NULL) {
   
-  .Deprecated("RegLog_resetPass_UI")
+  lifecycle::deprecate_warn(
+    "0.5.0",
+    "password_reset_UI()",
+    "RegLog_resetPass_UI()")
   
   ns <- NS(id)
 
@@ -99,7 +105,7 @@ password_reset_UI <- function(id = "login_system",
 #' Shiny UI module for registration box
 #'
 #' @description 
-#' `lifecycle::badge("deprecated")`
+#' `r lifecycle::badge("deprecated")`
 #' 
 #' It need to be used in conjuction with [login_server()] function and is suggested to be used alongside [login_UI()] and [password_reset_UI()] for full potential.
 #' 
@@ -157,7 +163,7 @@ register_UI <- function(id = "login_system",
 
 #' Action Button for logging out
 #' 
-#' @description `lifecycle::badge("deprecated")`
+#' @description `r lifecycle::badge("deprecated")`
 #' 
 #' To be used in conjuction with deprecated [login_server()]
 #' Simple action button - after pressing it, the user will be logged out. 

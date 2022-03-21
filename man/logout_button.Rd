@@ -20,7 +20,7 @@ every 'shiny.reglog' function}
 'actionButton' for logout
 }
 \description{
-\code{lifecycle::badge("deprecated")}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 To be used in conjuction with deprecated \code{\link[=login_server]{login_server()}}
 Simple action button - after pressing it, the user will be logged out.

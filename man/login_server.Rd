@@ -73,7 +73,7 @@ reactiveValues() object with three elements:
 \code{last_state_change}, containing string describing last change of login system state. Currently only supports state changes during login procedure
 }
 \description{
-\code{lifecycle::badge("deprecated")}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
 This function has become deprecated. New RegLog system is based on \link{RegLogServer} R6 class.
 

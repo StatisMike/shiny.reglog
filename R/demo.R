@@ -228,3 +228,57 @@ RegLogTest <- function(dbConnector,
            server = server)
   
 }
+
+#' deprecated login_server tests
+#' 
+#' @noRd
+
+login_server_test <- function(){
+  
+  temp_sqlite <- tempfile(fileext = ".sqlite")
+  
+  create_sqlite_db(temp_sqlite)
+  
+  ui <- fluidPage(
+    column(6, 
+      tabsetPanel(id = "tabset",
+        tabPanel(title = "Register",
+                 register_UI()),
+        tabPanel(title = "Login",
+                 login_UI()),
+        tabPanel(title = "Password reset",
+                 password_reset_UI())),
+      logout_button()),
+    column(6,
+      h2("User data"),
+      verbatimTextOutput("user_data")))
+  
+  server <- function(input, output, session) {
+     
+    old_reglog <- login_server(
+      db_method = "sqlite",
+      mail_method = "emayili",
+      appname = "Deprecated RegLog",
+      appaddress = "localhost",
+      lang = "en",
+      emayili_user = "statismike@gmail.com",
+      emayili_password = Sys.getenv("STATISMIKE_GMAIL_PASS"),
+      emayili_host = "smtp.gmail.com",
+      emayili_port = 465,
+      sqlite_db = temp_sqlite
+    )
+    
+    output$user_data <- renderPrint(
+      list(
+        is_logged = old_reglog$is_logged,
+        user_id = if (isTRUE(old_reglog$is_logged)) old_reglog$user_id
+                else "Anonymous",
+        user_mail = old_reglog$user_mail
+      )
+    )
+  }
+    
+  shinyApp(ui, server)
+}
+
+
