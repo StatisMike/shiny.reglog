@@ -1,4 +1,4 @@
-url: ~
+url: https://statismike.github.io/shiny.reglog/
 template:
   bootstrap: 5
 navbar:
@@ -53,11 +53,10 @@ reference:
   - mailMessageAttachment
 - subtitle: Default handler functions
   desc: >- 
-   All of these are used only internally and aren't exported. You can read these
+   All of these are used only internally and aren't exported. You can inspect these
    to better understand inner-workings of the RegLog system to create custom
    handler functions.
 - contents:
   - has_concept("gsheet_handler", internal = TRUE)
   - has_concept("DBI_handler", internal = TRUE)
   - has_concept("mail_handler", internal = TRUE)
-

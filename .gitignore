@@ -10,3 +10,4 @@ cache
 .secrets
 inst/doc
 docs
+backup_pkgdown.yml
