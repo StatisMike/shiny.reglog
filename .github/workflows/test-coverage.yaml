@@ -17,7 +17,7 @@ jobs:
       G_SERVICE_MAIL: ${{ secrets.G_SERVICE_MAIL }}
       GMAILR_EMAIL: ${{ secrets.GMAILR_EMAIL }}
       GMAILR_APP: ${{ secrets.GMAILR_APP }}
-      REGLOG_GSHEET: ${{ secrets.REGLOG_GSHEET }}
+      REGLOG_SHEET: ${{ secrets.REGLOG_SHEET }}
       STATISMIKE_GMAIL_PASS: ${{ secrets.STATISMIKE_GMAIL_PASS }}
 
     steps:
