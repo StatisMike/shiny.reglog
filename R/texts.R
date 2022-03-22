@@ -159,7 +159,7 @@ RegLog_txts$pl = list(
   register_ui_1 = "Formularz rejestracyjny",
   register_ui_2 = "W poni\u017Cszym formularzu mo\u017Cna zarejetrowa\u0107 nowe konto. Wybierz nazw\u0119 u\u017Cytkownika, podaj poprawny adres e-mail i wybierz has\u0142o dla swojego konta.",
   register_ui_3 = "Nazwa u\u017Cytkownika i has\u0142o powinny sk\u0142ada\u0107 si\u0119 z 8~30 znak\u00F3w. Nazwa u\u017Cytkownika mo\u017Ce zawiera\u0107 litery oraz cyfry. Has\u0142o powinno zawiera\u0107 co najmniej 3 z 4 nast\u0119puj\u0105cych typ\u00F3w znak\u00F3w: ma\u0142\u0105 liter\u0119, du\u017C\u0105 liter\u0119, cyfr\u0119, znak specjalny.",
-  register_ui_4 = "Podany adres e-mail powinien dla ciebie dost\u0119pny. Po rejestracji otrzymasz wiadomo\u015B\u0107 potwierdzaj\u0105c\u0105. Co wi\u0119cej, je\u017Celi kiedykolwiek zapomnisz swojego has\u0142a, mo\u017Cesz je zresetowa\u0107 poprzez kod resetujący wysłany na podany adres e-mail.",
+  register_ui_4 = "Podany adres e-mail powinien dla ciebie dost\u0119pny. Po rejestracji otrzymasz wiadomo\u015B\u0107 potwierdzaj\u0105c\u0105. Co wi\u0119cej, je\u017Celi kiedykolwiek zapomnisz swojego has\u0142a, mo\u017Cesz je zresetowa\u0107 poprzez kod resetuj\u0105cy wys\u0142any na podany adres e-mail.",
   register_bttn = "Zarejestruj",
   ## modal texts ####
   ### login modals ####

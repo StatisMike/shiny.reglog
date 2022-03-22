@@ -10,8 +10,6 @@ object to the database. It is created to handle \code{DBI} compatible drivers.
 Provides methods than will be used by RegLogServer to get and send data.
 }
 \seealso{
-\code{\link[=RegLogServer$new]{RegLogServer$new()}}
-
 Other dbConnectors: 
 \code{\link{RegLogGsheetConnector}}
 }

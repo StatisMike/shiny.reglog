@@ -5,6 +5,7 @@ if (interactive()) {
   library(shiny.reglog)
   
   # for exemplary setup temporary SQLite database will be created
+  requireNamespace("DBI")
   requireNamespace("RSQLite")
   temp_sqlite <- tempfile(fileext = ".sqlite")
   conn <- DBI::dbConnect(RSQLite::SQLite(),
