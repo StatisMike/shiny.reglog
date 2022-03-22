@@ -17,6 +17,8 @@ checks](https://cranchecks.info/badges/worst/shiny.reglog)](https://cranchecks.i
 coverage](https://codecov.io/gh/StatisMike/shiny.reglog/branch/master/graph/badge.svg)](https://app.codecov.io/gh/StatisMike/shiny.reglog?branch=master)
 <!-- badges: end -->
 
+>This documentation regards the newest version not yet released on CRAN. It is highly recommended to use this one if you are a newcomer to the RegLog.
+
 ## 1. Introduction
 
 The user authentication in Shiny applications can be very useful.
