@@ -7,5 +7,7 @@ test_shinybase
 test_shinydashboard
 test.sqlite
 cache
-tests
 .secrets
+inst/doc
+docs
+backup_pkgdown.yml

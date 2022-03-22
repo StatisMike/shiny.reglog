@@ -1,0 +1,62 @@
+url: https://statismike.github.io/shiny.reglog/
+template:
+  bootstrap: 5
+navbar:
+  components:
+    articles:
+     text: Articles
+     menu:
+     - text: RegLogServer object and its fields and methods
+       href: articles/RegLogServer_object.html
+     - text: Creating custom RegLogConnector handlers
+       href: articles/create_custom_handlers.html
+reference:
+- title: RegLog demonstation shinyApp
+- contents: 
+  - RegLogDemo
+- title: Server components of RegLogSystem
+- contents:
+  - RegLogServer
+  - RegLogDBIConnector
+  - RegLogGsheetConnector
+  - RegLogEmayiliConnector
+  - RegLogGmailrConnector
+- title: UI components of RegLogSystem
+- contents:
+  - RegLog_login_UI
+  - RegLog_register_UI
+  - RegLog_credsEdit_UI
+  - RegLog_resetPass_UI
+- title: Database creation
+  desc: Functions that facitilate creation of the database needed for RegLog system
+- contents:
+  - DBI_tables_create
+  - gsheet_tables_create
+- title: Advanced functions and objects 
+- subtitle: Customizing texts
+  desc: >- 
+   This function is used mostly internally, but you can also use it interactively
+   to check which texts are used to provide custom ones to the `RegLogServer`
+- contents:
+  - RegLog_txt
+- subtitle: Customizing connectors and messages
+  desc: >-
+   Parse connector messages yourself to trigger default handler functions
+   or custom ones (read vignettes for more information). 
+   You can also create your own connector!
+- contents:
+  - RegLogConnectorMessage
+  - RegLogConnector
+- subtitle: Various utility functions
+- contents:
+  - db_timestamp
+  - mailMessageAttachment
+- subtitle: Default handler functions
+  desc: >- 
+   All of these are used only internally and aren't exported. You can inspect these
+   to better understand inner-workings of the RegLog system to create custom
+   handler functions.
+- contents:
+  - has_concept("gsheet_handler", internal = TRUE)
+  - has_concept("DBI_handler", internal = TRUE)
+  - has_concept("mail_handler", internal = TRUE)

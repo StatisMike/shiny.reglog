@@ -1,0 +1,402 @@
+---
+title: "Creating custom RegLogConnector handlers"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating custom RegLogConnector handlers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(shiny.reglog)
+```
+
+*shiny.reglog* package requires user to create *dbConnector* and *mailConnector*
+for the *RegLogServer* functionality. While creating ShinyApp almost always
+you want to use one database and one emailing procedure. For all usage beyond
+*RegLogServer* defaults, it would be suboptimal to define new connections. That's
+why during development I came to the conclusion that these connectors should
+allow for easy extensions with custom functions.
+
+The scope of this vignette is to describe:
+
+- how the *RegLogConnectors* operate
+- the default *handlers functions*
+- how to write custom *handler function*
+
+## *RegLogConnector* dataflow
+
+Both *dbConnectors* (`RegLogDBIConnector` and `RegLogGsheetConnector`) and
+*mailConnectors* (`RegLogEmayiliConnector` and `RegLogGmailrConnector`) inherits
+from more general class: `RegLogConnector`. There are three public fields that
+are key for the whole dataflow:
+
+- `RegLogConnector$listener()` - *reactiveVal* object that intakes 
+*RegLogConnectorMessage* object. *RegLogConnector* listens to any change
+in the value of this this object and reacts accordingly.
+- `RegLogConnector$handlers` - *named list* of **handler functions**. For every
+`type` of received message there should be a specific function appended there.
+All of them should return another *RegLogConnectorMessage* object informing
+about the result of the function.
+- `RegLogConnector$message()` - *reactiveVal* object containing
+*RegLogConnectorMessage* that are returned from **handler function**.
+
+### RegLogConnectorMessage object
+
+`RegLogConnector` object reacts upon receiving some kind of 
+*RegLogConnectorMessage* object and responds likewise. Its an `S3` class object
+that contains four fields:
+
+- `time`: timestamp on which the message was generated
+- `type`: character string declaring handler function of the *RegLogConnector*
+that should be called when object receive message.
+- `data`: list of objects, usually some kind of input or output of the handler
+function
+- `logcontent`: character string declaring content that should be saved into
+*RegLogConnector* logs.
+
+You can create message freely using function of the same name:
+
+```{r preview_of_message}
+message <- 
+  RegLogConnectorMessage(
+    type = "test",
+    dataframe = mtcars,
+    numbers = runif(10, 0, 100),
+    logcontent = paste0("I contain data.frame and random numbers"))
+
+str(message)
+```
+
+## Default handler functions for *dbConnectors*
+
+Both *RegLogDBIConnector* and *RegLogGsheetConnector* contain the same default
+handler functions. In this vignette I will focus on the messages that are received
+by the handler functions and their general usability. To learn about messages
+produced by these functions, check "RegLogServer object fields and methods"
+vignette and its "Message" section - as all of these messages are finally
+exposed in `RegLogServer$message()` public field.
+
+All of these functions aren't exported, as they are used only internally. You can
+read the documentation for them though with usual syntax of `?function` in console. 
+Documentation is rendered for information how to react with them
+by creating *RegLogConnectorMessages* yourself.
+
+### Handler for *login* type message
+
+- *RegLogDBIConnector*: `DBI_login_handler`
+- *RegLogGsheetConnector*: `gsheet_login_handler`
+
+These functions are handling querying the database for the specified by the user
+of the ShinyApp user ID and password and check if there is a match. Message
+structure:
+
+```{r login_message}
+login_message <- 
+  RegLogConnectorMessage(
+    type = "login",
+    username = "Whatever",
+    password = "&f5*MSYj^niDt=V'3.[dyEX.C/")
+
+str(login_message)
+```
+
+### Handlers for *register* type message
+
+- *RegLogDBIConnector*: `DBI_register_handler`
+- *RegLogGsheetConnector*: `gsheet_register_handler`
+
+These functions are handling querying the database and checking if the specified
+user ID and email for new user aren't already existing in the database. If
+there is no conflicts, it will then hash provided password and input
+new row. Message structure:
+
+```{r register_message}
+register_message <- 
+  RegLogConnectorMessage(
+    type = "register",
+    username = "IAmNewThere",
+    email = "something@new.com",
+    password = "veryHardP422w0rd!")
+
+str(register_message)
+```
+
+### Handlers for *credsEdit* type message
+
+- *RegLogDBIConnector*: `DBI_credsEdit_handler`
+- *RegLogGsheetConnector*: `gsheet_credsEdit_handler`
+
+These functions are querying the database to search for the specified username
+and password. After confirming user identity, it can update the database row
+for this user with any or all of: new username, new email and new password.
+Message structure:
+
+```{r credsEdit message}
+credsEdit_message <- 
+  RegLogConnectorMessage(
+    type = "credsEdit",
+    username = "Whatever",
+    password = "&f5*MSYj^niDt=V'3.[dyEX.C/",
+    new_username = "Whenever",
+    new_email = "edited@email.com",
+    new_password = "veryHardP422w0rd!")
+
+str(credsEdit_message)
+```
+
+### Handlers for *resetCode_generate* type message
+
+- *RegLogDBIConnector*: `DBI_resetPass_generation_handler`
+- *RegLogGsheetConnector*: `gsheet_resetPass_generation_handler`
+
+These functions are querying the database to search for the specified username. 
+After confirming that the specified username exists, it generates and inputs
+reset code that the user can use to generate new password.
+Message structure:
+
+```{r resetPass_generate_message}
+resetPass_generate_message <- 
+  RegLogConnectorMessage(
+    type = "resetPass_generate",
+    username = "Whatever")
+
+str(resetPass_generate_message)
+```
+
+### Handlers for *resetCode_confirm* type message
+
+- *RegLogDBIConnector*: `DBI_resetPass_confirmation_handler`
+- *RegLogGsheetConnector*: `gsheet_resetPass_confirmation_handler`
+
+These functions are querying the database to search for the specified username
+and confirming that provided reset code is correct. After confirmation, it
+marks the reset code as used and updates password for the user. 
+Message structure:
+
+```{r resetPass_confirm_message}
+resetPass_confirm_message <-
+  RegLogConnectorMessage(
+    type = "resetPass_confirm",
+    username = "Whatever",
+    reset_code = "4265417643",
+    password = "veryHardP422w0rd!")
+
+str(resetPass_confirm_message)
+```
+
+## Default handler function for *mailConnectors*
+
+All default handlers for *mailConnectors* use the same handler functions:
+
+- *RegLogEmayiliConnector*: `emayili_reglog_mail_handler`
+- *RegLogGmailrConnector*: `gmailr_reglog_mail_handler`
+
+They send the email to the specified address using subject and html body of the
+email kept in the `mailConnector$mails[[message_type]]` list. They also replace
+all of occurences of *?username?*, *?email?*, *?app_name?*, *?app_address?* and
+*?reset_code?* with respective values received in the *RegLogConnectorMessage*.
+
+Mail creation is chosen from the `mailConnector$mails` public field on the
+basis of the `process` *RegLogConnectorMessage* value.
+
+```{r mail_reglogconnectormessage}
+resetPass_mail_message <- 
+  RegLogConnectorMessage(
+    type = "reglog_mail",
+    process = "resetPass",
+    username = "Whatever",
+    email = "edited@email.com",
+    app_name = "RegLog Nice ShinyApp",
+    app_address = "https://reglog.nice.com",
+    reset_code = "4265417643")
+
+str(resetPass_mail_message)
+```
+
+There are also provided handlers to send custom e-mails to the logged user.
+
+- *RegLogEmayiliConnector*: `emayili_custom_mail_handler`
+- *RegLogGmailrConnector*: `gmailr_custom_mail_handler`
+
+They are sending email to the specified address parsing it from provided
+inside the message *subject* and *body*, providing also an option to send
+an *attachment*. No additional parsing is done there and `process` value there
+is only informative - it is saved into logs and presented in the
+`RegLogServer$mail_message()` field.
+
+```{r custommailmessage}
+message_to_send <- RegLogConnectorMessage(
+    type = "custom_mail",
+    process = "attachment_mail",
+    username = "Whatever",
+    email = "edited@email.com",
+    mail_subject = "Custom message with attachement",
+    mail_body = "<p>This is a custom message send from my App</p>
+                 <p>It is completely optional, but that kind of message can also
+                    contain an attachment!</p>",
+    mail_attachement = "files/myplot.png"
+  )
+```
+
+## How to create custom *handler function*
+
+*Handler function* system of *dbConnectors* and *mailConnectors* allows
+for creating custom logic for communicating with them.
+
+For example purposes the custom action that will be described in this vignette
+will be the process of saving and reading from *googlesheet* based database
+results of simple, 10-item questionnaire: Rosenberg's Self-esteem scale.
+
+### Setup the grounds to store the data
+
+Firstly, we need to create another sheet in the googlesheet that is used
+by the *RegLogGsheetConnector* to store our data. Besides the summed score
+we will also need timestamp and username to read the most recent row for
+the currently logged user.
+
+```{r create_new_sheet, eval=F}
+# create new sheet to the googlesheet
+googlesheets4::write_sheet(
+  ss = gsheet_ss,
+  sheet = "SES_results",
+  # append 0-row data.frame to create the "schema" for the sheet
+  data = data.frame(timestamp = as.character(NA),
+                    user_id = as.character(NA),
+                    score = as.numeric(NA))[-1,]
+)
+```
+
+### Create a handler for writing to database
+
+All handler functions need to take as arguments objects `self`, `private` and
+`message` and return `RegLogConnectorMessage`.
+
+```{r SES_results_write, eval=F}
+write_SES_handler <- function(self, private, message) {
+  
+  googlesheets4::sheet_append(
+    # ID of the connected googlesheet is stored inside private of the
+    # RegLogGsheetConnector
+    ss = private$gsheet_ss,
+    sheet = "SES_results",
+    data = data.frame(
+      # db_timestamp creates nicely formatted and interpretable by most
+      # databases current time
+      timestamp = db_timestamp(),
+      # user ID and score should be received inside received message
+      user_id = message$data$user_id,
+      score = message$data$score
+      ))
+  
+  return(RegLogConnectorMessage(type = "write_SES",
+                                success = TRUE))
+  
+}
+```
+
+### Create a handler for reading from database
+
+As we have now the writing handler ready, we should create a handler to retrieve
+the data in another user session.
+
+```{r SES_results_read, eval=F}
+read_SES_handler <- function(self, private, message) {
+  
+  # read all results
+  SES_results <- googlesheets4::read_sheet(
+    ss = private$gsheet_ss,
+    sheet = "SES_results",
+    col_types = "ccn")
+  
+  # get the lastest result for the current user
+  SES_results <- SES_results |>
+    dplyr::filter(user_id == message$data$user_id) |>
+    dplyr::arrange(dplyr::desc(timestamp)) |>
+    dplyr::slice_head()
+  
+  # return the RegLogConnectorMessage with the score if available
+  if (nrow(SES_results) == 1) {
+    return(RegLogConnectorMessage(type = "read_SES",
+                                  success = TRUE,
+                                  score = SES_results$score))
+  } else {
+    return(RegLogConnectorMessage(type = "read_SES",
+                                  success = FALSE))
+  }
+}
+```
+
+### Have everything in motion
+
+I will present there only code for the server logic, containing all needed
+elements for appending created *custom handlers* and sending the *RegLogConnectorMessages*
+to both write and read data from new sheet.
+
+```{r everything_in_motion, eval=F}
+# create and assign RegLogServer object
+RegLog <- RegLogServer$new(
+  # create googlesheet connector
+  dbConector = RegLogGsheetConnector$new(
+    # provide correct googlesheet ID
+    gsheet_ss = gsheet_ss,
+    # provide handlers in a named list. Names will be used to choose on basis
+    # of received RegLogConnectorMessage which function to use
+    custom_handlers = list(write_SES = write_SES_handler,
+                           read_SES = read_SES_handler)
+  ),
+  # provide some mailConnector with all needed data
+  mailConnector = mailConnector
+)
+
+# create an event to write the data to the database: there actionButton will
+# trigger it
+observeEvent(input$write_ses_result, {
+  
+  # make sure the inputs are provided
+  req(input$SES_1, input$SES_2, input$SES_3, input$SES_4, input$SES_5,
+      input$SES_6, input$SES_7, input$SES_8, input$SES_9, input$SES_10)
+  
+  # get the score by summing all raw scores of items
+  score <- sum(input$SES_1, input$SES_2, input$SES_3, input$SES_4, input$SES_5,
+               input$SES_6, input$SES_7, input$SES_8, input$SES_9, input$SES_10)
+  
+  # send message to the dbConnector's listener
+  RegLog$dbConnector$listener(
+    RegLogConnectorMessage(
+      # specify correct type - the same as the name of the handler
+      type = "write_SES",
+      # get required user ID from the RegLog object
+      user_id = RegLog$user_id(),
+      score = score))
+})
+
+# create an event to read the data from the database: eg. another actionButton
+observeEvent(input$read_last_ses_result, {
+  
+  # send correct message to the dbConnector's listener
+  RegLog$dbConnector$listener(
+    RegLogConnectorMessage(
+      type = "read_SES",
+      user_id = RegLog$user_id())
+  )
+})
+
+# assign the retrieved data: eg. to the reactive
+
+SES_result <- reactive(
+  # retrieved data will be available in `message()` field of RegLog object
+  received_message <- RegLog$message()
+  # make sure to only process correct type of message
+  req(received_message$type == "read_SES")
+
+  if (!is.null(score)) {
+    # get the score if there was any saved in the database
+    received_message$data$score
+  })
+```

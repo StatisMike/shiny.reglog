@@ -1,0 +1,608 @@
+---
+title: "RegLogServer object fields and methods"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{RegLogServer object fields and methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## About R6 and specifically RegLogServer Class
+
+*R6* is the alternative class system available for **R** users. It is more driven towards
+Object Oriented Programming vs Functional Programming that is most known to **R** users
+via built-in *S3* class system.
+
+*R6* is ideal for creating more complex systems - it keeps all their elements enclosed
+in their own environment. Most of **R** users actually uses *R6* objects on
+daily basis: eg. the whole *Shiny* system is built as system of *R6* objects.
+
+Basically, all there is to know about *R6* system in regards to *shiny.reglog*
+usage is, that:
+
+- all modules available in *shiny.reglog* are *R6* classes:
+  - *RegLogServer*
+  - dbConnectors - which are used by every *RegLogServer* to communicate with
+  database containing your user data.
+     - *RegLogDBIConnector*
+     - *RegLogGsheetConnector*
+  - mailConnectors - which are used by every *RegLogServer* to send emails to
+  users of your ShinyApp.
+     - *RegLogEmayiliConnector*
+     - *RegLogGmailConnector*
+  - vanilla *RegLogConnector*, that you can use to create your own *Connector*
+  class with inheritance.
+- R6 objects after initialization have public elements, that can be accessed
+  with `$`. They can be either *fields*, holding some values, or *methods*
+  containing functions.
+  
+If you want to get to know more about R6 system as a whole I advise you to check
+out [articles created by R6 maintainers](https://r6.r-lib.org/articles/). Below
+I will talk more thoroughly about *RegLogServer* class and its public fields and
+methods.
+
+There are multiple public elements to *RegLogServer*. To keep them in order, I will
+describe them on basis of their usage. In all code chunks I will refer to them
+as if they would be called from an object assigned as *RegLogServer*:
+
+```{r setup, include=F}
+library(shiny.reglog)
+```
+
+```{r RegLogServer_assignement_example, eval = F}
+  RegLogServer <- RegLogServer$new(
+    dbConnector = dbConnector,
+    mailConnector = mailConnector)
+```
+
+## State of user in current ShinyApp session
+
+Elements described there are the most important things that every creator of 
+ShinyApp that incorporates *shiny.reglog* should be using to profit from user
+login. All of them are `reactiveVal` objects, so you can `observe` their changes
+and to access their current value you need to include them with parentheses.
+
+### Check if the user in current session is logged in
+
+`is_logged` is a simple boolean value to check if the user in current session is 
+logged in (`TRUE`) or not (`FALSE`)
+
+```{r is_logged, eval = F}
+# observe the reactiveVal change
+observeEvent(RegLogServer$is_logged, {
+  
+  # if contains TRUE: user is currently logged-in
+  if (RegLogServer$is_logged()) {
+    showModal(modalDialog(title = "You are logged in!"))
+    # if contains FALSE: user isn't logged-in
+  } else {
+    showModal(modalDialog(title = "You are not logged in!"))
+  }
+})
+```
+
+### Current ID of the user
+
+`user_id` field (character string): unique user ID. When the user 
+isn't logged it contains generated at the start of the session (or after logout)
+*Universally Unique Identifier* (with the use of `uuid::UUIDgenerate()`).
+```{r uuid_example}
+uuid::UUIDgenerate()
+```
+After login it contains the username that the user have chosen during registration
+procedure.
+```{r user_id, eval = F}
+RegLogServer$user_id()
+```
+
+### Email address of the currently logged user
+
+`user_mail` field (character string): unique user email. When the user is logged in,
+it contains the email that is currently associated with their *user_id*. Otherwise,
+it contains empty character string (`""`).
+```{r user_mail, eval = F}
+RegLogServer$user_mail()
+```
+
+### Account ID of the logged user
+
+`account_id` field (character string): unique account ID. It provides the simple
+way to relate to the specific logged users in other, custom tables in
+the database (eg.: settings saved for specific users). 
+
+- value of the **id** column in the *account* table for **SQL databases** 
+- **row number - 1** (header) in the *account* spreadsheet for **googlesheet 
+database**.
+
+```{r account_id, eval=F}
+RegLogServer$account_id()
+```
+
+## User logout
+
+You can insert an event to logout user by calling public method.
+
+```{r user_logout, eval = F}
+# if you create an actionButton "logout_button" in your UI, you can observe
+# its action and logout after press:
+observeEvent(input$logout_button, {
+  RegLogServer$logout()
+})
+```
+
+## UI object lists
+
+There are dedicated functions for creating UI for different functionalities of the
+*RegLog* system: `RegLog_login_UI`, `RegLog_register_UI`, `RegLog_credsEdit_UI`
+and `RegLog_resetPass_UI`. They put whole default `tagLists` into the UI, though.
+
+It is expected that there will be users who would want more freedom with how
+their UI should look like. That's why there are dedicated public fields containing
+named lists of UI elements for all of these functionalities. You can use these
+to create your own, custom `renderUI` output.
+
+- `UI_list_login` containing elements of login procedure tags
+- `UI_list_register` containing elements of register procedure tags
+- `UI_list_credsEdit` containing elements of credentials edit procedure tags
+- `UI_list_resetPass` containing elements of reset password procedure tags
+
+## Message
+
+`message` field is another `reactiveVal` value that can be used to observe
+**any** change of the *RegLogServer* object state. It always contains most recent object 
+of *S3* class **RegLogConnectorMessage**, that the *RegLogServer* received from its
+*dbConnector* or was specifically generated to communicate specific status changes.
+
+>Messages received from mailConnector aren't exposed in this field. Instead, they
+are exposed in `RegLogServer$mail_message()` field. They are separated because
+they don't idicate a change in state of *RegLog system* itself - instead, they just
+show the feedback from mail sending service.
+
+Creation of custom logic depending on its change isn't at all necessary. It can
+be handy especially when for any reason you want to inhibit the default
+*modalDialog*s that are called by *RegLogServer* to inform end-user about
+consequences of their actions (eg. successful login or unsuccessful, because the
+inputed user ID or password is incorrect). 
+
+Every *RegLogConnectorMessage* is specific type of *list* and can contain up to 
+four elements:
+
+- **time**: numeric representation of `Sys.time()` when it was generated
+- **type**: indicates the type of the process during which the message was generated
+- **data**: *list* containing data that was send with this message. Values
+contained there can be specific to certain *type* of the message
+- **logcontent**: all *RegLogConnectorMessage*s send by and received by the
+*RegLogServer* object (and by every *RegLogConnector*) are appended to that
+object `log` field. Content there will be saved as a *note* in the logs.
+
+Below I want to characterize all types of *RegLogConnectorMessages* that can be
+exposed in the `RegLogServer$message()` field. Besides them there are also messages
+that are send by the *RegLogServer* to its *Connectors*. To learn more about these,
+read vignette **Creating custom RegLogConnector handlers**.
+
+>Conditions for every default modalDialog are written in the order they should be
+checked in for best results. 
+>Conditions written like `value == FALSE` can be checked like that - the *message*
+of given type always contains this object. Conditions written like `isFALSE(value)` 
+means that the specified *value* in the *message* can be `NULL`.
+
+### Type: **ping**
+
+Type of the message that is produced by all classes inheriting from *RegLogConnector*
+upon their initialization, making it also the very first available in `RegLogServer$message()`
+field. Received message of this type contains:
+
+- *data*: response_time: time between receiving the **ping** message and sending
+this message back
+- *logcontent*: for message upon initialization it will hold value "init".
+
+### Type: **login_front**
+
+Type of the message generated by *RegLogServer* object itself. Contains
+information about invalidity of values provided during login procedure
+by user. It contains:
+
+- **data**
+  - success: boolean - `FALSE`
+  - input_provided: boolean - `FALSE`
+  
+This message type is binded with default *modalDialogs*:
+
+- login_noInput (`input_provided == FALSE`)
+
+### Type: **login**
+
+Type of the message received from the database connectors with responses about
+login procedure. It contains:
+
+- **data**:
+  - success: boolean - `TRUE` if the login was successful
+  - username: boolean - `TRUE` if the username exists in the database
+  - password: boolean - `TRUE` if the password provided match
+  - *user_id*: character - contains user_id presented afterwards in the
+  `RegLogServer$user_id()`. Only if `success == TRUE`
+  - *user_mail*: character - contains user_mail presented afterwards in the
+  `RegLogServer$user_mail()`. Only if `success == TRUE`
+- **logcontent**:
+  - brief information with username provided by the user and if the login
+  was successful.
+
+This message type is binded with default *modalDialogs*:
+
+- login_badId (`data$success == FALSE && data$username == FALSE`)
+- login_badPass (`data$success == FALSE && data$password == FALSE`)
+- login_success (`data$success == TRUE`)
+
+
+### Type: **register_front**
+
+Type of the message generated by *RegLogServer* object itself. Contains
+information about invalidity of values provided during register procedure
+by user. It contains:
+
+- **data**:
+  - success: boolean - `FALSE`
+  - input_provided: boolean - `TRUE` if all needed inputs were provided
+  - valid_id: boolean - `TRUE` if provided user ID was valid
+  - valid_email: boolean - `TRUE` if provided email was valid
+  - valid_pass: boolean - `TRUE` if provided password was valid
+  - identical_pass: boolean - `FALSE` (it is the last condition checked)
+  
+This message type is binded with default *modalDialogs*:
+
+- register_noInput (`data$input_provided == FALSE`)
+- register_nonValidId (`isFALSE(data$valid_id)`)
+- register_nonValidEmail (`isFALSE(data$valid_email)`)
+- register_nonValidPass (`isFALSE(data$valid_pass)`)
+- register_notIndenticalPass (`isFALSE(data$identical_pass)`)
+
+### Type: **register**
+
+Type of the message received from the database connector with responses about
+register procedure. It contains:
+
+- **data**:
+  - success: boolean - `TRUE` if the register was successful
+  - username: boolean - `TRUE` if there were no conflicts with existing 
+  usernames in the database
+  - email: boolean - `TRUE` if there were no conflicts with existing
+  e-mails in the database
+  - *user_id*: character - contains user ID with which new user have been
+  registered. Only if `success == TRUE`
+  - *user_mail*: character - contains e-mail with which new user have
+  been registered. Only if `success == TRUE`
+- **logcontent**:
+  - registered user ID and mail if the register was successful or value
+  of the element which caused conflict.
+  
+This message type is binded with default *modalDialogs*:
+
+- register_existingId (`data$success == FALSE && data$username == FALSE`)
+- register_existingEmail (`data$success == FALSE && data$email == FALSE`)
+- register_success (`data$success == TRUE`)
+
+### Type: **credsEdit_front**
+
+Type of the message generated by *RegLogServer* object itself. Contains
+information about invalidity of values provided during credentials change procedure
+by user. It contains:
+
+- **data**:
+  - success: boolean - `FALSE` (generated only when something is invalid)
+  - user_logged: boolean - `TRUE` if user is currently logged in
+  - input_provided: boolean - `TRUE` if required inputs are not empty
+  - valid_id: boolean - `TRUE` if provided user ID was valid
+  - valid_email: boolean - `TRUE` if provided email was valid
+  - valid_pass: boolean - `TRUE` if provided password was valid
+  - identical_pass: boolean - `FALSE` (it is the last condition checked)
+  
+This message type is binded with default *modalDialogs*:
+
+- credsEdit_notLogged (`data$user_logged == FALSE`)
+- credsEdit_noInput_pass (`isFALSE(data$input_provided) && change == "pass"`)
+- credsEdit_noInput_other (`isFALSE(data$input_provided) && change == "other"`)
+- credsEdit_nonValidId (`isFALSE(data$valid_id)`)
+- credsEdit_nonValidEmail (`isFALSE(data$valid_email)`)
+- credsEdit_nonValidPass (`isFALSE(data$valid_pass)`)
+- credsEdit_notIdenticalPass (`isFALSE(data$identical_pass)`)
+
+### Type: **credsEdit**
+
+Type of the message received from the database connector with responses about
+credentials edit procedure. It contains:
+
+- **data**:
+  - success: boolean - `TRUE` if credentials edit was successful
+  - username: boolean - `TRUE` if provided username was found
+  - password: boolean - `TRUE` if provided password was correct
+  - *new_username*: boolean - `TRUE` if provided new ID weren't in
+  database (no conflicts). Only if there were some conflict.
+  - *new_mail*: boolean - `TRUE` if provided new e-mail weren't in
+  database (no conflicts). Only if there were some conflict.
+  - *new_user_id*: character - contains new user ID. Only if user ID was changed.
+  - *new_user_mail*: character - contains new user e-mail. Only if user mail
+  was changed.
+  - *new_user_pass*: boolean - `TRUE`. Only if user password was changed.
+- **logcontent**:
+  - brief information about changes.
+  
+This message type is binded with default *modalDialogs*:
+
+- credsEdit_badId (`data$success == FALSE && data$username == FALSE`)
+- credsEdit_badPass (`data$success == FALSE && data$password == FALSE`)
+- credsEdit_existingId (`data$success == FALSE && isFALSE(data$username)`)
+- credsEdit_existingEmail (`data$success == FALSE && isFALSE(data$email)`)
+- credsEdit_success (`data$success == TRUE`)
+
+### Type: **resetPass_front**
+
+Type of the message generated by *RegLogServer* object itself. Contains
+information about invalidity of values provided during password reset procedure
+by user. It contains:
+
+- **data**
+  - success: boolean - `FALSE` (message generated only when something is invalid)
+  - step: character - either `generate` or `confirm`, depending on the step of the process
+  - input_provided: boolean - `TRUE` if the inputs required for specific step were provided
+  - valid_pass: boolean - `TRUE` if provided password was valid
+  - identical_pass: boolean - `FALSE` (it is the last condition checked)
+  
+This message type is binded with default *modalDialogs*:
+
+- resetPass_noInput_generate (`data$step == "generate" && isFALSE(data$input_provided)`)
+- resetPass_noInput_confirm (`data$step == "confirm" && isFALSE(data$input_provided)`)
+- resetPass_nonValidPass (`isFALSE(data$valid_pass)`)
+- resetPass_notIdenticalPass (`isFALSE(data$identical_pass)`)
+  
+### Type:  **resetPass_generate**
+
+Type of the message received from the database connector with responses about
+password reset procedure - code generation step. It contains:
+
+- **data**:
+  - success: boolean - `TRUE` if reset code was created successfully
+  - username: boolean - `TRUE` if the username was found in the database
+  - email: character - email to which the reset code will be sent
+- **logcontent**:
+  - information about user for whom the reset code was generated and to which
+  email it will be sent.
+  
+This message type is binded with default *modalDialog*:
+
+- resetPass_badId (`data$username == FALSE`)
+- resetPass_codeGenerated (`data$success == TRUE`)
+  
+### Type: **resetPass_confirm** 
+
+Type of the message received from the database connector with responses about
+password reset procedure - code confirmation step. It contains:
+
+- **data**
+  - success: boolean - `TRUE` if the password was changed successfully
+  - username: boolean - `TRUE` if the username was found in the database
+  - code_valid: boolean - `TRUE` if the reset code was valid (both matched and not expired)
+- **logcontent**
+  - username for which the password was changed.
+  
+This message type is binded with default *modalDialogs*:
+
+- resetPass_badId (`data$username == FALSE`)
+- resetPass_nonValidCode (`isFALSE(data$code_valid)`)
+- resetPass_success (`data$success == TRUE`)
+
+### Type: **logout**
+
+Type of the message generated by *RegLogServer* itself, indicating that the
+user have been logged out. It contains:
+
+- **data**
+  - success: boolean - `TRUE` if the user was logged in and have been logged out
+- **logcontent**
+  - username of the user that had logged out
+  
+This message type is binded with default *modalDialog*:
+
+- logout_notLogIn (`data$success == FALSE`)
+- logout_success (`data$success == TRUE`)
+
+## Mail message
+
+`mail_message` field contains last *RegLogConnectorMessage* received from
+*mailConnector*. It only provides information about last process of sending
+email, which don't signalize the change of the data or state of current login
+session, so it is separated from much more important `message` field.
+
+### Type: **reglog_mail**
+
+This type of message is received after default e-mail sending from all RegLog
+processess. It contains:
+
+- **data**
+  - process: character - name of the process for which e-mail was sent. Either
+  'register', 'credsEdit' or 'resetPass'
+  - success: boolean - `TRUE` if the email was sent sucessfully
+- **logcontent**
+  - username and address to which email was sent, and the name of the process that
+  triggered it. If `success == FALSE` it will also contain error message.
+  
+### Type: **custom_mail**
+
+This type of message isn't received during regular *RegLog* run. It is a response
+to message that you can use to send a custom e-mail. It contains the same
+responses as **reglog_mail** message.
+
+To send a custom email using *mailConnector*, pass to its *listener* a 
+*RegLogConnectorMessage* of type *custom_mail*, as in example below:
+
+```{r eval=F}
+# you can observe some kind of event to trigger the send
+observeEvent(input$send_custom_email, {
+  
+  # as the username and email will be acquired from RegLogServer,
+  # it is best to make sure that the user is logged-in
+  req(RegLogServer$is_logged())
+  
+  message_to_send <- RegLogConnectorMessage(
+    type = "custom_mail",
+    # name your process in some unique way - it will be tracked by the app 
+    # and saved into logs
+    process = "attachement_mail!",
+    # username and email can be gotten from RegLogServer
+    username = RegLogServer$user_id(),
+    email = RegLogServer$user_mail(),
+    # we can specify the subject and body of message ourselves
+    mail_subject = "Custom message with attachement",
+    # it's best for the body to contain html code
+    mail_body = "<p>This is a custom message send from my App</p>
+                 <p>It is completely optional, but that kind of message can also
+                    contain an attachment!</p>",
+    # optionally: attachment
+    mail_attachement = "files/myplot.png"
+  )
+})
+```
+
+## Collected logs during the App session
+
+During the lifespan of the session, *RegLogServer* object sends, shows and receives
+many different *RegLogConnectorMessages*. By default, all messages **send** to 
+its *dbConnector* and *mailConnector* and **received** back are saved into the
+`RegLogServer$logs` field, into separate lists per direction. 
+There are also some messages that are only **shown** by the object (namely all 
+messages with "_front" suffix and message of type **logout**)
+
+They contain following information:
+
+- **time** when the message was generated
+- **session** in which the message was generated (taken from `session$token`)
+- **type** of the message
+- **note** in which the `logcontent` of the message is saved
+
+### Collecting all logs
+
+You can use public method to get whole content of the logs collected up to this
+point in time in the form of *data.frame*.
+
+```{r, eval = F}
+logs_df <- RegLogServer$get_logs()
+```
+
+## Configuring RegLogServer
+
+As the whole *RegLog* system is created with elasticity in mind, there are also
+many options for customizing the behaviour of *RegLogServer* object.
+
+### Customizing messages and texts 
+
+During *RegLogServer* object initialization you can specify some arguments:
+
+- `app_name` - name of your application that will show up in default emails
+sent to your users. Defaults to the name of root folder of your application.
+- `app_address` - URL to your application that will show up in default emails
+sent to your users. Defaults to the URL that the App is accessed on the client
+side (actually: `NULL`, as the address is got on session start)
+- `lang` - language in which the default texts are presented. Defaults to "en"
+for English. You can also specify "i18" for the RegLog to show only the content
+identifiers for ease of building your own translations using external tools, eg.
+[shiny.i18n](https://github.com/Appsilon/shiny.i18n).
+- `custom_txts` - defaults to NULL. Can be a named list of character vectors that
+should be used in place of defined text for language of your choosing (to 
+check them out, use `RegLog_texts()` function).
+
+    You can define custom texts during initialization of *RegLogServer*:
+    ```{r, eval = F}
+        # initialize new RegLogServer object
+    RegLog <- RegLogServer$new(
+      # assign created dbConnector and mailConnector
+      dbConnector = dbConnector,
+      mailConnector = mailConnector,
+      # replace default title and body of `login_success` modalDialog
+      custom_txts = list(
+        login_success_t = "Welcome!",
+        login_success_b = "Hi! It's nice to see you logged into our ShinyApp!"
+      )
+    )
+    ```
+    
+    
+- `use_modals` - defaults to TRUE. If specified as `FALSE`, no default modals
+will be shown. You can also inhibit only specific modal dialogs by providing
+named list of FALSE values. Eg:
+
+    ```{r, eval = F}
+    # initialize new RegLogServer object
+    RegLog <- RegLogServer$new(
+      # assign created dbConnector and mailConnector
+      dbConnector = dbConnector,
+      mailConnector = mailConnector,
+      # inhibit default 'login_success' and 'register_success' modals
+      use_modals = list(
+        login_success = FALSE,
+        register_success = FALSE
+      )
+    )
+    ```
+
+### Options related to log saving
+
+There are two options that can be defined in the script that relates to the log
+collection: *RegLogServer.logs* that defines saving logs to `RegLogServer$logs`
+and *RegLogServer.logs_to_database* that defines saving the logs into table
+or spreadsheet created for log-recording purposes. 
+
+> To save logs into database, remember to firstly create a table or spreadsheet.
+During tables creation with either `DBI_tables_create` or `gsheet_tables_create`
+specify argument `use_log = T`.
+
+To define options just insert in the beginning of your script:
+
+```{r, eval = F}
+# examples with default values
+options("RegLogServer.logs" = 1)
+options("RegLogServer.logs_to_database" = 0)
+```
+
+Possible values:
+
+- 0: no message is saved into logs/database
+- 1: messages **sent** and **received** are saved
+- 2: all messages are saved
+
+> It isn't recommended to save any logs into database when using *RegLogGsheetConnector* 
+as your database driver. All actions made on the *googlesheets* database are taking
+significant time. Recommended only during testing/debugging runs.
+
+### Options related to e-mail sending
+
+By default, *RegLogServer* will trigger an e-mail send to users of your ShinyApp
+after they are registered, when they attempt reset password procedure (to provide
+them with their reset code) and after changing their user ID or e-mail during the
+credentials edit procedure.
+
+As the e-mail sending is mandatory during reset password procedure, there is no
+option to inhibit it, but the other messages are only recommended as they are
+enriching the user experience. If you are concerned with the amount of e-mails
+that can be sent from your app, you can inhibit these messages using following
+options:
+
+- `options("RegLogServer.register_mail" = FALSE)`
+- `options("RegLogServer.credsEdit_mail" = FALSE)`
+
+To inhibit all e-mail sending (eg. if the app is under development, you are 
+debugging it or only playing with the package currently), you can pass an
+`RegLogConnector` object to the `mailConnector` argument during initialization
+of the *RegLogServer*:
+
+```{r eval = F}
+RegLog <- RegLogServer$new(
+  dbConnector = somedbConnector,
+  mailConnector = RegLogConnector$new()
+)
+```

@@ -1,33 +1,56 @@
 Package: shiny.reglog
 Title: Optional Login and Registration Module System for ShinyApps
-Version: 0.4.2
+Version: 0.5.0
 Authors@R: 
     person(given = "Michal",
            family = "Kosinski",
            role = c("aut", "cre"),
            email = "kosinski.mich@gmail.com",
            comment = c(ORCID = "https://orcid.org/0000-0002-8426-3654"))
-Description: Package creates UI modules for Login, Register and Password Reset boxes and server module for reading and writing user database contained within googlesheet or sqlite file. Creates automatic e-mail messages after registration and for resetting password procedure. Currently supports English language (default) and Polish. The authentication system created with shiny.reglog is designed to be optional: user don't need to be logged-in to access your application, but when logged-in the user data can be used to read from and write to relational databases.
+Description: RegLog system provides a set of shiny modules to handle register
+   procedure for your users, alongside with login, edit credentials and
+   password reset functionality. 
+   It provides support for popular SQL databases
+   and optionally googlesheet-based database for easy setup. For email sending
+   it provides support for 'emayili' and 'gmailr' backends. Architecture makes 
+   customizing usability pretty straightforward.
+   The authentication system created 
+   with shiny.reglog is designed to be optional: user don't need to be logged-in 
+   to access your application, but when logged-in the user data can be used 
+   to read from and write to relational databases.
+Depends:
+    R (>= 4.1.0),
+    R6,
+    shiny
 Imports:
-	shiny,
-	dplyr,
-	scrypt,
-	R6,
-	DBI,
-	googlesheets4,
-	RSQLite,
-	lubridate
+    dplyr,
+    lubridate,
+    lifecycle,
+    scrypt,
+    shinyjs,
+    stringi,
+    uuid
 Suggests:
-    shinydashboard,
-    googledrive,
-    gmailr,
+    withr,
+    devtools,
+    DBI,
+    testthat (>= 3.0.0),
+    DT,
     emayili,
+    gmailr,
+    googledrive,
+    googlesheets4,
     knitr,
-    rmarkdown
-License: 
-	GPL-3
+    rmarkdown,
+    RSQLite,
+    shinydashboard,
+    shinytest,
+    covr
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
+Config/testthat/edition: 3
+URL: https://statismike.github.io/shiny.reglog/
