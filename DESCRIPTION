@@ -19,6 +19,7 @@ Description: RegLog system provides a set of shiny modules to handle register
    to access your application, but when logged-in the user data can be used 
    to read from and write to relational databases.
 Depends:
+    R (>= 4.1.0),
     R6,
     shiny
 Imports:
@@ -30,6 +31,8 @@ Imports:
     stringi,
     uuid
 Suggests:
+    withr,
+    devtools,
     DBI,
     testthat (>= 3.0.0),
     DT,
