@@ -37,7 +37,8 @@ Suggests:
     knitr,
     rmarkdown,
     RSQLite,
-    shinydashboard
+    shinydashboard,
+    covr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

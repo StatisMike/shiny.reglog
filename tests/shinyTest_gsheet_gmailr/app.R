@@ -7,7 +7,7 @@ googlesheets4::gs4_auth(email = Sys.getenv("G_SERVICE_MAIL"),
 googledrive::drive_auth(email = Sys.getenv("G_SERVICE_MAIL"),
                         path = Sys.getenv("G_SERVICE_ACCOUNT"),
                         cache = F)
-gmailr::gm_auth_configure()
+gmailr::gm_auth_configure(path = Sys.getenv("GMAILR_APP"))
 gmailr::gm_auth(email = Sys.getenv("G_SERVICE_MAIL"),
                 path = Sys.getenv("G_SERVICE_ACCOUNT"))
 

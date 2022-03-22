@@ -329,20 +329,21 @@ RegLog_txt <- function(
     
     if (is.null(x)) {
       customized <- lapply(
-        seq_along(reglog_texts[[as.character(lang)]]),
+        seq_along(RegLog_txts[[as.character(lang)]]),
         \(i) {
-          custom_txt <- custom_txts[[names(reglog_texts[[as.character(lang)]])[i]]]
+          custom_txt <- custom_txts[[names(RegLog_txts[[as.character(lang)]])[i]]]
           if (is.null(custom_txt)) {
-            return(reglog_texts[[as.character(lang)]][[i]])
+            return(RegLog_txts[[as.character(lang)]][[i]])
           } else {
             return(custom_txt)
           }
         })
+      names(customized) <- names(RegLog_txts[[as.character(lang)]])
       return(customized)
       
       # with x provided, return only this one element
     } else {
-      default_txt <- reglog_texts[[as.character(lang)]][[as.character(x)]]
+      default_txt <- RegLog_txts[[as.character(lang)]][[as.character(x)]]
       custom_txt <- custom_txts[[as.character(x)]]
       
       if (is.null(custom_txt)) {

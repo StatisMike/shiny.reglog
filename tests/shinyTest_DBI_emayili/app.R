@@ -10,10 +10,8 @@ uneval_dbConnector <- bquote(
 
 uneval_mailConnector <- quote(
   RegLogEmayiliConnector$new(
-    from = "statismike@gmail.com",
-    smtp = emayili::gmail(username = "statismike@gmail.com",
-                          password = Sys.getenv("STATISMIKE_GMAIL_PASS"))))
-
+    from = "reglog@testing.com",
+    smtp = emayili::smtpbucket()))
 
 shiny.reglog:::RegLogTest(
   dbConnector = uneval_dbConnector,

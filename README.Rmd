@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 [![CRAN checks](https://cranchecks.info/badges/worst/shiny.reglog)](https://cranchecks.info/pkgs/shiny.reglog)
 [![](http://cranlogs.r-pkg.org/badges/last-month/shiny.reglog?color=green)](https://cran.r-project.org/package=shiny.reglog)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/shiny.reglog?color=blue)](https://cran.r-project.org/package=shiny.reglog)
-
+[![Codecov test coverage](https://codecov.io/gh/StatisMike/shiny.reglog/branch/master/graph/badge.svg)](https://app.codecov.io/gh/StatisMike/shiny.reglog?branch=master)
 <!-- badges: end -->
 
 ## 1. Introduction
@@ -91,13 +91,16 @@ devtools::install_github("StatisMike/shiny.reglog")
 # install.packages("shiny.reglog")
 ```
 
-## 4. Setup
+## 4. Setting up *dbConnector*
+
+You need to create *dbConnector* object to be used by the *RegLogServer* to 
+write and read user data from the database.
 
 To set-up the database for *RegLog* system, you can use helper functions
 included in this package. They are tested and guarantee compatible structure
 of the data.
 
-### 4.1 Googlesheet database method
+### 4.1 Googlesheet database method (*RegLogGsheetConnector*)
 
 1. Create googlesheet file on your googledrive to support database. You can use
 `gsheet_tables_create()` function, which by default creates empty spreadsheets
@@ -134,7 +137,19 @@ gsheet_id <- gsheet_tables_create(
 
 2. Configure googlesheets4 package to use out-of-band (non-interactive) auth. For more information about it visit [googlesheets4 documentation](https://googlesheets4.tidyverse.org/).
 
-### 4.2 `DBI` compatible SQL database
+3. In the `server` part of your ShinyApp define `RegLogGsheetConnector` to provide it
+afterwards to the `RegLogServer` object
+
+```{r, eval = F}
+server <- function(input, output, session) {
+  
+  dbConnector <- RegLogGsheetConnector$new(
+    gsheet_ss = gsheet_id)
+  
+}
+```
+
+### 4.2 `DBI` compatible SQL database (*RegLogDBIConnector*)
 
 *RegLog system* out of the box supports *SQLite*, *MySQL*, *MariaDB* and *PostgreSQL*
 databases. You can use `DBI_tables_create` function, which by default creates empty 
@@ -178,133 +193,206 @@ DBI_tables_create(conn = conn,
 DBI::dbDisconnect(conn)
 ```
 
-## 4. Information about functions
+2. In the *server* part of your ShinyApp define `RegLogDBIConnector` to provide it
+afterwards to the `RegLogServer` object.
 
-All functions generates text (input labels, descriptions, authomatic e-mail). You can control the language of displayed text with `lang` argument. Currently it supports English (the default) and Polish (`lang = "pl"`). If you want to use non-default language, you need to set the 'lang' argument consistently between all functions of the package.
+```{r, eval = F}
+server <- function(input, output, session) {
+  
+  dbConnector <- RegLogDBIConnector$new(
+    driver = RSQLite::SQLite(),
+    dbname = "reglog_db.sqlite")
+  
+}
+```
 
-### 4.1. UI functions
+## 5. Setting up mail connectors
 
-All UI functions creates a `div` element which can be input into UI of your application, inside a `fluidRow`, complete `fluidPage`, `tabItem` of dashboard or any other container of your choosing.
+You need to create *mailConnector* object to be used by the *RegLogServer* to 
+write and read user data from the database. There are two classes defined to use
+`emayili` or `gmailr` packages as backend.
 
-#### 4.1.1. register_UI
+### 5.1. Using `emayili` (*RegLogEmayiliConnector*)
 
-The register box contains inputs for user ID (which can be used to link the user with other elements in external databases), e-mail address (which will be used to send confirmation e-mail and reset codes for your password) and for password and password repetition. It tests validity of all inputs and tries to register new account after pushing the "Register" button.
+This backend is recommended to use. It supports many SMTP servers, mostly
+with username and password based identification.
 
-It produces modal dialog detailing the result. Additionally, if registered successfully it sends user a confirmation e-mail.
-
-Currently the functions accept user ID and password consisting of 8~25 alphanumeric characters. It is planned to change in future iterations to widen the requirements - especially for passwords.
-
-Provided password is saved in hashed form - using the `scrypt::hashPassword` function.
-
-[![Register UI - click for gif!](https://statismike.github.io/gallery/shiny.reglog/1_register.png)](https://statismike.github.io/gallery/shiny.reglog/1_register.gif)
-
-#### 4.1.2. login_UI
-
-The login box contains inputs for user ID and password. After pushing the "Login" button, it check validity of inputs and logins user. Produces modal dialog detailing results.
-
-[![Login UI  - click for gif!](https://statismike.github.io/gallery/shiny.reglog/2_login.png)](https://statismike.github.io/gallery/shiny.reglog/2_login.gif){target="_blank"}
-
-#### 4.1.3. password_reset_UI
-
-The box for password reset consists of two UI elements: the password_reset_UI `div` element and modal dialog it produces after confirming validity of inputted confirmation code.
-
-The main `div` contains input for User ID. After user inputs their ID, they should push "Send code" button, which generates their 24h-valid resetcode mails it to their e-mail and stores in hashed form in the database.
-
-After they receive reset code, they need to input it in the next inputbox below and push next button. The validity of inputted code in relation to user ID is then checked. If correct, the new modal dialog opens to input the new password.
-
-[![Reset UI  - click for gif!](https://statismike.github.io/gallery/shiny.reglog/3_reset1.png)](https://statismike.github.io/gallery/shiny.reglog/3_reset1.gif){target="_blank"}
-
-The user need to provide new password and repeat it to check for any typos. After pushing the "Confirm new password" button, below input boxes a message is rendered to give feedback to the user - if the password was changed successfully. After that, the user can close modal dialog with "OK" button.
-
-[![Reset modal dialog - click for gif!](https://statismike.github.io/gallery/shiny.reglog/4_reset2.png)](https://statismike.github.io/gallery/shiny.reglog/4_reset2.gif){target="_blank"}
-
-#### 4.1.4. logout_button
-
-Simple `actionButton` for your users to log out during ShinyApp session. Clicking it brings on `modalDialog` asking if they are sure that they want to logout.
-
-### 4.2. Server function
-
-Currently there is only one server function: login_server()
-
-```{r login_server, eval = FALSE}
-login_server(
-  id = "login_system", 
-  db_method = c("gsheet", "sqlite"), 
-  mail_method = c("emayili", "gmailr"),
-  appname,
-  appaddress,
-  lang = "en",
-  gsheet_file,
-  sqlite_db,
-  gmailr_user,
-  emayili_user,
-  emayili_password,
-  emayili_host,
-  emayili_port
+```{r, eval = F}
+server <- function(input, output, session) {
+  
+  mailConnector <- RegLogEmayiliConnector$new(
+    from = "email@sending.com",
+    # to learn how to setup emayili smtp server read ?emayili::server
+    smtp = emayili::server(...)
   )
+  
+}
 ```
 
-#### 4.2.1. Arguments
+### 5.2. Using `gmailr` (*RegLogGmailrConnector*)
 
-`login_server` arguments can be divided into three main groups:
+This backend is only viable if you have an app registered in Google Cloud Console.
+It authorizes and sends email via gmail REST API, needing Oauth authorization
+with high scopes.
 
-##### 4.2.1.1 General arguments: always mandatory
-
-These arguments are always mandatory while using `login_server`
-
-+ *id* argument defaults to "login_system". You can use different name - but remember to keep it consistent for all functions
-+ *db_method* specify which database method you want to use. At this moment there are two methods for databases: `gsheet` and `sqlite`
-+ *mail_method* specify which e-mailing method you want to use. At this moment there are two methods fo e-mailing: `gmailr` and `emayili`
-+ *appname* is the character string with title of your application
-+ *appaddress* is the character string with URL address of your application for your users to navigate from their confirmation mail
-+ *lang* argument defaults to "en". It changes the language of your modules. Currently only one other option is available: "pl" for Polish
-
-##### 4.2.1.2 Arguments specific to database methods
-
-+ *gsheet_file* is the character string containing your googlesheets ID. Argument is mandatory when using `gsheet` database method
-+ *sqlite_db* is the character string specifying path to your sqlite database path. Argument is mandatory when using `sqlite`
-
-##### 4.2.1.3 Arguments specific to e-mail methods
-
-+ *gmailr_user* is the character string of your gmail address that you wish the application to use for automatic e-mails. Used in `gmailr` mailing method
-
-+ *emayili_user* is the character string of your email address, that is also used to log into your mailbox. Used in `emayili` mailing method, as the ones below. 
-+ *emayili_password* is the character string of password that you use to log into your mailbox
-+ *emayili_host* is the character string specifying the sending host of your mailbox (fe. `smtp.gmail.com` for gmail mailbox)
-+ *emayili_port* is the character string containing the sending port of your mailbox (fe. `465` for gmail mailbox)
-
-
-#### 4.2.2. Values
-
-`login_server` function creates `reactiveValues` object containing three elements, describing the status of current sessions' active user.
-
-+ *is_logged* returns a boolean indicating, if the user is anonymous (`FALSE`) or logged in (`TRUE`)
-+ *user_id* returns a character string containing the ID specyfied during registration and used to log-in. When `is_logged = F` it countains the timestamp of time when the anonymous user began his session. It can be used to link specific activities and outputs generated by the same person.
-+ *user_mail* returns a character string containing the email address provided during registration. It can be used for automatic sending the user some kind of e-mails (fe. containing the results of some analysis after using your ShinyApp). When `is_logged = F` it contains the empty string value (`""`)
-
-Additionally, it stores the tibbles of `user_db` and `reset_db` content under `session$userData` inside `reactive_db` object of `reactiveValues` class.
-
-```{r active_user example, eval = FALSE}
-# save the output in the server function of you application
-
-auth <- login_server(...)
-
-# you can check if currently the user is logged
-
-isTRUE(auth$is_logged)
-
-# moreover, you can check what is the ID and mail of currently logged user
-
-user_data <- list(
-  ID = auth$user_id,
-  mail = auth$user_mail
-)
+```{r, eval = F}
+server <- function(input, output, session) {
+  
+  mailConnector <- RegLogGmailrConnector$new(
+    from = "email@gmail.com"
+  )
+  
+}
 ```
 
-## 5. Examples
+## 6. Setup *RegLogServer*
 
-Examples of `shiny.reglog` implementation with varying methods for database and e-mail implementation both in base `shiny` and `shinydashboard` are contained within `examples` folder.
+All of **RegLog system** is generated and maintained by the object of class 
+`RegLogSystem` in unison with *dbConnector* and *mailConnector* of your
+choosing.
 
-## 6. User feedback
+Its setup is pretty straightforward:
 
-As it is package in very early development, please give any feedback after using it. Open new *Issues* or mail any suggestions to [my e-mail](mailto:statismike@gmail.com?subject=shiny.reglog)
+```{r, eval = F}
+server <- function(input, output, session) {
+  
+  RegLog <- RegLogServer$new(
+    # both of these elements need to be defined firstly or in this call
+    dbConnector = dbConnector,
+    mailConnector = mailConnector
+  )
+}
+```
+
+Besides these two mandatory arguments, there are also some additional arguments
+to be used for customization.
+
+- `app_name`: your application name. It will be used within emails send to users.
+If not specified, the name of the folder containing you application files will be
+used.
+- `app_address`: URL address to your application. It will be used within emails
+send to users. If not specified, the email address contained within *session$clientData*
+will be used.
+- `lang`: language to be used in UI elements and send emails. Defaults to 'en'
+for *English*. Currently also 'pl' for *Polish* is supported. Besides that, you
+can also specify 'i18' to generate only text indicators - external methods can
+be used to parse the message in given language can be then used (eg. `shiny.i18n`
+package).
+- `custom_txts`: named list with character strings of custom texts to be used
+by the system. For more information call `?RegLog_txt`.
+- `use_modals`: either boolean indicating if all default modalDialogs should be shown
+or named list of `FALSE` values inhibiting specific ones. For more information
+read **RegLogServer object fields and methods**, section **Message**. All modals
+are listed there alongside conditions of their appearance.
+- `module_id`: character string with ID of the module. Recommended to leave
+as default - unless if that name is taken by another module.
+
+### 6.1. Retrieve information from **RegLogServer**
+
+After setting up and assigning the object your application logic can observe
+status of user in current session by public fields containing *reactiveVal*
+objects.
+
+```{r, eval = F}
+## if you assigned the RegLogServer to 'RegLog' object, as in examples above:
+
+# boolean showing if the user is logged in:
+RegLog$is_logged()
+
+# character vector containing user ID: either specific to the user if logged
+# in, or unique anonymous ID generated with 'uuid::UUIDgenerate()'
+RegLog$user_id()
+
+# character vector containing user email if logged in
+RegLog$user_mail()
+
+# integer of the account ID inside the database - for identifying the logged user
+# across relative tables
+RegLog$account_id()
+```
+
+>There are much more to be learned about RegLogServer object - for more information
+read **RegLogServer object fields and methods**. Above information is enough
+for basic setup.
+
+## 7. Insert UI elements
+
+Every part of the UI is generated by *RegLogServer*, and could be accessed by
+provided functions containing `tagList`.
+
+### 7.1. Login UI
+
+Providing GUI to allow logging in if user is already registered to your 
+application.
+
+<img src="man/figures/login_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;">
+
+```{r, eval = F}
+RegLog_login_UI()
+```
+
+### 7.2. Register UI
+
+Providing GUI for registering new account.
+
+- Both user ID and e-mail needs to be unique within the databasa
+- user ID need to consist of 8-30 alphanumeric characters
+- user password need to consist of 8-30 characters. It needs to contain characters
+of at least 3 of 4 following groups:
+  - small letter
+  - big letter
+  - number
+  - special character
+- user email is also validated
+
+After account registration, user will receive confirmation email on their password.
+
+<img src="man/figures/register_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;">
+
+```{r, eval = F}
+RegLog_register_UI()
+```
+
+### 7.3. Credentials edit UI
+
+Providing GUI for changing credentials.
+
+- user need to be logged in to change their data
+- to confirm their identity, they need to provide their current password
+- user can change either during one interaction:
+   - password
+   - user ID and/or e-mail 
+- same checks as in register procedure are conducted
+- after user ID and/or e-mail change user will receive confirmation e-mail
+
+<img src="man/figures/credsEdit_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;">
+
+```{r, eval = F}
+RegLog_credsEdit_UI()
+```
+
+### 7.4. Reset password UI
+
+Providing GUI for password reset.
+
+- in the case of user forgetting their password, they can reset it by providing
+their user ID
+- mail message containing reset code will be sent to the user
+- inputing the reset code from e-mail will allow password change
+- same password check for new password is conducted as in register procedure
+
+<img src="man/figures/resetPass_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;">
+
+```{r, eval = F}
+RegLog_resetPass_UI()
+```
+
+## 8. Additional information
+
+- You can access demonstration shinyApp with showcase mode on 
+[shinyapps.io](https://statismik.shinyapps.io/shinyreglog_demo/){target="_blank"}
+- You can run interactive demo in your own RStudio by using `RegLogDemo()` 
+function. It will use mocked *mailConnector* by default or *RegLogEmayiliConnector* 
+if you provide it arguments required by `emayili` backend.
+- For more information read vignettes.
+

@@ -103,7 +103,7 @@ emayili_reglog_mail_handler <- function(self, private, message) {
 #' - email
 #' - mail_subject
 #' - mail_body
-#' - mail_attachment (optional)
+#' - mail_attachment (optional, needs to be of class `mailMessageAttachment`)
 #' 
 #' @return `RegLogEmayiliConnector` message.
 #' @family mail handler functions
@@ -127,9 +127,17 @@ emayili_custom_mail_handler <- function(self, private, message) {
     emayili::subject(message$data$mail_subject) |>
     emayili::html(content = message$data$mail_body)
   
-  if (!is.null(message$data$mail_attachment)) {
+  if (!is.null(message$data$mail_attachment) &&
+      isTRUE(class(message$data$mail_attachment) == "mailMessageAttachment")) {
     mail <- mail |>
-      emayili::attachment(message$data$mail_attachment)
+      emayili::attachment(
+        path = message$data$mail_attachment$filepath,
+        type = if(!is.null(message$data$mail_attachment$filetype))
+          message$data$mail_attachment$filetype else NA,
+        cid = if(!is.null(message$data$mail_attachment$cid))
+          message$data$mail_attachment$cid else NA,
+        name = if(!is.null(message$data$mail_attachment$filename))
+          message$data$mail_attachment$filename else NA)
   }
   
   # and send it!
@@ -267,9 +275,9 @@ gmailr_reglog_mail_handler <- function(self, private, message) {
 #' - email
 #' - mail_subject
 #' - mail_body
-#' - mail_attachment (optional)
+#' - mail_attachment (optional, needs to be of class `mailMessageAttachment`)
 #' 
-#' @return `RegLogEmayiliConnector` message.
+#' @return `RegLogGmailrConnector` message.
 #' @family mail handler functions
 #' @concept mail_handler
 #' @keywords internal
@@ -291,14 +299,18 @@ gmailr_custom_mail_handler <- function(self, private, message) {
     gmailr::gm_subject(message$data$mail_subject) |>
     gmailr::gm_html_body(body = message$data$mail_body)
   
-  if (!is.null(message$data$mail_attachment)) {
+  if (!is.null(message$data$mail_attachment) &&
+      isTRUE(class(message$data$mail_attachment) == "mailMessageAttachment")) {
     mail <- mail |>
-      gmailr::gm_attach_file(message$data$mail_attachment)
+      gmailr::gm_attach_file(
+        filename = message$data$mail_attachment$filepath,
+        type = message$data$mail_attachment$filetype,
+        id = message$data$mail_attachment$cid)
   }
   
   # and send it!
   message_to_send <- tryCatch({
-    private$smtp(mail)
+    gmailr::send_message(mail)
     
     RegLogConnectorMessage(
       message$type,
@@ -324,5 +336,34 @@ gmailr_custom_mail_handler <- function(self, private, message) {
   
   # send the RegLogConnectorMessage
   return(message_to_send)
+  
+}
+
+#' Mail attachment data to be handled by mailConnector via `custom_mail` RegLogConnectorMessage
+#' 
+#' @param filepath path to the file to be attached
+#' @param filename name of the file to be used (supported by RegLogEmayiliConnector)
+#' @param cid content ID to be used to access in email body
+#' @param filetype mime type of the attached file
+#' @return mailMessageAttachment object 
+#' @export
+#' 
+
+mailMessageAttachment <- function(
+  filepath,
+  filename = NULL,
+  cid = NULL,
+  filetype = NULL
+) {
+  
+  attachment <- list(
+    filepath = filepath,
+    filename = filename,
+    cid = cid
+  )
+  
+  class(attachment) <- "mailMessageAttachment"
+  
+  return(attachment)
   
 }

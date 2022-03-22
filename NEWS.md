@@ -23,6 +23,9 @@ or `RegLogGmailrConnector`).
   of the application accessing the `RegLogServer$message()` reactiveVal.
   - default *modalDialogs* can now be inhibited - either all together (`use_modals = F`)
   or specifically (providing named list of `FALSE` bool values to `use_modals` argument)
+  - `is_logged`, `user_id`, `user_mail` values are now kept inside *reactiveVal*
+  fields, so you need to add `()` to access their values (eg. `RegLogServer$user_id()`).
+  Also, `account_id` value is added for logged users.
 - the improved presentation of password reset procedure don't make it necessary
 for invoking `modalDialog`. It makes the UI more flexible for this process more
 flexible.

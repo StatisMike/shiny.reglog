@@ -1,5 +1,4 @@
 #' @docType class
-#'
 #' @title Login and registration moduleServer
 #' @description RegLogServer is an R6 class to use for handling the whole
 #' backend of login and registration component of your shinyApp.
@@ -114,8 +113,6 @@ RegLogServer <- R6::R6Class(
         if (!"list" %in% class(custom_txts) || is.null(names(custom_txts)) ||
             sum(sapply(names(custom_txts), \(x) nchar(x) == 0)) > 0) {
           stop("Object provided to 'custom_txts' argument should be a named list")
-        } else { # get custom txts into named list
-
         }
       }
       
@@ -175,7 +172,6 @@ RegLogServer <- R6::R6Class(
       return(binded_logs)
       
     }
-    
   ),
   
   private = list(
@@ -197,3 +193,8 @@ RegLogServer <- R6::R6Class(
     }
   )
 )
+
+#' @name RegLogServer
+#' @rdname RegLogServer
+#' @example examples/RegLogServer.R
+NULL

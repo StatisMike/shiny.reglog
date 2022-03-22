@@ -18,11 +18,11 @@ gmailr_custom_mail_handler(self, private, message)
 \item email
 \item mail_subject
 \item mail_body
-\item mail_attachment (optional)
+\item mail_attachment (optional, needs to be of class \code{mailMessageAttachment})
 }}
 }
 \value{
-\code{RegLogEmayiliConnector} message.
+\code{RegLogGmailrConnector} message.
 }
 \description{
 Default handler function parsing and sending email.

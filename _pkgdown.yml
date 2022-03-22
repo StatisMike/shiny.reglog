@@ -50,6 +50,7 @@ reference:
 - subtitle: Various utility functions
 - contents:
   - db_timestamp
+  - mailMessageAttachment
 - subtitle: Default handler functions
   desc: >- 
    All of these are used only internally and aren't exported. You can read these

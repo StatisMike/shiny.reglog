@@ -37,7 +37,8 @@ usage is, that:
   users of your ShinyApp.
      - *RegLogEmayiliConnector*
      - *RegLogGmailConnector*
-  - vanilla *RegLogConnector*, that you can use to create your own *Connector*.
+  - vanilla *RegLogConnector*, that you can use to create your own *Connector*
+  class with inheritance.
 - R6 objects after initialization have public elements, that can be accessed
   with `$`. They can be either *fields*, holding some values, or *methods*
   containing functions.
@@ -108,6 +109,20 @@ it contains the email that is currently associated with their *user_id*. Otherwi
 it contains empty character string (`""`).
 ```{r user_mail, eval = F}
 RegLogServer$user_mail()
+```
+
+### Account ID of the logged user
+
+`account_id` field (character string): unique account ID. It provides the simple
+way to relate to the specific logged users in other, custom tables in
+the database (eg.: settings saved for specific users). 
+
+- value of the **id** column in the *account* table for **SQL databases** 
+- **row number - 1** (header) in the *account* spreadsheet for **googlesheet 
+database**.
+
+```{r account_id, eval=F}
+RegLogServer$account_id()
 ```
 
 ## User logout
