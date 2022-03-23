@@ -18,10 +18,12 @@ server <- function(input, output, session) {
   
   mailConnector <- RegLogEmayiliConnector$new(
     from = "statismike@gmail.com",
-    smtp = emayili::gmail(
+    smtp = if (identical(Sys.getenv("NOT_CRAN"), "true")) { 
+      emayili::gmail(
       username = "statismike@gmail.com",
-      password = Sys.getenv("STATISMIKE_GMAIL_PASS")
-    ), custom_mails = custom_emails
+      password = Sys.getenv("STATISMIKE_GMAIL_PASS"))
+      } else { emayili::smtpbucket() }, 
+    custom_mails = custom_emails
   )
 }
 

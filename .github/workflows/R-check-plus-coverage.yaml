@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, master]
 
-name: R-CMD-check
+name: R-check-plus-coverage
 
 jobs:
   R-CMD-check:
@@ -22,7 +22,6 @@ jobs:
           - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -50,3 +49,30 @@ jobs:
           extra-packages: rcmdcheck
 
       - uses: r-lib/actions/check-r-package@v1
+  
+  test-coverage:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      G_SERVICE_ACCOUNT: ${{ secrets.G_SERVICE_ACCOUNT }}
+      G_SERVICE_MAIL: ${{ secrets.G_SERVICE_MAIL }}
+      GMAILR_EMAIL: ${{ secrets.GMAILR_EMAIL }}
+      GMAILR_APP: ${{ secrets.GMAILR_APP }}
+      REGLOG_SHEET: ${{ secrets.REGLOG_SHEET }}
+      STATISMIKE_GMAIL_PASS: ${{ secrets.STATISMIKE_GMAIL_PASS }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-r@v1
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v1
+        with:
+          extra-packages: covr
+          needs: shinytesting
+
+      - name: Test coverage
+        run: covr::codecov()
+        shell: Rscript {0}
