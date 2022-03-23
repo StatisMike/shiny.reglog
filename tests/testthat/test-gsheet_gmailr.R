@@ -1,3 +1,7 @@
+# long-running test - skip on CRAN
+
+skip_on_cran()
+
 # auth #
 
 googlesheets4::gs4_auth(email = Sys.getenv("G_SERVICE_MAIL"),

@@ -31,11 +31,10 @@ Imports:
     stringi,
     uuid
 Suggests:
-    withr,
-    devtools,
+    covr,
     DBI,
-    testthat (>= 3.0.0),
     DT,
+    devtools,
     emayili,
     gmailr,
     googledrive,
@@ -43,9 +42,8 @@ Suggests:
     knitr,
     rmarkdown,
     RSQLite,
-    shinydashboard,
-    shinytest,
-    covr
+    testthat (>= 3.0.0)
+Config/Needs/shinytesting: devtools, shinytest, withr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -1,4 +1,6 @@
-# auth #
+# long-running test - skip on CRAN
+
+skip_on_cran()
 
 # create SQLite database
 temp_db <- tempfile(fileext = ".sqlite")

@@ -15,9 +15,14 @@ checks](https://cranchecks.info/badges/worst/shiny.reglog)](https://cranchecks.i
 [![](http://cranlogs.r-pkg.org/badges/grand-total/shiny.reglog?color=blue)](https://cran.r-project.org/package=shiny.reglog)
 [![Codecov test
 coverage](https://codecov.io/gh/StatisMike/shiny.reglog/branch/master/graph/badge.svg)](https://app.codecov.io/gh/StatisMike/shiny.reglog?branch=master)
+[![R-CMD-check](https://github.com/StatisMike/shiny.reglog/workflows/R-CMD-check/badge.svg)](https://github.com/StatisMike/shiny.reglog/actions)
 <!-- badges: end -->
 
->This documentation regards the newest version not yet released on CRAN. It is highly recommended to use this one if you are a newcomer to the RegLog.
+> These informations are relevant to the current release, which comes
+> with some changes to underlying logic. It isn’t currently submitted to
+> CRAN. If you are looking for information about version present at
+> CRAN, check its
+> <a href="https://github.com/cran/shiny.reglog" target="_blank">mirror</a>
 
 ## 1. Introduction
 
@@ -59,12 +64,25 @@ The `emayili` is recommended for most applications. `gmailr` can be
 useful if you already have application registered and authorized with
 mail sending scope.
 
-Currently the package is after major change in its code - basically full
-rewrite to allow more security, usage of more databases and more
-customization. Past functions are still available in current version,
-but will generate deprecation warnings.
+> Currently the package is after major change in its code - basically
+> full rewrite to allow more security, usage of more databases and more
+> customization. Past functions are still available in current version,
+> but will generate deprecation warnings.
 
-## 2. Basic structure
+## 2. Additional information
+
+Basic information about *shiny.reglog* is contained within this
+document. There are some more resources to learn about its usage:
+
+-   You can access demonstration shinyApp with showcase mode on
+    <a href="https://statismik.shinyapps.io/shinyreglog_demo/" target="_blank">shinyapps.io</a>
+-   You can run interactive demo in your own RStudio by using
+    `RegLogDemo()` function. It will use mocked *mailConnector* by
+    default or *RegLogEmayiliConnector* if you provide it arguments
+    required by `emayili` backend.
+-   For more information read vignettes.
+
+## 3. Basic structure
 
 There are three main objects that are to be used when implementing
 *RegLog* system for login and registration in your ShinyApp. All of them
@@ -80,7 +98,7 @@ need to be defined in the *server* code.
     and reactivity of the login and registration system. It uses
     *dbConnector* and *mailConnector* for actions external of R.
 
-## 3. Installation
+## 4. Installation
 
 You can install this version of shiny.reglog from GitHub with:
 
@@ -93,7 +111,7 @@ devtools::install_github("StatisMike/shiny.reglog")
 # install.packages("shiny.reglog")
 ```
 
-## 4. Setting up *dbConnector*
+## 5. Setting up *dbConnector*
 
 You need to create *dbConnector* object to be used by the *RegLogServer*
 to write and read user data from the database.
@@ -102,7 +120,7 @@ To set-up the database for *RegLog* system, you can use helper functions
 included in this package. They are tested and guarantee compatible
 structure of the data.
 
-### 4.1 Googlesheet database method (*RegLogGsheetConnector*)
+### 5.1 Googlesheet database method (*RegLogGsheetConnector*)
 
 1.  Create googlesheet file on your googledrive to support database. You
     can use `gsheet_tables_create()` function, which by default creates
@@ -152,7 +170,7 @@ server <- function(input, output, session) {
 }
 ```
 
-### 4.2 `DBI` compatible SQL database (*RegLogDBIConnector*)
+### 5.2 `DBI` compatible SQL database (*RegLogDBIConnector*)
 
 *RegLog system* out of the box supports *SQLite*, *MySQL*, *MariaDB* and
 *PostgreSQL* databases. You can use `DBI_tables_create` function, which
@@ -209,13 +227,13 @@ server <- function(input, output, session) {
 }
 ```
 
-## 5. Setting up mail connectors
+## 6. Setting up mail connectors
 
 You need to create *mailConnector* object to be used by the
 *RegLogServer* to write and read user data from the database. There are
 two classes defined to use `emayili` or `gmailr` packages as backend.
 
-### 5.1. Using `emayili` (*RegLogEmayiliConnector*)
+### 6.1. Using `emayili` (*RegLogEmayiliConnector*)
 
 This backend is recommended to use. It supports many SMTP servers,
 mostly with username and password based identification.
@@ -232,7 +250,7 @@ server <- function(input, output, session) {
 }
 ```
 
-### 5.2. Using `gmailr` (*RegLogGmailrConnector*)
+### 6.2. Using `gmailr` (*RegLogGmailrConnector*)
 
 This backend is only viable if you have an app registered in Google
 Cloud Console. It authorizes and sends email via gmail REST API, needing
@@ -248,7 +266,7 @@ server <- function(input, output, session) {
 }
 ```
 
-## 6. Setup *RegLogServer*
+## 7. Setup *RegLogServer*
 
 All of **RegLog system** is generated and maintained by the object of
 class `RegLogSystem` in unison with *dbConnector* and *mailConnector* of
@@ -291,7 +309,7 @@ arguments to be used for customization.
 -   `module_id`: character string with ID of the module. Recommended to
     leave as default - unless if that name is taken by another module.
 
-### 6.1. Retrieve information from **RegLogServer**
+### 7.1. Retrieve information from **RegLogServer**
 
 After setting up and assigning the object your application logic can
 observe status of user in current session by public fields containing
@@ -319,12 +337,12 @@ RegLog$account_id()
 > information read **RegLogServer object fields and methods**. Above
 > information is enough for basic setup.
 
-## 7. Insert UI elements
+## 8. Insert UI elements
 
 Every part of the UI is generated by *RegLogServer*, and could be
 accessed by provided functions containing `tagList`.
 
-### 7.1. Login UI
+### 8.1. Login UI
 
 Providing GUI to allow logging in if user is already registered to your
 application.
@@ -335,7 +353,7 @@ application.
 RegLog_login_UI()
 ```
 
-### 7.2. Register UI
+### 8.2. Register UI
 
 Providing GUI for registering new account.
 
@@ -358,7 +376,7 @@ their password.
 RegLog_register_UI()
 ```
 
-### 7.3. Credentials edit UI
+### 8.3. Credentials edit UI
 
 Providing GUI for changing credentials.
 
@@ -378,7 +396,7 @@ Providing GUI for changing credentials.
 RegLog_credsEdit_UI()
 ```
 
-### 7.4. Reset password UI
+### 8.4. Reset password UI
 
 Providing GUI for password reset.
 
@@ -394,13 +412,3 @@ Providing GUI for password reset.
 ``` r
 RegLog_resetPass_UI()
 ```
-
-## 8. Additional information
-
--   You can access demonstration shinyApp with showcase mode on
-    <a href="https://statismik.shinyapps.io/shinyreglog_demo/" target="_blank">shinyapps.io</a>
--   You can run interactive demo in your own RStudio by using
-    `RegLogDemo()` function. It will use mocked *mailConnector* by
-    default or *RegLogEmayiliConnector* if you provide it arguments
-    required by `emayili` backend.
--   For more information read vignettes.
