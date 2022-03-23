@@ -43,7 +43,6 @@ Suggests:
     rmarkdown,
     RSQLite,
     testthat (>= 3.0.0)
-
 Config/Needs/shinytesting: devtools, shinytest, withr
 License: MIT + file LICENSE
 Encoding: UTF-8
