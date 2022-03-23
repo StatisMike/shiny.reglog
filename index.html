@@ -85,6 +85,9 @@
 </h1></div>
 <!-- badges: start -->
 
+<blockquote>
+<p>These informations are relevant to the current release, which comes with some changes to underlying logic. It isn’t currently submitted to CRAN. If you are looking for information about version present at CRAN, check its <a href="https://github.com/cran/shiny.reglog" target="_blank" class="external-link">mirror</a></p>
+</blockquote>
 <div class="section level2">
 <h2 id="1-introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#1-introduction"></a>
 </h2>
@@ -95,10 +98,23 @@
 <p>It is highly recommended to use one of the <code>DBI</code>-supported databases, though. It is much more optimized and secure, as the database is never loaded as a whole into the memory, but queried as needed. <em>googlesheets</em> database is much easier to set-up, but it shouldn’t be used when you are expecting big userbase.</p>
 <p>Registration, credentials edit and password reset procedures programmatically send email to the user of your ShinyApp - to welcome them, inform about change of their user ID and/or email and to give them a reset code to reset their password. <em>shiny.reglog</em> supports two methods of email sending: via <code>emayili</code> or <code>gmailr</code> packages. Both of them have their pros and cons, depending on your accesses: <code>emayili</code> allows for usage of many SMTP servers, while <code>gmailr</code> allowing using <em>gmail</em> messaging via Google REST API.</p>
 <p>The <code>emayili</code> is recommended for most applications. <code>gmailr</code> can be useful if you already have application registered and authorized with mail sending scope.</p>
+<blockquote>
 <p>Currently the package is after major change in its code - basically full rewrite to allow more security, usage of more databases and more customization. Past functions are still available in current version, but will generate deprecation warnings.</p>
+</blockquote>
 </div>
 <div class="section level2">
-<h2 id="2-basic-structure">2. Basic structure<a class="anchor" aria-label="anchor" href="#2-basic-structure"></a>
+<h2 id="2-additional-information">2. Additional information<a class="anchor" aria-label="anchor" href="#2-additional-information"></a>
+</h2>
+<p>Basic information about <em>shiny.reglog</em> is contained within this document. There are some more resources to learn about its usage:</p>
+<ul>
+<li>You can access demonstration shinyApp with showcase mode on <a href="https://statismik.shinyapps.io/shinyreglog_demo/" target="_blank" class="external-link">shinyapps.io</a>
+</li>
+<li>You can run interactive demo in your own RStudio by using <code><a href="reference/RegLogDemo.html">RegLogDemo()</a></code> function. It will use mocked <em>mailConnector</em> by default or <em>RegLogEmayiliConnector</em> if you provide it arguments required by <code>emayili</code> backend.</li>
+<li>For more information read vignettes.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="3-basic-structure">3. Basic structure<a class="anchor" aria-label="anchor" href="#3-basic-structure"></a>
 </h2>
 <p>There are three main objects that are to be used when implementing <em>RegLog</em> system for login and registration in your ShinyApp. All of them need to be defined in the <em>server</em> code.</p>
 <ul>
@@ -111,7 +127,7 @@
 </ul>
 </div>
 <div class="section level2">
-<h2 id="3-installation">3. Installation<a class="anchor" aria-label="anchor" href="#3-installation"></a>
+<h2 id="4-installation">4. Installation<a class="anchor" aria-label="anchor" href="#4-installation"></a>
 </h2>
 <p>You can install this version of shiny.reglog from GitHub with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -123,13 +139,13 @@
 <span class="co"># install.packages("shiny.reglog")</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="4-setting-up-dbconnector">4. Setting up <em>dbConnector</em>
-<a class="anchor" aria-label="anchor" href="#4-setting-up-dbconnector"></a>
+<h2 id="5-setting-up-dbconnector">5. Setting up <em>dbConnector</em>
+<a class="anchor" aria-label="anchor" href="#5-setting-up-dbconnector"></a>
 </h2>
 <p>You need to create <em>dbConnector</em> object to be used by the <em>RegLogServer</em> to write and read user data from the database.</p>
 <p>To set-up the database for <em>RegLog</em> system, you can use helper functions included in this package. They are tested and guarantee compatible structure of the data.</p>
 <div class="section level3">
-<h3 id="41-googlesheet-database-method-regloggsheetconnector">4.1 Googlesheet database method (<em>RegLogGsheetConnector</em>)<a class="anchor" aria-label="anchor" href="#41-googlesheet-database-method-regloggsheetconnector"></a>
+<h3 id="51-googlesheet-database-method-regloggsheetconnector">5.1 Googlesheet database method (<em>RegLogGsheetConnector</em>)<a class="anchor" aria-label="anchor" href="#51-googlesheet-database-method-regloggsheetconnector"></a>
 </h3>
 <ol style="list-style-type: decimal">
 <li>Create googlesheet file on your googledrive to support database. You can use <code><a href="reference/gsheet_tables_create.html">gsheet_tables_create()</a></code> function, which by default creates empty spreadsheets configured correctly.</li>
@@ -169,7 +185,7 @@
 <span class="op">}</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="42-dbi-compatible-sql-database-reglogdbiconnector">4.2 <code>DBI</code> compatible SQL database (<em>RegLogDBIConnector</em>)<a class="anchor" aria-label="anchor" href="#42-dbi-compatible-sql-database-reglogdbiconnector"></a>
+<h3 id="52-dbi-compatible-sql-database-reglogdbiconnector">5.2 <code>DBI</code> compatible SQL database (<em>RegLogDBIConnector</em>)<a class="anchor" aria-label="anchor" href="#52-dbi-compatible-sql-database-reglogdbiconnector"></a>
 </h3>
 <p><em>RegLog system</em> out of the box supports <em>SQLite</em>, <em>MySQL</em>, <em>MariaDB</em> and <em>PostgreSQL</em> databases. You can use <code>DBI_tables_create</code> function, which by default creates empty tables configured correctly.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -218,11 +234,11 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="5-setting-up-mail-connectors">5. Setting up mail connectors<a class="anchor" aria-label="anchor" href="#5-setting-up-mail-connectors"></a>
+<h2 id="6-setting-up-mail-connectors">6. Setting up mail connectors<a class="anchor" aria-label="anchor" href="#6-setting-up-mail-connectors"></a>
 </h2>
 <p>You need to create <em>mailConnector</em> object to be used by the <em>RegLogServer</em> to write and read user data from the database. There are two classes defined to use <code>emayili</code> or <code>gmailr</code> packages as backend.</p>
 <div class="section level3">
-<h3 id="51-using-emayili-reglogemayiliconnector">5.1. Using <code>emayili</code> (<em>RegLogEmayiliConnector</em>)<a class="anchor" aria-label="anchor" href="#51-using-emayili-reglogemayiliconnector"></a>
+<h3 id="61-using-emayili-reglogemayiliconnector">6.1. Using <code>emayili</code> (<em>RegLogEmayiliConnector</em>)<a class="anchor" aria-label="anchor" href="#61-using-emayili-reglogemayiliconnector"></a>
 </h3>
 <p>This backend is recommended to use. It supports many SMTP servers, mostly with username and password based identification.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -237,7 +253,7 @@
 <span class="op">}</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="52-using-gmailr-regloggmailrconnector">5.2. Using <code>gmailr</code> (<em>RegLogGmailrConnector</em>)<a class="anchor" aria-label="anchor" href="#52-using-gmailr-regloggmailrconnector"></a>
+<h3 id="62-using-gmailr-regloggmailrconnector">6.2. Using <code>gmailr</code> (<em>RegLogGmailrConnector</em>)<a class="anchor" aria-label="anchor" href="#62-using-gmailr-regloggmailrconnector"></a>
 </h3>
 <p>This backend is only viable if you have an app registered in Google Cloud Console. It authorizes and sends email via gmail REST API, needing Oauth authorization with high scopes.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -251,8 +267,8 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="6-setup-reglogserver">6. Setup <em>RegLogServer</em>
-<a class="anchor" aria-label="anchor" href="#6-setup-reglogserver"></a>
+<h2 id="7-setup-reglogserver">7. Setup <em>RegLogServer</em>
+<a class="anchor" aria-label="anchor" href="#7-setup-reglogserver"></a>
 </h2>
 <p>All of <strong>RegLog system</strong> is generated and maintained by the object of class <code>RegLogSystem</code> in unison with <em>dbConnector</em> and <em>mailConnector</em> of your choosing.</p>
 <p>Its setup is pretty straightforward:</p>
@@ -281,8 +297,8 @@
 <code>module_id</code>: character string with ID of the module. Recommended to leave as default - unless if that name is taken by another module.</li>
 </ul>
 <div class="section level3">
-<h3 id="61-retrieve-information-from-reglogserver">6.1. Retrieve information from <strong>RegLogServer</strong>
-<a class="anchor" aria-label="anchor" href="#61-retrieve-information-from-reglogserver"></a>
+<h3 id="71-retrieve-information-from-reglogserver">7.1. Retrieve information from <strong>RegLogServer</strong>
+<a class="anchor" aria-label="anchor" href="#71-retrieve-information-from-reglogserver"></a>
 </h3>
 <p>After setting up and assigning the object your application logic can observe status of user in current session by public fields containing <em>reactiveVal</em> objects.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -307,11 +323,11 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="7-insert-ui-elements">7. Insert UI elements<a class="anchor" aria-label="anchor" href="#7-insert-ui-elements"></a>
+<h2 id="8-insert-ui-elements">8. Insert UI elements<a class="anchor" aria-label="anchor" href="#8-insert-ui-elements"></a>
 </h2>
 <p>Every part of the UI is generated by <em>RegLogServer</em>, and could be accessed by provided functions containing <code>tagList</code>.</p>
 <div class="section level3">
-<h3 id="71-login-ui">7.1. Login UI<a class="anchor" aria-label="anchor" href="#71-login-ui"></a>
+<h3 id="81-login-ui">8.1. Login UI<a class="anchor" aria-label="anchor" href="#81-login-ui"></a>
 </h3>
 <p>Providing GUI to allow logging in if user is already registered to your application.</p>
 <p><img src="reference/figures/login_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
@@ -319,7 +335,7 @@
 <code class="sourceCode R"><span class="fu"><a href="reference/RegLog_login_UI.html">RegLog_login_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="72-register-ui">7.2. Register UI<a class="anchor" aria-label="anchor" href="#72-register-ui"></a>
+<h3 id="82-register-ui">8.2. Register UI<a class="anchor" aria-label="anchor" href="#82-register-ui"></a>
 </h3>
 <p>Providing GUI for registering new account.</p>
 <ul>
@@ -341,7 +357,7 @@
 <code class="sourceCode R"><span class="fu"><a href="reference/RegLog_register_UI.html">RegLog_register_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="73-credentials-edit-ui">7.3. Credentials edit UI<a class="anchor" aria-label="anchor" href="#73-credentials-edit-ui"></a>
+<h3 id="83-credentials-edit-ui">8.3. Credentials edit UI<a class="anchor" aria-label="anchor" href="#83-credentials-edit-ui"></a>
 </h3>
 <p>Providing GUI for changing credentials.</p>
 <ul>
@@ -361,7 +377,7 @@
 <code class="sourceCode R"><span class="fu"><a href="reference/RegLog_credsEdit_UI.html">RegLog_credsEdit_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="74-reset-password-ui">7.4. Reset password UI<a class="anchor" aria-label="anchor" href="#74-reset-password-ui"></a>
+<h3 id="84-reset-password-ui">8.4. Reset password UI<a class="anchor" aria-label="anchor" href="#84-reset-password-ui"></a>
 </h3>
 <p>Providing GUI for password reset.</p>
 <ul>
@@ -374,16 +390,6 @@
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/RegLog_resetPass_UI.html">RegLog_resetPass_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="8-additional-information">8. Additional information<a class="anchor" aria-label="anchor" href="#8-additional-information"></a>
-</h2>
-<ul>
-<li>You can access demonstration shinyApp with showcase mode on <a href="https://statismik.shinyapps.io/shinyreglog_demo/" target="_blank" class="external-link">shinyapps.io</a>
-</li>
-<li>You can run interactive demo in your own RStudio by using <code><a href="reference/RegLogDemo.html">RegLogDemo()</a></code> function. It will use mocked <em>mailConnector</em> by default or <em>RegLogEmayiliConnector</em> if you provide it arguments required by <code>emayili</code> backend.</li>
-<li>For more information read vignettes.</li>
-</ul>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -425,6 +431,7 @@
 <li><a href="https://cran.r-project.org/package=shiny.reglog" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/last-month/shiny.reglog?color=green"></a></li>
 <li><a href="https://cran.r-project.org/package=shiny.reglog" class="external-link"><img src="http://cranlogs.r-pkg.org/badges/grand-total/shiny.reglog?color=blue"></a></li>
 <li><a href="https://app.codecov.io/gh/StatisMike/shiny.reglog?branch=master" class="external-link"><img src="https://codecov.io/gh/StatisMike/shiny.reglog/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/StatisMike/shiny.reglog/actions" class="external-link"><img src="https://github.com/StatisMike/shiny.reglog/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 
