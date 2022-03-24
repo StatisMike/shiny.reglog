@@ -134,7 +134,7 @@
 <p><code>user_id</code> field (character string): unique user ID. When the user isn’t logged it contains generated at the start of the session (or after logout) <em>Universally Unique Identifier</em> (with the use of <code><a href="https://rdrr.io/pkg/uuid/man/UUIDgenerate.html" class="external-link">uuid::UUIDgenerate()</a></code>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">uuid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/uuid/man/UUIDgenerate.html" class="external-link">UUIDgenerate</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] "1552a946-9e32-42f9-99db-12f490a90875"</span></code></pre></div>
+<span class="co">#&gt; [1] "c4179971-40ee-44dc-bfb2-c39a9b02fd45"</span></code></pre></div>
 <p>After login it contains the username that the user have chosen during registration procedure.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">user_id</span><span class="op">(</span><span class="op">)</span></code></pre></div>

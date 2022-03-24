@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   RegLogServer_object: RegLogServer_object.html
   create_custom_handlers: create_custom_handlers.html
-last_built: 2022-03-23T19:27Z
+last_built: 2022-03-24T17:40Z
 urls:
   reference: https://statismike.github.io/shiny.reglog/reference
   article: https://statismike.github.io/shiny.reglog/articles
