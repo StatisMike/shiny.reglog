@@ -18,12 +18,6 @@ coverage](https://codecov.io/gh/StatisMike/shiny.reglog/branch/master/graph/badg
 [![R-CMD-check](https://github.com/StatisMike/shiny.reglog/workflows/R-CMD-check/badge.svg)](https://github.com/StatisMike/shiny.reglog/actions)
 <!-- badges: end -->
 
-> These informations are relevant to the current release, which comes
-> with some changes to underlying logic. It isn’t currently submitted to
-> CRAN. If you are looking for information about version present at
-> CRAN, check its
-> <a href="https://github.com/cran/shiny.reglog" target="_blank">mirror</a>
-
 ## 1. Introduction
 
 The user authentication in Shiny applications can be very useful.
