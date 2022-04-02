@@ -16,9 +16,10 @@ DBI_tables_create(conn = conn)
 
 DBI::dbDisconnect(conn)
 
+tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
+
 test_that("User register works correctly.", {
   
-  tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
   results <- withr::with_libpaths(tmp_lib, {
     shinytest::testApp(appDir = testthat::test_path("../shinyTest_DBI_emayili"), 
                        compareImages = FALSE,
@@ -30,7 +31,7 @@ test_that("User register works correctly.", {
 
 test_that("User login works correctly.", {
   
-  tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
+  # tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
   results <- withr::with_libpaths(tmp_lib, {
     shinytest::testApp(appDir = testthat::test_path("../shinyTest_DBI_emayili"), 
                        compareImages = FALSE,
@@ -42,7 +43,7 @@ test_that("User login works correctly.", {
 
 test_that("User credsEdit works correctly.", {
   
-  tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
+  # tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
   results <- withr::with_libpaths(tmp_lib, {
     shinytest::testApp(appDir = testthat::test_path("../shinyTest_DBI_emayili"), 
                        compareImages = FALSE,
@@ -54,7 +55,7 @@ test_that("User credsEdit works correctly.", {
 
 test_that("User resetPass works correctly.", {
   
-  tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
+  # tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
   results <- withr::with_libpaths(tmp_lib, {
     shinytest::testApp(appDir = testthat::test_path("../shinyTest_DBI_emayili"), 
                        compareImages = FALSE,
