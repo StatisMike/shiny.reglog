@@ -128,12 +128,12 @@
 </h2>
 <p>You can install this version of shiny.reglog from GitHub with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install version 0.5.0 from GitHub </span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"StatisMike/shiny.reglog"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># install last stable release from CRAN</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"shiny.reglog"</span><span class="op">)</span>
 
-<span class="co"># or install old version from CRAN</span>
-<span class="co"># install.packages("shiny.reglog")</span></code></pre></div>
+<span class="co">## or development version from GitHub</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install.github</span><span class="op">(</span><span class="st">"StatisMike/shiny.reglog"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="5-setting-up-dbconnector">5. Setting up <em>dbConnector</em>
@@ -166,8 +166,8 @@
 <span class="co"># create gsheet database with some credentials</span>
 <span class="va">gsheet_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gsheet_tables_create.html">gsheet_tables_create</a></span><span class="op">(</span>
   user_data <span class="op">=</span> <span class="va">credentials</span>,
-  <span class="co"># as the password was not hashed with `script` before, it need to be</span>
-  <span class="co"># hashed now</span>
+  <span class="co"># as the password was not hashed with `script` before, </span>
+  <span class="co"># it need to be hashed now</span>
   hash_passwords <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li><p>Configure googlesheets4 package to use out-of-band (non-interactive) auth. For more information about it visit <a href="https://googlesheets4.tidyverse.org/" class="external-link">googlesheets4 documentation</a>.</p></li>
@@ -213,8 +213,12 @@
 <span class="op">)</span>
 
 <span class="co"># create database using the connection</span>
-<span class="fu"><a href="reference/DBI_tables_create.html">DBI_tables_create</a></span><span class="op">(</span>conn <span class="op">=</span> <span class="va">conn</span>,
-                  user_data <span class="op">=</span> <span class="va">credentials</span><span class="op">)</span>
+<span class="fu"><a href="reference/DBI_tables_create.html">DBI_tables_create</a></span><span class="op">(</span>
+  conn <span class="op">=</span> <span class="va">conn</span>,
+  user_data <span class="op">=</span> <span class="va">credentials</span>,
+  <span class="co"># as the password was not hashed with `script` before, </span>
+  <span class="co"># it need to be hashed now</span>
+  hash_passwords <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
 
 <span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
@@ -327,9 +331,9 @@
 <h3 id="81-login-ui">8.1. Login UI<a class="anchor" aria-label="anchor" href="#81-login-ui"></a>
 </h3>
 <p>Providing GUI to allow logging in if user is already registered to your application.</p>
-<p><img src="reference/figures/login_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/RegLog_login_UI.html">RegLog_login_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/login_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 </div>
 <div class="section level3">
 <h3 id="82-register-ui">8.2. Register UI<a class="anchor" aria-label="anchor" href="#82-register-ui"></a>
@@ -349,9 +353,9 @@
 <li>user email is also validated</li>
 </ul>
 <p>After account registration, user will receive confirmation email on their password.</p>
-<p><img src="reference/figures/register_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/RegLog_register_UI.html">RegLog_register_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/register_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 </div>
 <div class="section level3">
 <h3 id="83-credentials-edit-ui">8.3. Credentials edit UI<a class="anchor" aria-label="anchor" href="#83-credentials-edit-ui"></a>
@@ -369,9 +373,9 @@
 <li>same checks as in register procedure are conducted</li>
 <li>after user ID and/or e-mail change user will receive confirmation e-mail</li>
 </ul>
-<p><img src="reference/figures/credsEdit_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/RegLog_credsEdit_UI.html">RegLog_credsEdit_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/credsEdit_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 </div>
 <div class="section level3">
 <h3 id="84-reset-password-ui">8.4. Reset password UI<a class="anchor" aria-label="anchor" href="#84-reset-password-ui"></a>
@@ -383,9 +387,9 @@
 <li>inputing the reset code from e-mail will allow password change</li>
 <li>same password check for new password is conducted as in register procedure</li>
 </ul>
-<p><img src="reference/figures/resetPass_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/RegLog_resetPass_UI.html">RegLog_resetPass_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/resetPass_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 </div>
 </div>
 </div>

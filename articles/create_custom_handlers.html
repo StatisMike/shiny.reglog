@@ -120,7 +120,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">message</span><span class="op">)</span>
 <span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-03-27 09:01:42.396"</span>
+<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:47.974"</span>
 <span class="co">#&gt;  $ type      : chr "test"</span>
 <span class="co">#&gt;  $ data      :List of 2</span>
 <span class="co">#&gt;   ..$ dataframe:'data.frame':    32 obs. of  11 variables:</span>
@@ -135,7 +135,7 @@
 <span class="co">#&gt;   .. ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...</span>
 <span class="co">#&gt;   .. ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...</span>
 <span class="co">#&gt;   .. ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...</span>
-<span class="co">#&gt;   ..$ numbers  : num [1:10] 61.6 99.5 92.2 42.8 94.2 ...</span>
+<span class="co">#&gt;   ..$ numbers  : num [1:10] 63.26 94.04 44.62 5.55 35.71 ...</span>
 <span class="co">#&gt;  $ logcontent: chr "I contain data.frame and random numbers"</span>
 <span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></code></pre></div>
 </div>
@@ -166,7 +166,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">login_message</span><span class="op">)</span>
 <span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-03-27 09:01:42.482"</span>
+<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.054"</span>
 <span class="co">#&gt;  $ type      : chr "login"</span>
 <span class="co">#&gt;  $ data      :List of 2</span>
 <span class="co">#&gt;   ..$ username: chr "Whatever"</span>
@@ -196,7 +196,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">register_message</span><span class="op">)</span>
 <span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-03-27 09:01:42.560"</span>
+<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.130"</span>
 <span class="co">#&gt;  $ type      : chr "register"</span>
 <span class="co">#&gt;  $ data      :List of 3</span>
 <span class="co">#&gt;   ..$ username: chr "IAmNewThere"</span>
@@ -221,7 +221,6 @@
 <code class="sourceCode R"><span class="va">credsEdit_message</span> <span class="op">&lt;-</span> 
   <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
     type <span class="op">=</span> <span class="st">"credsEdit"</span>,
-    username <span class="op">=</span> <span class="st">"Whatever"</span>,
     password <span class="op">=</span> <span class="st">"&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span>,
     new_username <span class="op">=</span> <span class="st">"Whenever"</span>,
     new_email <span class="op">=</span> <span class="st">"edited@email.com"</span>,
@@ -229,10 +228,9 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">credsEdit_message</span><span class="op">)</span>
 <span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-03-27 09:01:42.637"</span>
+<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.207"</span>
 <span class="co">#&gt;  $ type      : chr "credsEdit"</span>
-<span class="co">#&gt;  $ data      :List of 5</span>
-<span class="co">#&gt;   ..$ username    : chr "Whatever"</span>
+<span class="co">#&gt;  $ data      :List of 4</span>
 <span class="co">#&gt;   ..$ password    : chr "&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span>
 <span class="co">#&gt;   ..$ new_username: chr "Whenever"</span>
 <span class="co">#&gt;   ..$ new_email   : chr "edited@email.com"</span>
@@ -260,7 +258,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resetPass_generate_message</span><span class="op">)</span>
 <span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-03-27 09:01:42.718"</span>
+<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.283"</span>
 <span class="co">#&gt;  $ type      : chr "resetPass_generate"</span>
 <span class="co">#&gt;  $ data      :List of 1</span>
 <span class="co">#&gt;   ..$ username: chr "Whatever"</span>
@@ -289,7 +287,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resetPass_confirm_message</span><span class="op">)</span>
 <span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-03-27 09:01:42.795"</span>
+<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.350"</span>
 <span class="co">#&gt;  $ type      : chr "resetPass_confirm"</span>
 <span class="co">#&gt;  $ data      :List of 3</span>
 <span class="co">#&gt;   ..$ username  : chr "Whatever"</span>
@@ -326,7 +324,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resetPass_mail_message</span><span class="op">)</span>
 <span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-03-27 09:01:42.873"</span>
+<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.424"</span>
 <span class="co">#&gt;  $ type      : chr "reglog_mail"</span>
 <span class="co">#&gt;  $ data      :List of 6</span>
 <span class="co">#&gt;   ..$ process    : chr "resetPass"</span>
