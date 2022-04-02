@@ -141,7 +141,6 @@ Message structure:
 credsEdit_message <- 
   RegLogConnectorMessage(
     type = "credsEdit",
-    username = "Whatever",
     password = "&f5*MSYj^niDt=V'3.[dyEX.C/",
     new_username = "Whenever",
     new_email = "edited@email.com",
