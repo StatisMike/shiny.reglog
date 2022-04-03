@@ -5,6 +5,8 @@
 #' object to the database. It is created to handle googlesheet database.
 #' Provides methods than will be used by RegLogServer to get and send data.
 #' 
+#' Requires `googlesheets4` package to be installed.
+#' 
 #' @family dbConnectors
 #' @import R6
 #' @export

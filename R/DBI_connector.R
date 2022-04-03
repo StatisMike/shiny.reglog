@@ -86,6 +86,8 @@ RegLogDBIConnector = R6::R6Class(
     #' @description Initialization of the object. Creates initial connection
     #' to the database.
     #' 
+    #' Requires `DBI` package to be installed.
+    #' 
     #' @param driver Call that specifies the driver to be used during all queries
     #' @param ... other arguments used in `DBI::dbConnect()` call
     #' @param table_names character vector. Contains names of the tables in the

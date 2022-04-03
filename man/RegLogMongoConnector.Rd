@@ -3,8 +3,10 @@
 \docType{class}
 \name{RegLogMongoConnector}
 \alias{RegLogMongoConnector}
-\title{COnnector to MongoDB database}
+\title{Connector to MongoDB database}
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Object of this class handles all connections for the RegLogServer object to
 the database. It is created to handle MongoDB database compatible drivers.
 Provides methods than will be used by RegLogServer to get and send data.

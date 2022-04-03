@@ -8,6 +8,8 @@
 Object of this class handles all connections for the RegLogServer
 object to the database. It is created to handle googlesheet database.
 Provides methods than will be used by RegLogServer to get and send data.
+
+Requires \code{googlesheets4} package to be installed.
 }
 \seealso{
 Other dbConnectors: 

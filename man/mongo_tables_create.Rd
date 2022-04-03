@@ -41,12 +41,14 @@ this option to \code{TRUE}.}
 printed back to the console.}
 }
 \description{
-Create RegLog-valid database collections for MongoDB
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+MongoDB database don't enforce a structure to the documents contained within.
+Even though this is true, it's best to use this function explicitly,
+as after creation of collections it also create appropriate indexes for quick
+querying of the database by RegLogMongoConnector.
 }
 \details{
-MongoDB database don't enforce a structure to the documents contained within.
-It's best to use this function explicitly, as after creation of collections
-it also create appropriate indexes for quick querying of the
 Every document in created collections will have following structure:
 \itemize{
 \item account (default name)

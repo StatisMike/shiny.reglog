@@ -1,4 +1,12 @@
-#' Create RegLog-valid database collections for MongoDB
+#' @title Create RegLog-valid database collections for MongoDB
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' MongoDB database don't enforce a structure to the documents contained within.
+#' Even though this is true, it's best to use this function explicitly, 
+#' as after creation of collections it also create appropriate indexes for quick 
+#' querying of the database by RegLogMongoConnector.
 #' 
 #' @param mongo_url URI to the MongoDB cluster
 #' @param mongo_db name of the MongoDB database 
@@ -18,9 +26,6 @@
 #' printed back to the console. 
 #' 
 #' @details 
-#' MongoDB database don't enforce a structure to the documents contained within.
-#' It's best to use this function explicitly, as after creation of collections
-#' it also create appropriate indexes for quick querying of the 
 #' Every document in created collections will have following structure:
 #' 
 #' - account (default name)
@@ -134,8 +139,10 @@ mongo_tables_create <- function(
 
 
 #' @docType class
-#' @title COnnector to MongoDB database
+#' @title Connector to MongoDB database
 #' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
 #' Object of this class handles all connections for the RegLogServer object to 
 #' the database. It is created to handle MongoDB database compatible drivers. 
 #' Provides methods than will be used by RegLogServer to get and send data.
@@ -197,3 +204,128 @@ RegLogMongoConnector <- R6::R6Class(
     collections = NULL
   )
 )
+
+### RegLogMongoConnector handler functions ####
+
+#' MongoDB login handler
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Default handler function querying database to confirm login 
+#' procedure. Used within object of `RegLogMongoConnector` class internally.
+#' 
+#' @param self R6 object element
+#' @param private R6 object element
+#' @param message RegLogConnectorMessage which should contain within its data:
+#' - username
+#' - password
+#' @family MongoDB handler functions
+#' @concept mongo_handler
+#' @keywords internal
+
+mongo_login_handler <- function(self, private, message) {
+  
+  check_namespace("mongolite")
+  
+}
+
+#' MongoDB register handler
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Default handler function querying database to confirm registration 
+#' validity and input new data. Used within object of `RegLogMongoConnector` class internally.
+#' 
+#' @param self R6 object element
+#' @param private R6 object element
+#' @param message RegLogConnectorMessage which should contain within its data:
+#' - username
+#' - password
+#' - email
+#' @family MongoDB handler functions
+#' @concept mongo_handler
+#' @keywords internal
+
+mongo_register_handler = function(self, private, message) {
+  
+  check_namespace("mongolite")
+  
+}
+
+#' MongoDB edit to the database handler
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Default handler function querying database to confirm credentials
+#' edit procedure and update values saved within database. Used within object of 
+#' `RegLogMongoConnector` class internally.
+#' @param self R6 object element
+#' @param private R6 object element
+#' @param message RegLogConnectorMessage which need to contain within its data:
+#' - username
+#' - password
+#' 
+#' It can also contain elements for change:
+#' - new_username
+#' - new_email
+#' - new_password
+#' @family MongoDB handler functions
+#' @concept mongo_handler
+#' @keywords internal
+
+mongo_credsEdit_handler <- function(self, private, message) {
+  
+  check_namespace("mongolite")
+  
+}
+
+#' MongoDB resetpass code generation handler
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Default handler function querying database to confirm credentials
+#' edit procedure and update values saved within database. Used within object of 
+#' `RegLogMongoConnector` class internally.
+#' @param self R6 object element
+#' @param private R6 object element
+#' @param message RegLogConnectorMessage which need to contain within its data:
+#' - username
+#' 
+#' @family MongoDB handler functions
+#' @concept mongo_handler
+#' @keywords internal
+
+mongo_resetPass_generation_handler <- function(self, private, message) {
+  
+  check_namespace("mongolite")
+
+}
+
+#' MongoDB resetpass code confirmation handler
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Default handler function querying database to confirm credentials
+#' edit procedure and update values saved within database. Used within object of 
+#' `RegLogMongoConnector` class internally.
+#' @param self R6 object element
+#' @param private R6 object element
+#' @param message RegLogConnectorMessage which need to contain within its data:
+#' - username
+#' - reset_code
+#' - password
+#' 
+#' @family MongoDB handler functions
+#' @concept mongo_handler
+#' @keywords internal
+
+mongo_resetPass_confirmation_handler <- function(self, private, message) {
+  
+  check_namespace("mongolite")
+  
+}

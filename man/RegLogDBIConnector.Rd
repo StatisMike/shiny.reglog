@@ -39,6 +39,8 @@ Other dbConnectors:
 \subsection{Method \code{new()}}{
 Initialization of the object. Creates initial connection
 to the database.
+
+Requires \code{DBI} package to be installed.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RegLogDBIConnector$new(
   driver,
