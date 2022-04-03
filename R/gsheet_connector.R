@@ -56,6 +56,11 @@ RegLogGsheetConnector <- R6::R6Class(
           )
         }
       )
+    },
+    # method to clear the sheets data from memory
+    clear_sheets = function() {
+      private$data_user <- NULL
+      private$data_reset_code <- NULL
     }
   ),
   # public elements ####
@@ -69,10 +74,10 @@ RegLogGsheetConnector <- R6::R6Class(
     #' googlesheet: first containing user data, second - reset codes information,
     #' third (optional) - logs from the object. For more info check documentation
     #' of `gsheet_database_create`.
-    #' @param custom_handlers named list of custom handler functions. Custom handler
-    #' should take arguments: `self` and `private` - relating to the R6 object
-    #' and `message` of class `RegLogConnectorMessage`. It should return
-    #' `RegLogConnectorMessage` object.
+    #' @param custom_handlers named list of custom handler functions. Every 
+    #' custom handler should take arguments: `self` and `private` - relating 
+    #' to the R6 object and `message` of class `RegLogConnectorMessage`. It 
+    #' should return `RegLogConnectorMessage` object.
     #' 
     #' @return object of `RegLogDBIConnector` class
     #' 

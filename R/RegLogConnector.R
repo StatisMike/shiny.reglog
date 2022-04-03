@@ -26,10 +26,10 @@ RegLogConnector = R6::R6Class(
     #' types of `RegLogConnectorMessage`. Name of the element corresponds to 
     #' the 'type' that is should handle.
     #' @details You can specify custom handler functions as a named list passed
-    #' to `custom_handlers` arguments during object initialization. Custom handler
-    #' should take arguments: `self` and `private` - relating to the R6 object
-    #' and `message` of class `RegLogConnectorMessage`. It should return
-    #' return `RegLogConnectorMessage` object
+    #' to `custom_handlers` arguments during object initialization. Every custom
+    #' handler should take arguments: `self` and `private` - relating to the R6 
+    #' object and `message` of class `RegLogConnectorMessage`. It should return 
+    #' `RegLogConnectorMessage` object.
     
     handlers = list(
       ping = function(self, private, message) {
@@ -64,9 +64,9 @@ RegLogConnector = R6::R6Class(
     
     #' @description Initialization of the object. Sets up listener reactiveVal
     #' and initializes listening server module
-    #' @param custom_handlers named list of custom handler functions. Custom handler
-    #' should take arguments: `self` and `private` - relating to the R6 object
-    #' and `message` of class `RegLogConnectorMessage`. It should return
+    #' @param custom_handlers named list of custom handler functions. Every 
+    #' custom handler should take arguments: `self` and `private` - relating to 
+    #' the R6 object and `message` of class `RegLogConnectorMessage`. It should 
     #' return `RegLogConnectorMessage` object.
     #' 
     #' @return object of `RegLogConnector` class

@@ -47,10 +47,10 @@ of single data.frame
 
 \subsection{Details}{
 You can specify custom handler functions as a named list passed
-to \code{custom_handlers} arguments during object initialization. Custom handler
-should take arguments: \code{self} and \code{private} - relating to the R6 object
-and \code{message} of class \code{RegLogConnectorMessage}. It should return
-return \code{RegLogConnectorMessage} object
+to \code{custom_handlers} arguments during object initialization. Every custom
+handler should take arguments: \code{self} and \code{private} - relating to the R6
+object and \code{message} of class \code{RegLogConnectorMessage}. It should return
+\code{RegLogConnectorMessage} object.
 }
 
 \subsection{Returns}{
@@ -70,9 +70,9 @@ and initializes listening server module
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{custom_handlers}}{named list of custom handler functions. Custom handler
-should take arguments: \code{self} and \code{private} - relating to the R6 object
-and \code{message} of class \code{RegLogConnectorMessage}. It should return
+\item{\code{custom_handlers}}{named list of custom handler functions. Every
+custom handler should take arguments: \code{self} and \code{private} - relating to
+the R6 object and \code{message} of class \code{RegLogConnectorMessage}. It should
 return \code{RegLogConnectorMessage} object.}
 }
 \if{html}{\out{</div>}}

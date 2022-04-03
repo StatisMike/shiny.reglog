@@ -92,9 +92,9 @@ RegLogDBIConnector = R6::R6Class(
     #' database: first containing user data, second - reset codes information,
     #' third (optional) - logs from the object. For more info check documentation
     #' of `DBI_database_create`.
-    #' @param custom_handlers named list of custom handler functions. Custom handler
-    #' should take arguments: `self` and `private` - relating to the R6 object
-    #' and `message` of class `RegLogConnectorMessage`. It should return
+    #' @param custom_handlers named list of custom handler functions. Every 
+    #' custom handler should take arguments: `self` and `private` - relating to 
+    #' the R6 object and `message` of class `RegLogConnectorMessage`. It should 
     #' return `RegLogConnectorMessage` object.
     #' @return object of `RegLogDBIConnector` class
     #' 
@@ -123,8 +123,6 @@ RegLogDBIConnector = R6::R6Class(
       private$db_tables <- table_names
       # initial connection to the database, checking if everything is all right
       private$db_connect()
-      # assign the unique ID for the module
-      self$module_id <- uuid::UUIDgenerate()
       # disconnect fron the database when not used
       private$db_disconnect()
     }
