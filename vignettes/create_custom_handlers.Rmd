@@ -132,8 +132,8 @@ str(register_message)
 - *RegLogDBIConnector*: `DBI_credsEdit_handler`
 - *RegLogGsheetConnector*: `gsheet_credsEdit_handler`
 
-These functions are querying the database to search for the specified username
-and password. After confirming user identity, it can update the database row
+These functions are querying the database to search for the specified account ID
+and verify password. After confirming user identity, it can update the database row
 for this user with any or all of: new username, new email and new password.
 Message structure:
 
@@ -141,6 +141,7 @@ Message structure:
 credsEdit_message <- 
   RegLogConnectorMessage(
     type = "credsEdit",
+    account_id = 1,
     password = "&f5*MSYj^niDt=V'3.[dyEX.C/",
     new_username = "Whenever",
     new_email = "edited@email.com",

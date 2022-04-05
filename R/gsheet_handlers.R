@@ -134,7 +134,7 @@ gsheet_register_handler = function(self, private, message) {
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which need to contain within its data:
-#' - username
+#' - account_id
 #' - password
 #' 
 #' It can also contain elements for change:

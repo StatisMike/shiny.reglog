@@ -12,7 +12,7 @@ check_user_data <- function(user_data) {
   if (class(user_data) != "data.frame") {
     stop(call. = F, "User data need to be in form of 'data.frame' object.")
   }
-  if (!all(names(user_data)) %in% c("username", "password", "email", "create_time")) {
+  if (!all(names(user_data) %in% c("username", "password", "email", "create_time"))) {
     stop(call. = F, "Data.frame containing user data needs to contain columns: 'username', 'password', 'email' and (optionally) 'create_time'.")
   }
   if (sum(is.na(user_data$username), is.na(user_data$password), is.na(user_data$email)) > 0) {

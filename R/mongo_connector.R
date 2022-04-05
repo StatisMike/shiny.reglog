@@ -180,11 +180,11 @@ RegLogMongoConnector <- R6::R6Class(
     ) {
       check_namespace("mongolite")
       
-      # self$handlers[["login"]] <- mongo_login_handler
-      # self$handlers[["register"]] <- mongo_register_handler
-      # self$handlers[["credsEdit"]] <- mongo_credsEdit_handler
-      # self$handlers[["resetPass_generate"]] <- mongo_resetPass_generation_handler
-      # self$handlers[["resetPass_confirm"]] <- mongo_resetPass_confirmation_handler
+      self$handlers[["login"]] <- mongo_login_handler
+      self$handlers[["register"]] <- mongo_register_handler
+      self$handlers[["credsEdit"]] <- mongo_credsEdit_handler
+      self$handlers[["resetPass_generate"]] <- mongo_resetPass_generation_handler
+      self$handlers[["resetPass_confirm"]] <- mongo_resetPass_confirmation_handler
       
       super$initialize(custom_handlers = custom_handlers)
       
@@ -199,9 +199,17 @@ RegLogMongoConnector <- R6::R6Class(
   ),
   
   private = list(
-    url = NULL,
-    db = NULL,
-    collections = NULL
+    mongo_url = NULL,
+    mongo_db = NULL,
+    mongo_options = NULL,
+    collections = NULL,
+    connect = function(collection) {
+      
+      mongolite::mongo(url = private$mongo_url,
+                       db = private$mongo_db,
+                       options = private$mongo_options,
+                       collection = collection)
+    }
   )
 )
 
@@ -228,6 +236,47 @@ mongo_login_handler <- function(self, private, message) {
   
   check_namespace("mongolite")
   
+  account <- private$connect(private$collections[1])
+  on.exit(account$disconnect())
+  
+  # search for user
+  user_data <- account$find(
+    query = jsonlite::toJSON(list(username = message$data$username), auto_unbox = T),
+    fields = '{}'
+  )
+  
+  if (nrow(user_data) == 0) {
+    # if don't return any, then nothing happened
+    
+    RegLogConnectorMessage(
+      "login", success = FALSE, username = FALSE, password = FALSE,
+      logcontent = paste(message$data$username, "don't exist")
+    )
+    
+  } else {
+    # if there is a row present, check password
+    
+    if (scrypt::verifyPassword(user_data$password, message$data$password)) {
+      # if success: user logged in
+      
+      RegLogConnectorMessage(
+        "login", success = TRUE, username = TRUE, password = TRUE,
+        user_id = user_data$username,
+        user_mail = user_data$email,
+        account_id = user_data$`_id`,
+        logcontent = paste(message$data$username, "logged in")
+      )
+      
+    } else {
+      # if else: the password didn't match
+      
+      RegLogConnectorMessage(
+        "login", success = FALSE, username = TRUE, password = FALSE,
+        logcontent = paste(message$data$username, "bad pass")
+      )
+    }
+  }
+  
 }
 
 #' MongoDB register handler
@@ -252,6 +301,53 @@ mongo_register_handler = function(self, private, message) {
   
   check_namespace("mongolite")
   
+  account <- private$connect(private$collections[1])
+  on.exit(account$disconnect())
+  
+  # firstly check if user or email exists
+  user_data <- account$find(
+    jsonlite::toJSON(list(
+      "$or" = list(list(username = message$data$username), list(email = message$data$email))), 
+      auto_unbox = T))
+  
+  if (nrow(user_data) > 0) {
+    # if query returns data don't register new
+    message_to_send <- RegLogConnectorMessage(
+      "register", 
+      success = FALSE, 
+      username = !message$data$username %in% user_data$username,
+      email = !message$data$email %in% user_data$email)
+    
+    if (!message_to_send$data$username && !message_to_send$data$email) {
+      message_to_send$logcontent <- paste0(message$data$username, "/", message$data$email, " conflict")
+    } else if (!message_to_send$data$username) {
+      message_to_send$logcontent <- paste(message$data$username, "conflict")
+    } else if (!message_to_send$data$email) {
+      message_to_send$logcontent <- paste(message$data$email, "conflict")
+    }
+    return(message_to_send)
+  } else {
+    # if query returns no data register new
+    account$insert(
+      data.frame(
+        username = message$data$username,
+        password = scrypt::hashPassword(message$data$password),
+        email = message$data$email,
+        create_time = Sys.time(),
+        update_time = Sys.time()
+      )
+    )
+    
+    return(
+      RegLogConnectorMessage(
+        "register", 
+        success = TRUE, username = TRUE, email = TRUE,
+        user_id = message$data$username,
+        user_mail = message$data$email,
+        logcontent = paste(message$data$username, message$data$email, sep = "/")
+      )
+    )
+  }
 }
 
 #' MongoDB edit to the database handler
@@ -265,7 +361,7 @@ mongo_register_handler = function(self, private, message) {
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which need to contain within its data:
-#' - username
+#' - account_id
 #' - password
 #' 
 #' It can also contain elements for change:
@@ -280,6 +376,86 @@ mongo_credsEdit_handler <- function(self, private, message) {
   
   check_namespace("mongolite")
   
+  account <- private$connect(private$collections[1])
+  on.exit(account$disconnect())
+  
+  # firstly check login credentials
+  user_data <- account$find(
+    query = jsonlite::toJSON(list(
+      "_id" = list("$oid" = message$data$account_id)
+    ), auto_unbox = T))
+  
+  if (isFALSE(scrypt::verifyPassword(user_data$password, message$data$password))) {
+    # if FALSE: don't allow changes
+    
+    message_to_send <- RegLogConnectorMessage(
+      "credsEdit", success = FALSE, password = FALSE,
+      logcontent = paste(user_data$username, "bad pass")
+    )
+  } else {
+    # if TRUE: allow changes
+    
+    ## Additional checks: if unique values (username, email) that are to be changed
+    ## are already present in the database
+    conflicting <- account$find(
+      list("$or" = list(list(username = message$data$username),
+                        list(email = message$data$email)))
+    )
+    
+    if (nrow(conflicting) > 0) {
+      message_to_send <- RegLogConnectorMessage(
+        "credsEdit", success = FALSE,
+        password = TRUE,
+        # if there is a conflict, these returns FALSE
+        new_username = !isTRUE(message$data$new_username %in% conflicting$username),
+        new_email = !isTRUE(message$data$new_email %in% conflicting$email))
+      
+      message_to_send$logcontent <-
+        paste0(user_data$username, " conflict:",
+               if (!message_to_send$data$new_username) paste(" username:", message$data$new_username),
+               if (!message_to_send$data$new_email) paste(" email:", message$data$new_email), "." )
+    } else {
+      # if nothing is returned, update can be made!
+      to_update <- list()
+      
+      if (!is.null(message$data$new_username)) {
+        to_update[["username"]] = message$data$new_username
+      }
+      if (!is.null(message$data$new_email)) {
+        to_update[["email"]] = message$data$new_email
+      }
+      if (!is.null(message$data$new_password)) {
+        to_update[["password"]] = scrypt::hashPassword(message$data$new_password)
+      }
+      
+      account$update(
+        query = jsonlite::toJSON(list(
+          "_id" = list("$oid" = message$data$account_id)
+        ), auto_unbox = T),
+        update = jsonlite::toJSON(list("$set" = to_update), auto_unbox = T)
+      )
+      
+      message_to_send <- RegLogConnectorMessage(
+        "credsEdit", success = TRUE,
+        password = TRUE,
+        new_user_id = message$data$new_username,
+        new_user_mail = message$data$new_email,
+        new_user_pass = if(!is.null(message$data$new_password)) TRUE else NULL)
+      
+      info_to_log <- 
+        c(message_to_send$data$new_user_id,
+          message_to_send$data$new_user_mail,
+          if (!is.null(message_to_send$new_user_pass)) "pass_change")
+      
+      message_to_send$logcontent <-
+        paste(user_data$username, "updated",
+              paste(info_to_log,
+                    collapse = "/")
+        )
+    }
+  }
+  
+  return(message_to_send)
 }
 
 #' MongoDB resetpass code generation handler
@@ -302,7 +478,56 @@ mongo_credsEdit_handler <- function(self, private, message) {
 mongo_resetPass_generation_handler <- function(self, private, message) {
   
   check_namespace("mongolite")
+  
+  account <- private$connect(private$collections[1])
+  on.exit(account$disconnect())
 
+  # firstly check login credentials
+  user_data <- account$find(
+    query = jsonlite::toJSON(list("username" = message$data$username),
+                             auto_unbox = T),
+    fields = '{}')
+  
+  # check condition and create output message accordingly
+  
+  if (nrow(user_data) == 0) {
+    # if don't return any, then nothing happened
+    
+    message_to_send <- RegLogConnectorMessage(
+      "resetPass_generate", success = FALSE, 
+      logcontent = paste(message$data$username, "don't exist")
+    )
+    
+    # if username exists, generate new resetpass code
+  } else {
+    
+    resetCode <- private$connect(private$collections[2])
+    on.exit(resetCode$disconnect(), add = T)
+    
+    # get the user id
+    user_id <- user_data$`_id`
+    reset_code <- paste(floor(stats::runif(10, min = 0, max = 9.9)), collapse = "")
+    
+    data_to_append <- data.frame(
+      user_id = user_id,
+      reset_code = reset_code,
+      user = 0,
+      create_time = Sys.time(),
+      update_time = Sys.time()
+    )
+    
+    resetCode$insert(data_to_append)
+    
+    message_to_send <- RegLogConnectorMessage(
+      "resetPass_generate", success = TRUE,  
+      user_id = message$data$username,
+      user_mail = user_data$email,
+      reset_code = reset_code,
+      logcontent = paste(message$data$username, "code generated")
+    )
+  }
+  
+  return(message_to_send)
 }
 
 #' MongoDB resetpass code confirmation handler
@@ -327,5 +552,76 @@ mongo_resetPass_generation_handler <- function(self, private, message) {
 mongo_resetPass_confirmation_handler <- function(self, private, message) {
   
   check_namespace("mongolite")
+  
+  account <- private$connect(private$collections[1])
+  on.exit(account$disconnect())
+  
+  user_data <- account$find(
+    query = jsonlite::toJSON(list("username" = message$data$username),
+                             auto_unbox = T),
+    fields = '{}')
+  
+  # check condition and create output message accordingly
+  if (nrow(user_data) == 0) {
+    # if don't return any, then nothing happened
+    
+    message_to_send <- RegLogConnectorMessage(
+      "resetPass_confirm", success = FALSE, username = FALSE, code_valid = FALSE,
+      logcontent = paste(message$data$username, "don't exist")
+    )
+    
+    # if username exists, check for the resetcode
+  } else {
+    
+    resetCode <- private$connect(private$collections[2])
+    on.exit(resetCode$disconnect(), add = T)
+    
+    user_id <- user_data$`_id`
+    reset_code_data <- resetCode$find(
+      query = jsonlite::toJSON(list("user_id" = user_id),
+                               auto_unbox = T),
+      fields = '{}')
+    
+    not_expired <- 
+      (lubridate::as_datetime(reset_code_data$create_time) + lubridate::period(4, "hours")) > Sys.time()
+    
+    # if not used reset code matches and isn't expired, update the database
+    if (nrow(reset_code_data) > 0 && not_expired) {
+
+      # update user data
+      account$update(
+        query = jsonlite::toJSON(list(
+          "_id" = list("$oid" = user_id)
+        ), auto_unbox = T),
+        update = jsonlite::toJSON(list("$set" = list(
+          list(password = scrypt::hashPassword(message$data$password)),
+          list(update_time = Sys.time())
+        )), auto_unbox = T))
+      
+      # update reset code
+      resetCode$update(
+        query = jsonlite::toJSON(list(
+          "_id" = list("$oid" = reset_code_data$`_id`)
+        ), auto_unbox = T),
+        update = jsonlite::toJSON(list("$set" = list(
+          list(used = 1),
+          list(update_time = Sys.time())
+        )), auto_unbox = T))
+      
+      message_to_send <- RegLogConnectorMessage(
+        "resetPass_confirm", success = TRUE, username = TRUE, code_valid = TRUE,
+        logcontent = paste(message$data$username, "changed")
+      )
+      # if reset code wasn't valid
+    } else {
+      
+      message_to_send <- RegLogConnectorMessage(
+        "resetPass_confirm", success = FALSE, username = TRUE, code_valid = FALSE,
+        logcontent = paste(message$data$username, "invalid code")
+      )
+    }
+  }
+  
+  return(message_to_send)
   
 }
