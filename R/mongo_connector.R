@@ -91,7 +91,7 @@ mongo_tables_create <- function(
       }
       if (isTRUE(verbose)) close(hash_progress)
     }
-    db_time <- lubridate::as_datetime(db_timestamp())
+    db_time <- db_timestamp()
     user_data$create_time <- if (is.null(user_data$create_time)) db_time 
                            else lubridate::as_datetime(user_data$create_time)
     user_data$update_time <- db_time
@@ -333,8 +333,8 @@ mongo_register_handler = function(self, private, message) {
         username = message$data$username,
         password = scrypt::hashPassword(message$data$password),
         email = message$data$email,
-        create_time = Sys.time(),
-        update_time = Sys.time()
+        create_time = db_timestamp(),
+        update_time = db_timestamp()
       )
     )
     
@@ -398,9 +398,9 @@ mongo_credsEdit_handler <- function(self, private, message) {
     ## Additional checks: if unique values (username, email) that are to be changed
     ## are already present in the database
     conflicting <- account$find(
-      list("$or" = list(list(username = message$data$username),
-                        list(email = message$data$email)))
-    )
+      jsonlite::toJSON(list("$or" = list(list(username = message$data$new_username),
+                                         list(email = message$data$new_email))),
+                       auto_unbox = T))
     
     if (nrow(conflicting) > 0) {
       message_to_send <- RegLogConnectorMessage(
@@ -512,8 +512,8 @@ mongo_resetPass_generation_handler <- function(self, private, message) {
       user_id = user_id,
       reset_code = reset_code,
       user = 0,
-      create_time = Sys.time(),
-      update_time = Sys.time()
+      create_time = db_timestamp(),
+      update_time = db_timestamp()
     )
     
     resetCode$insert(data_to_append)
@@ -553,6 +553,8 @@ mongo_resetPass_confirmation_handler <- function(self, private, message) {
   
   check_namespace("mongolite")
   
+  browser()
+  
   account <- private$connect(private$collections[1])
   on.exit(account$disconnect())
   
@@ -578,7 +580,7 @@ mongo_resetPass_confirmation_handler <- function(self, private, message) {
     
     user_id <- user_data$`_id`
     reset_code_data <- resetCode$find(
-      query = jsonlite::toJSON(list("user_id" = user_id),
+      query = jsonlite::toJSON(list(user_id = user_id, reset_code = message$data$reset_code),
                                auto_unbox = T),
       fields = '{}')
     
@@ -594,8 +596,8 @@ mongo_resetPass_confirmation_handler <- function(self, private, message) {
           "_id" = list("$oid" = user_id)
         ), auto_unbox = T),
         update = jsonlite::toJSON(list("$set" = list(
-          list(password = scrypt::hashPassword(message$data$password)),
-          list(update_time = Sys.time())
+          password = scrypt::hashPassword(message$data$password),
+          update_time = db_timestamp()
         )), auto_unbox = T))
       
       # update reset code
@@ -604,8 +606,8 @@ mongo_resetPass_confirmation_handler <- function(self, private, message) {
           "_id" = list("$oid" = reset_code_data$`_id`)
         ), auto_unbox = T),
         update = jsonlite::toJSON(list("$set" = list(
-          list(used = 1),
-          list(update_time = Sys.time())
+          used = 1,
+          update_time = db_timestamp()
         )), auto_unbox = T))
       
       message_to_send <- RegLogConnectorMessage(

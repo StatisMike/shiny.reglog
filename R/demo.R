@@ -165,11 +165,14 @@ RegLogDemo <- function(emayili_smtp = NULL,
 #' @param dbConnector unevaluated dbConnector
 #' @param mailConnector unevaluated mailConnector
 #' @param onStart unevaluated expression to run before initializing session
+#' @param hide_account_id should account ID be hidden? Useful when document ID
+#' is randomized.
 #' @noRd
 
 RegLogTest <- function(dbConnector,
                        mailConnector,
-                       onStart = NULL) {
+                       onStart = NULL,
+                       hide_account_id = FALSE) {
   
   # create an UI
   
@@ -209,12 +212,17 @@ RegLogTest <- function(dbConnector,
       list("is_logged" = RegLog$is_logged(),
            "user_id" = if (isTRUE(RegLog$is_logged())) RegLog$user_id() else "not_logged",
            "user_mail" = RegLog$user_mail(),
-           "account_id" = RegLog$account_id())
+           "account_id" = if(isTRUE(hide_account_id)) "hidden" else RegLog$account_id())
     )
     
     output$reglog_message <- renderPrint({
       req(RegLog$message()$type != "ping")
-      RegLog$message()[-1] 
+      
+      message <- RegLog$message()[-1]
+      if (isTRUE(hide_account_id)) {
+        message$data <- message$data[sapply(names(message$data), \(x) x != "account_id")]
+      }
+      message
     })
     
     observeEvent(input$logs, RegLog$get_logs())
