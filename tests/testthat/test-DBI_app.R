@@ -22,20 +22,6 @@ non_valid_pass <- c(
   "I Have Bad Characters"
 )
 
-# function to dismiss modal button
-close_modal <- function(app) {
-  
-  # Verify the modal is closed when Dismiss is clicked
-  app$get_js(script = "window.modalHidden = false;\n    $(document).on('hidden.bs.modal', function(e) {window.modalHidden = true; });",
-             timeout = 10000)
-  
-  # Click the Dismiss button
-  app$get_js(script = "$('button[data-dismiss=\"modal\"]').click()",
-             timeout = 10000)
-  app$wait_for_js("window.modalHidden", timeout = 3000)
-  
-}
-
 # initialize ShinyApp ####
 
 app <- AppDriver$new(
@@ -62,7 +48,7 @@ test_that("Cannot register with missing input", {
     
     app$click("login_system-register_bttn")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -95,7 +81,7 @@ test_that("Cannot register with faulty user id", {
     
     app$click("login_system-register_bttn")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -132,7 +118,7 @@ test_that("Cannot register with faulty email", {
     
     app$click("login_system-register_bttn")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -161,7 +147,7 @@ test_that("Cannot register with faulty password", {
     
     app$click("login_system-register_bttn")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -190,7 +176,7 @@ test_that("Cannot register with non-identical passwords", {
   
   app$click("login_system-register_bttn")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -217,7 +203,7 @@ test_that("Can register with correct inputs", {
   
   app$click("login_system-register_bttn")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -246,7 +232,7 @@ test_that("Cannot register with conflicts", {
   
   app$click("login_system-register_bttn")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -262,7 +248,7 @@ test_that("Cannot register with conflicts", {
   
   app$click("login_system-register_bttn")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -292,7 +278,7 @@ test_that("Cannot login with missing input", {
     
     app$click("login_system-login_button")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -314,7 +300,7 @@ test_that("Cannot login with bad username", {
   
   app$click("login_system-login_button")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -335,7 +321,7 @@ test_that("Cannot login with bad password", {
   
   app$click("login_system-login_button")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -356,7 +342,7 @@ test_that("Can login with correct credentials", {
   
   app$click("login_system-login_button")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -378,7 +364,7 @@ test_that("Can logout when logged in", {
   
   app$click("logout")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -393,7 +379,7 @@ test_that("Cannot logout when not logged in", {
   
   app$click("logout")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -414,7 +400,7 @@ test_that("Cannot generate resetpass code without ID", {
   
   app$click("login_system-reset_send")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -431,7 +417,7 @@ test_that("Cannot generate resetpass code with bad ID", {
   
   app$click("login_system-reset_send")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -446,7 +432,7 @@ test_that("Can generate reset pass code", {
   
   app$click("login_system-reset_send")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -478,7 +464,7 @@ test_that("Cannot reset password without all inputs", {
     
     app$click("login_system-reset_confirm_bttn")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -507,7 +493,7 @@ test_that("Cannot reset password with not-valid passwords", {
     
     app$click("login_system-reset_confirm_bttn")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -534,7 +520,7 @@ test_that("Cannot reset password with different passwords", {
   
   app$click("login_system-reset_confirm_bttn")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -561,7 +547,7 @@ test_that("Cannot reset password with bad ID", {
   
   app$click("login_system-reset_confirm_bttn")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -586,7 +572,7 @@ test_that("Cannot reset password with bad code", {
   
   app$click("login_system-reset_confirm_bttn")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -611,7 +597,7 @@ test_that("Password reset can be made", {
   
   app$click("login_system-reset_confirm_bttn")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -631,7 +617,7 @@ test_that("Can login with changed password", {
   
   app$click("login_system-login_button")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -669,7 +655,7 @@ test_that("Cannot change password without inputs", {
     
     app$click("login_system-cred_edit_pass_change")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -700,7 +686,7 @@ test_that("Cannot change user ID without inputs", {
     
     app$click("login_system-cred_edit_other_change")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -730,7 +716,7 @@ test_that("Cannot change user mail without inputs", {
     
     app$click("login_system-cred_edit_other_change")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -756,7 +742,7 @@ test_that("Cannot set invalid password during change", {
     
     app$click("login_system-cred_edit_pass_change")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -784,7 +770,7 @@ test_that("Cannot set invalid user ID during change", {
     
     app$click("login_system-cred_edit_other_change")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -811,7 +797,7 @@ test_that("Cannot set invalid email during change", {
     
     app$click("login_system-cred_edit_other_change")
     
-    close_modal(app)
+    
     
     vals <- app$get_value(export = "RegLogMessage")
     
@@ -837,7 +823,7 @@ test_that("Cannot change credentials with bad password", {
   
   app$click("login_system-cred_edit_other_change")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -857,7 +843,7 @@ test_that("Cannot change user ID to existing one", {
   
   app$click("login_system-cred_edit_other_change")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -878,7 +864,7 @@ test_that("Cannot change user email to existing one", {
   
   app$click("login_system-cred_edit_other_change")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -900,7 +886,7 @@ test_that("Can change password", {
   
   app$click("login_system-cred_edit_pass_change")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -925,7 +911,7 @@ test_that("Can change user ID", {
   
   app$click("login_system-cred_edit_other_change")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -949,7 +935,7 @@ test_that("Can change user email", {
   
   app$click("login_system-cred_edit_other_change")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -978,7 +964,7 @@ test_that("Not logged user cannot change password", {
   
   app$click("login_system-cred_edit_pass_change")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   
@@ -1000,7 +986,7 @@ test_that("Not logged user cannot change user ID", {
   
   app$click("login_system-cred_edit_other_change")
   
-  close_modal(app)
+  
   
   vals <- app$get_value(export = "RegLogMessage")
   

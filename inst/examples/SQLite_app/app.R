@@ -20,7 +20,7 @@ shiny.reglog:::RegLogTest(
     dbname = SQLite_db
   ),
   mailConnector = RegLogConnector$new(),
-  use_modals = T,
+  use_modals = F,
   onStart = {
     options("RegLogServer.logs_to_database" = 1)
     options("RegLogServer.logs" = 1)
