@@ -13,7 +13,7 @@ gsheet_credsEdit_handler(self, private, message)
 
 \item{message}{RegLogConnectorMessage which need to contain within its data:
 \itemize{
-\item username
+\item account_id
 \item password
 }
 

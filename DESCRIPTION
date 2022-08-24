@@ -1,6 +1,6 @@
 Package: shiny.reglog
 Title: Optional Login and Registration Module System for ShinyApps
-Version: 0.5.0
+Version: 0.5.1
 Authors@R: 
     person(given = "Michal",
            family = "Kosinski",
@@ -39,9 +39,12 @@ Suggests:
     gmailr,
     googledrive,
     googlesheets4,
+    jsonlite,
     knitr,
+    mongolite,
     rmarkdown,
     RSQLite,
+    shinytest2,
     testthat (>= 3.0.0)
 Config/Needs/shinytesting: devtools, shinytest, withr
 License: MIT + file LICENSE

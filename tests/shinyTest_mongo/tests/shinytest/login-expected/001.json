@@ -1,0 +1,35 @@
+{
+  "input": {
+    "browser": 0,
+    "login_system-login_button": 1,
+    "login_system-login_user_id": "",
+    "login_system-password_login": "",
+    "login_system-register_bttn": 0,
+    "login_system-register_email": "",
+    "login_system-register_pass1": "",
+    "login_system-register_pass2": "",
+    "login_system-register_user_ID": "",
+    "logout": 0,
+    "logs": 0,
+    "reglogtabset": "Login"
+  },
+  "output": {
+    "login_system-login_ui": {
+      "html": "<h1>Login<\/h1>\n<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"login_system-login_user_id-label\" for=\"login_system-login_user_id\">User ID<\/label>\n  <input id=\"login_system-login_user_id\" type=\"text\" class=\"form-control\" value=\"\"/>\n<\/div>\n<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"login_system-password_login-label\" for=\"login_system-password_login\">Password<\/label>\n  <input id=\"login_system-password_login\" type=\"password\" class=\"form-control\" value=\"\"/>\n<\/div>\n<button class=\"btn btn-default action-button reglog_bttn\" id=\"login_system-login_button\" type=\"button\">Log-in<\/button>",
+      "deps": [
+
+      ]
+    },
+    "login_system-register_ui": {
+      "html": "<h1>Registration form<\/h1>\n<p>\n  In the form below you can register a new account. Choose a user ID, provide a valid e-mail adress and choose a password for your account.\n  <ul>\n    <li>User ID and password should consist of 8~30 characters. For user ID every alphanumeric characters are valid. Password should contain at least three out of four following types of characters: big letter, small letter, number, special character.<\/li>\n    <li>You should have access to the provided e-mail address. After registration you will receive a confirmation e-mail. Moreover, if you ever forget your password you can reset it with reset code send to provided e-mail.<\/li>\n  <\/ul>\n<\/p>\n<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"login_system-register_user_ID-label\" for=\"login_system-register_user_ID\">User ID<\/label>\n  <input id=\"login_system-register_user_ID\" type=\"text\" class=\"form-control\" value=\"\"/>\n<\/div>\n<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"login_system-register_email-label\" for=\"login_system-register_email\">E-mail address<\/label>\n  <input id=\"login_system-register_email\" type=\"text\" class=\"form-control\" value=\"\"/>\n<\/div>\n<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"login_system-register_pass1-label\" for=\"login_system-register_pass1\">Password<\/label>\n  <input id=\"login_system-register_pass1\" type=\"password\" class=\"form-control\" value=\"\"/>\n<\/div>\n<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"login_system-register_pass2-label\" for=\"login_system-register_pass2\">Repeat the password<\/label>\n  <input id=\"login_system-register_pass2\" type=\"password\" class=\"form-control\" value=\"\"/>\n<\/div>\n<button class=\"btn btn-default action-button reglog_bttn\" id=\"login_system-register_bttn\" type=\"button\">Register<\/button>",
+      "deps": [
+
+      ]
+    },
+    "reglog_message": "$type\n[1] \"login_front\"\n\n$data\n$data$success\n[1] FALSE\n\n$data$input_provided\n[1] FALSE\n\n\n$logcontent\nNULL",
+    "user_data": "$is_logged\n[1] FALSE\n\n$user_id\n[1] \"not_logged\"\n\n$user_mail\nNULL\n\n$account_id\n[1] \"hidden\""
+  },
+  "export": {
+
+  }
+}

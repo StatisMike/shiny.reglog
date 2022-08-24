@@ -8,6 +8,8 @@
 Object of this class handles all connections for the RegLogServer
 object to the database. It is created to handle googlesheet database.
 Provides methods than will be used by RegLogServer to get and send data.
+
+Requires \code{googlesheets4} package to be installed.
 }
 \seealso{
 Other dbConnectors: 
@@ -57,10 +59,10 @@ googlesheet: first containing user data, second - reset codes information,
 third (optional) - logs from the object. For more info check documentation
 of \code{gsheet_database_create}.}
 
-\item{\code{custom_handlers}}{named list of custom handler functions. Custom handler
-should take arguments: \code{self} and \code{private} - relating to the R6 object
-and \code{message} of class \code{RegLogConnectorMessage}. It should return
-\code{RegLogConnectorMessage} object.}
+\item{\code{custom_handlers}}{named list of custom handler functions. Every
+custom handler should take arguments: \code{self} and \code{private} - relating
+to the R6 object and \code{message} of class \code{RegLogConnectorMessage}. It
+should return \code{RegLogConnectorMessage} object.}
 }
 \if{html}{\out{</div>}}
 }

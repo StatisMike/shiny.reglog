@@ -39,6 +39,8 @@ Other dbConnectors:
 \subsection{Method \code{new()}}{
 Initialization of the object. Creates initial connection
 to the database.
+
+Requires \code{DBI} package to be installed.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RegLogDBIConnector$new(
   driver,
@@ -60,9 +62,9 @@ database: first containing user data, second - reset codes information,
 third (optional) - logs from the object. For more info check documentation
 of \code{DBI_database_create}.}
 
-\item{\code{custom_handlers}}{named list of custom handler functions. Custom handler
-should take arguments: \code{self} and \code{private} - relating to the R6 object
-and \code{message} of class \code{RegLogConnectorMessage}. It should return
+\item{\code{custom_handlers}}{named list of custom handler functions. Every
+custom handler should take arguments: \code{self} and \code{private} - relating to
+the R6 object and \code{message} of class \code{RegLogConnectorMessage}. It should
 return \code{RegLogConnectorMessage} object.}
 }
 \if{html}{\out{</div>}}

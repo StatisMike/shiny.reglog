@@ -40,14 +40,16 @@ RegLogDBIConnector = R6::R6Class(
     },
     # check the connection, and reconnect
     db_check_n_refresh = function() {
-      tryCatch({
-        res <- DBI::dbSendQuery(private$db_conn, "SELECT TRUE;")
-        DBI::dbClearResult(res)
-        },
-        error = function(e) {
-          private$db_connect()
-        }
-      )
+    #   tryCatch({
+    #     res <- DBI::dbSendQuery(private$db_conn, "SELECT TRUE;")
+    #     DBI::dbClearResult(res)
+    #     },
+    #     error = function(e) {
+    #       private$db_connect()
+    #     }
+    #   )
+      if (!isTRUE(DBI::dbIsValid(private$db_conn)))
+        private$db_connect()
     },
     # method to input log into database
     input_log = function(message, direction, session) {
@@ -86,15 +88,17 @@ RegLogDBIConnector = R6::R6Class(
     #' @description Initialization of the object. Creates initial connection
     #' to the database.
     #' 
+    #' Requires `DBI` package to be installed.
+    #' 
     #' @param driver Call that specifies the driver to be used during all queries
     #' @param ... other arguments used in `DBI::dbConnect()` call
     #' @param table_names character vector. Contains names of the tables in the
     #' database: first containing user data, second - reset codes information,
     #' third (optional) - logs from the object. For more info check documentation
     #' of `DBI_database_create`.
-    #' @param custom_handlers named list of custom handler functions. Custom handler
-    #' should take arguments: `self` and `private` - relating to the R6 object
-    #' and `message` of class `RegLogConnectorMessage`. It should return
+    #' @param custom_handlers named list of custom handler functions. Every 
+    #' custom handler should take arguments: `self` and `private` - relating to 
+    #' the R6 object and `message` of class `RegLogConnectorMessage`. It should 
     #' return `RegLogConnectorMessage` object.
     #' @return object of `RegLogDBIConnector` class
     #' 
@@ -123,8 +127,6 @@ RegLogDBIConnector = R6::R6Class(
       private$db_tables <- table_names
       # initial connection to the database, checking if everything is all right
       private$db_connect()
-      # assign the unique ID for the module
-      self$module_id <- uuid::UUIDgenerate()
       # disconnect fron the database when not used
       private$db_disconnect()
     }

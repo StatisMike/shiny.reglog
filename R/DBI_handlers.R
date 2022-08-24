@@ -120,7 +120,6 @@ DBI_register_handler = function(self, private, message) {
                                  create_time = db_timestamp())
     
     DBI::dbExecute(private$db_conn, query)
-    # DBI::dbSendQuery(private$db_conn, query)
     
     return(
       RegLogConnectorMessage(
@@ -142,6 +141,7 @@ DBI_register_handler = function(self, private, message) {
 #' @param self R6 object element
 #' @param private R6 object element
 #' @param message RegLogConnectorMessage which need to contain within its data:
+#' - account_id
 #' - password
 #' 
 #' It can also contain elements for change:
@@ -271,7 +271,6 @@ DBI_credsEdit_handler <- function(self, private, message) {
         )
     }
   }
-  
   return(message_to_send)
 }
 

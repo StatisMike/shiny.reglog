@@ -12,8 +12,8 @@ check_user_data <- function(user_data) {
   if (class(user_data) != "data.frame") {
     stop(call. = F, "User data need to be in form of 'data.frame' object.")
   }
-  if (!all(c("username", "password", "email") %in% names(user_data))) {
-    stop(call. = F, "Data.frame containing user data needs to contain columns: 'username', 'password' and 'email'.")
+  if (!all(names(user_data) %in% c("username", "password", "email", "create_time"))) {
+    stop(call. = F, "Data.frame containing user data needs to contain columns: 'username', 'password', 'email' and (optionally) 'create_time'.")
   }
   if (sum(is.na(user_data$username), is.na(user_data$password), is.na(user_data$email)) > 0) {
     stop(call. = F, "Provided user data can't contain any NA values.")
@@ -51,14 +51,14 @@ check_user_data <- function(user_data) {
 #' 
 #' - account (default name)
 #'   - id: integer, primary key, auto-increment
-#'   - username: varchar(255), NOT NULL, unique
+#'   - username: varchar(255), NOT NULL, unique key
 #'   - password: varchar(255), NOT NULL
-#'   - email: varchar(255), NOT NULL, unique
+#'   - email: varchar(255), NOT NULL, unique key
 #'   - create_time: datetime, NOT NULL
 #'   - update_time: datetime, NOT NULL
 #' - reset_code (default name)
 #'   - id: integer, primary key, auto-increment
-#'   - user_id: integer, NOT NULL
+#'   - user_id: integer, NOT NULL, key
 #'   - reset_code: varchar(10), NOT NULL
 #'   - used: tinyint, NOT NULL
 #'   - create_time: datetime, NOT NULL
@@ -153,6 +153,8 @@ DBI_tables_create <- function(
     error = function(e) e,
     warning = function(w) w
   )
+  
+  DBI::dbExecute(conn, paste0("CREATE INDEX user_id_reset_code ON ", reset_code_name, " (user_id);"))
   
   if (isTRUE(verbose)) {
     writeLines(paste0(output$reset_code$table_name, " creation result: ", output$reset_code$result))

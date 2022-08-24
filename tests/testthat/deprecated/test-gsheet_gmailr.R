@@ -1,39 +1,41 @@
 # long-running test - skip on CRAN
 
-skip_on_cran()
+skip("wip")
 
-# create SQLite database
-temp_db <- tempfile(fileext = ".sqlite")
+# auth #
 
-Sys.setenv(REGLOG_TEMP_SQLITE = temp_db)
+googlesheets4::gs4_auth(email = Sys.getenv("G_SERVICE_MAIL"),
+                        path = Sys.getenv("G_SERVICE_ACCOUNT"),
+                        cache = F)
+googledrive::drive_auth(email = Sys.getenv("G_SERVICE_MAIL"),
+                        path = Sys.getenv("G_SERVICE_ACCOUNT"),
+                        cache = F)
 
-conn <- DBI::dbConnect(
-  RSQLite::SQLite(),
-  dbname = temp_db
-)
+# prepare gsheet
+tryCatch(
+    googlesheets4::sheet_delete(id, c("account", "reset_code")), 
+    error = function(e) { })
 
-DBI_tables_create(conn = conn)
-
-DBI::dbDisconnect(conn)
+gsheet_tables_create(gsheet_ss = Sys.getenv("REGLOG_SHEET"))
 
 tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
 
 test_that("User register works correctly.", {
-  
+
   results <- withr::with_libpaths(tmp_lib, {
-    shinytest::testApp(appDir = testthat::test_path("../shinyTest_DBI_emayili"), 
+    shinytest::testApp(appDir = testthat::test_path("../shinyTest_gsheet_gmailr"), 
                        compareImages = FALSE,
                        testnames = "register")
   }, action = "prefix")
   shinytest::expect_pass(results)
-  
+
 })
 
 test_that("User login works correctly.", {
   
   # tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
   results <- withr::with_libpaths(tmp_lib, {
-    shinytest::testApp(appDir = testthat::test_path("../shinyTest_DBI_emayili"), 
+    shinytest::testApp(appDir = testthat::test_path("../shinyTest_gsheet_gmailr"), 
                        compareImages = FALSE,
                        testnames = "login")
   }, action = "prefix")
@@ -45,7 +47,7 @@ test_that("User credsEdit works correctly.", {
   
   # tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
   results <- withr::with_libpaths(tmp_lib, {
-    shinytest::testApp(appDir = testthat::test_path("../shinyTest_DBI_emayili"), 
+    shinytest::testApp(appDir = testthat::test_path("../shinyTest_gsheet_gmailr"), 
                        compareImages = FALSE,
                        testnames = "credsEdit")
   }, action = "prefix")
@@ -57,7 +59,7 @@ test_that("User resetPass works correctly.", {
   
   # tmp_lib <- ensurePackagePresent(pkgName = "shiny.reglog", quiet = F)
   results <- withr::with_libpaths(tmp_lib, {
-    shinytest::testApp(appDir = testthat::test_path("../shinyTest_DBI_emayili"), 
+    shinytest::testApp(appDir = testthat::test_path("../shinyTest_gsheet_gmailr"), 
                        compareImages = FALSE,
                        testnames = "resetPass")
   }, action = "prefix")

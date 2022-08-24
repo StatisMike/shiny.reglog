@@ -5,6 +5,8 @@
 #' object to the database. It is created to handle googlesheet database.
 #' Provides methods than will be used by RegLogServer to get and send data.
 #' 
+#' Requires `googlesheets4` package to be installed.
+#' 
 #' @family dbConnectors
 #' @import R6
 #' @export
@@ -33,7 +35,7 @@ RegLogGsheetConnector <- R6::R6Class(
         note = message$logcontent)
       
       googlesheets4::sheet_append(
-        ss =  gsheet_ss,
+        ss =  private$gsheet_ss,
         data = log_data,
         sheet = private$gsheet_sheetnames[3]
       )
@@ -41,21 +43,26 @@ RegLogGsheetConnector <- R6::R6Class(
     # method to get specified sheet of type 'user' or 'reset_code'
     get_sheet = function(type) {
       switch(type,
-        account = {
-          private$data_user <- googlesheets4::read_sheet(
-            ss = private$gsheet_ss,
-            sheet = private$gsheet_sheetnames[1],
-            col_types = "c"
-          )
-        },
-        reset_code = {
-          private$data_reset_code <- googlesheets4::read_sheet(
-            ss = private$gsheet_ss,
-            sheet = private$gsheet_sheetnames[2],
-            col_types = "icicc"
-          )
-        }
+             account = {
+               private$data_user <- googlesheets4::read_sheet(
+                 ss = private$gsheet_ss,
+                 sheet = private$gsheet_sheetnames[1],
+                 col_types = "c"
+               )
+             },
+             reset_code = {
+               private$data_reset_code <- googlesheets4::read_sheet(
+                 ss = private$gsheet_ss,
+                 sheet = private$gsheet_sheetnames[2],
+                 col_types = "icicc"
+               )
+             }
       )
+    },
+    # method to clear the sheets data from memory
+    clear_sheets = function() {
+      private$data_user <- NULL
+      private$data_reset_code <- NULL
     }
   ),
   # public elements ####
@@ -69,18 +76,18 @@ RegLogGsheetConnector <- R6::R6Class(
     #' googlesheet: first containing user data, second - reset codes information,
     #' third (optional) - logs from the object. For more info check documentation
     #' of `gsheet_database_create`.
-    #' @param custom_handlers named list of custom handler functions. Custom handler
-    #' should take arguments: `self` and `private` - relating to the R6 object
-    #' and `message` of class `RegLogConnectorMessage`. It should return
-    #' `RegLogConnectorMessage` object.
+    #' @param custom_handlers named list of custom handler functions. Every 
+    #' custom handler should take arguments: `self` and `private` - relating 
+    #' to the R6 object and `message` of class `RegLogConnectorMessage`. It 
+    #' should return `RegLogConnectorMessage` object.
     #' 
     #' @return object of `RegLogDBIConnector` class
     #' 
     
     initialize = function(
-      gsheet_ss,
-      gsheet_sheetnames = c("account", "reset_code", "logs"),
-      custom_handlers = NULL
+    gsheet_ss,
+    gsheet_sheetnames = c("account", "reset_code", "logs"),
+    custom_handlers = NULL
     ) {
       
       check_namespace("googlesheets4")
@@ -96,7 +103,7 @@ RegLogGsheetConnector <- R6::R6Class(
       # store the arguments internally
       private$gsheet_ss <- gsheet_ss
       private$gsheet_sheetnames <- gsheet_sheetnames
-
+      
     }
   )
 )
