@@ -20,8 +20,8 @@ mongo_tables_create(
 )
 
 dbConnector <- quote(RegLogMongoConnector$new(
-  mongo_url = "mongodb://localhost",
-  mongo_db = "reglog"
+  mongo_url = mongo_default$url,
+  mongo_db = mongo_default$db
 ))
 
 mailConnector <- quote(RegLogConnector$new())
@@ -29,10 +29,10 @@ mailConnector <- quote(RegLogConnector$new())
 shiny.reglog:::RegLogTest(dbConnector = dbConnector,
                           mailConnector = mailConnector)
 
-account <- mongolite::mongo(db = "reglog", collection = "account")
+account <- mongolite::mongo(db = mongo_default$db, collection = "account")
 account$drop()
 account$disconnect()
-resetCode <- mongolite::mongo(db = "reglog", collection = "reset_code")
+resetCode <- mongolite::mongo(db = mongo_default$db, collection = "reset_code")
 resetCode$drop()
 resetCode$disconnect()
 

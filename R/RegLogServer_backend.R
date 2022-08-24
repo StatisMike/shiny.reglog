@@ -55,7 +55,7 @@ RegLogServer_backend <- function(
         } else {
           
           on.exit(blank_textInputs(inputs = c("login_user_id", "password_login"),
-                                    session = session))
+                                   session = session))
           
           shinyjs::runjs("$('.reglog_bttn').attr('disabled', true)")
           
@@ -99,7 +99,7 @@ RegLogServer_backend <- function(
         } else {
           
           on.exit(blank_textInputs(inputs = c("register_pass1", "register_pass2"),
-                                    session = session))
+                                   session = session))
           
           # check validity of inputs
           
@@ -121,10 +121,10 @@ RegLogServer_backend <- function(
             modals_check_n_show(
               private = private,
               modalname = if (!message_to_show$data$valid_id) "register_nonValidId"
-                     else if (!message_to_show$data$valid_email) "register_nonValidEmail"
-                     else if (!message_to_show$data$valid_pass) "register_nonValidPass"
-                     else if (!message_to_show$data$identical_pass) "register_notIdenticalPass"
-              )
+              else if (!message_to_show$data$valid_email) "register_nonValidEmail"
+              else if (!message_to_show$data$valid_pass) "register_nonValidPass"
+              else if (!message_to_show$data$identical_pass) "register_notIdenticalPass"
+            )
             
             # show message and save to logs if enabled
             self$message(message_to_show)
@@ -133,7 +133,7 @@ RegLogServer_backend <- function(
           } else {
             
             on.exit(blank_textInputs(inputs = c("register_user_ID", "register_email"),
-                                      session = session), add = T)
+                                     session = session), add = T)
             
             message_to_send <- RegLogConnectorMessage(
               type = "register",
@@ -170,7 +170,7 @@ RegLogServer_backend <- function(
             "credsEdit_front",
             success = FALSE,
             user_logged = FALSE,
-            change = "other"
+            change = "pass"
           )
           
           modals_check_n_show(private,
@@ -182,7 +182,7 @@ RegLogServer_backend <- function(
           
           # check if the inputs are filled
         } else if (!all(isTruthy(input$cred_edit_old_pass),
-                 isTruthy(input$cred_edit_new_pass1), isTruthy(input$cred_edit_new_pass2))) {
+                        isTruthy(input$cred_edit_new_pass1), isTruthy(input$cred_edit_new_pass2))) {
           
           message_to_show <- RegLogConnectorMessage(
             type = "credsEdit_front",
@@ -210,12 +210,12 @@ RegLogServer_backend <- function(
           )
           
           blank_textInputs(c("cred_edit_new_pass1", "cred_edit_new_pass2"),
-                            session = session)
+                           session = session)
           
           modals_check_n_show(
             private = private,
             modalname = if (!message_to_show$data$valid_pass) "credsEdit_nonValidPass"
-                   else if (!message_to_show$data$identical_pass) "credsEdit_notIdenticalPass"
+            else if (!message_to_show$data$identical_pass) "credsEdit_notIdenticalPass"
           )
           # if everything is OK - send the message
         } else {
@@ -226,8 +226,8 @@ RegLogServer_backend <- function(
           })
           
           blank_textInputs(c("cred_edit_new_pass1", "cred_edit_new_pass2", 
-                              "cred_edit_old_pass"), 
-                            session = session)
+                             "cred_edit_old_pass"), 
+                           session = session)
           
           message_to_send <- RegLogConnectorMessage(
             type = "credsEdit",
@@ -267,8 +267,8 @@ RegLogServer_backend <- function(
           
           
           # check if the inputs are filled
-        } else if (!isTruthy(input$cred_edit_old_pass) &&
-            !any(isTruthy(input$cred_edit_new_ID), isTruthy(input$cred_edit_new_mail))) {
+        } else if (!isTruthy(input$cred_edit_old_pass) ||
+                   (!isTruthy(input$cred_edit_new_ID) && !isTruthy(input$cred_edit_new_mail))) {
           
           message_to_show <- RegLogConnectorMessage(
             "credsEdit_front",
@@ -298,11 +298,11 @@ RegLogServer_backend <- function(
           modals_check_n_show(
             private = private,
             modalname = if (isFALSE(message_to_show$data$valid_id)) "credsEdit_nonValidId"
-                   else if (isFALSE(message_to_show$data$valid_email)) "credsEdit_nonValidEmail")
+            else if (isFALSE(message_to_show$data$valid_email)) "credsEdit_nonValidEmail")
           
           blank_textInputs(c("cred_edit_old_pass", 
-                              "cred_edit_new_ID", "cred_edit_new_mail"),
-                            session = session)
+                             "cred_edit_new_ID", "cred_edit_new_mail"),
+                           session = session)
           
         } else {
           # if everything is all right, send message to dbConnector
@@ -321,8 +321,8 @@ RegLogServer_backend <- function(
           )
           
           blank_textInputs(c("cred_edit_old_pass", 
-                              "cred_edit_new_ID", "cred_edit_new_mail"),
-                            session = session)
+                             "cred_edit_new_ID", "cred_edit_new_mail"),
+                           session = session)
           
           shinyjs::runjs("$('.reglog_bttn').attr('disabled', true)")
           
@@ -386,8 +386,8 @@ RegLogServer_backend <- function(
           modals_check_n_show(
             private = private, 
             modalname = if (!check_user_pass(input$reset_pass1)) "resetPass_nonValidPass"
-                   else if (input$reset_pass1 != input$reset_pass2) "resetPass_notIdenticalPass"
-            )
+            else if (input$reset_pass1 != input$reset_pass2) "resetPass_notIdenticalPass"
+          )
           
           message_to_show <- RegLogConnectorMessage(
             "resetPass_front",
@@ -399,7 +399,7 @@ RegLogServer_backend <- function(
           )
           
           blank_textInputs(c("reset_pass1", "reset_pass2"), 
-                            session = session)
+                           session = session)
           
         } else {
           
@@ -416,8 +416,8 @@ RegLogServer_backend <- function(
           )
           
           blank_textInputs(c("reset_user_ID", "reset_code", 
-                              "reset_pass1", "reset_pass2"), 
-                            session = session)
+                             "reset_pass1", "reset_pass2"), 
+                           session = session)
           
           shinyjs::runjs("$('.reglog_bttn').attr('disabled', true)")
         }

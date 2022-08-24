@@ -54,17 +54,18 @@
 #' @family RegLog databases
 
 mongo_tables_create <- function(
-  mongo_url,
-  mongo_db,
-  mongo_options = mongolite::ssl_options(),
-  account_name = "account",
-  reset_code_name = "reset_code",
-  user_data = NULL,
-  hash_passwords = FALSE,
-  verbose = TRUE
+    mongo_url,
+    mongo_db,
+    mongo_options = mongolite::ssl_options(),
+    account_name = "account",
+    reset_code_name = "reset_code",
+    user_data = NULL,
+    hash_passwords = FALSE,
+    verbose = TRUE
 ){
   
   check_namespace("mongolite")
+  check_namespace("jsonlite")
   
   # if user data is provided, check its validity
   if (!is.null(user_data)) {
@@ -93,9 +94,9 @@ mongo_tables_create <- function(
     }
     db_time <- db_timestamp()
     user_data$create_time <- if (is.null(user_data$create_time)) db_time 
-                           else lubridate::as_datetime(user_data$create_time)
+    else lubridate::as_datetime(user_data$create_time)
     user_data$update_time <- db_time
-
+    
     # insert parsed data
     mongo_conn <- mongolite::mongo(
       url = mongo_url,
@@ -172,13 +173,14 @@ RegLogMongoConnector <- R6::R6Class(
     #' @return Object of `RegLogMongoConnector` class
     
     initialize = function(
-      mongo_url,
-      mongo_db,
-      mongo_options = mongolite::ssl_options(),
-      collections = c("account", "reset_code", "logs"),
-      custom_handlers = NULL
+    mongo_url,
+    mongo_db,
+    mongo_options = mongolite::ssl_options(),
+    collections = c("account", "reset_code", "logs"),
+    custom_handlers = NULL
     ) {
       check_namespace("mongolite")
+      check_namespace("jsonlite")
       
       self$handlers[["login"]] <- mongo_login_handler
       self$handlers[["register"]] <- mongo_register_handler
@@ -195,7 +197,6 @@ RegLogMongoConnector <- R6::R6Class(
       private$collections <- collections
       
     }
-    
   ),
   
   private = list(
@@ -209,6 +210,26 @@ RegLogMongoConnector <- R6::R6Class(
                        db = private$mongo_db,
                        options = private$mongo_options,
                        collection = collection)
+    },
+    
+    input_log = function(message, direction, session) {
+      
+      logs <- private$connect(private$collections[3])
+      
+      on.exit(logs$disconnect())
+      
+      log_data <- list(time = message$time,
+                       session = session$token,
+                       direction = direction,
+                       type = message$type)
+      
+      if (!is.null(message$logcontent)) {
+        log_data[["note"]] <- message$logcontent
+      }
+      
+      logs$insert(
+        log_data
+      )
     }
   )
 )
@@ -235,7 +256,8 @@ RegLogMongoConnector <- R6::R6Class(
 mongo_login_handler <- function(self, private, message) {
   
   check_namespace("mongolite")
-  
+  check_namespace("jsonlite")
+    
   account <- private$connect(private$collections[1])
   on.exit(account$disconnect())
   
@@ -300,6 +322,7 @@ mongo_login_handler <- function(self, private, message) {
 mongo_register_handler = function(self, private, message) {
   
   check_namespace("mongolite")
+  check_namespace("jsonlite")
   
   account <- private$connect(private$collections[1])
   on.exit(account$disconnect())
@@ -375,6 +398,7 @@ mongo_register_handler = function(self, private, message) {
 mongo_credsEdit_handler <- function(self, private, message) {
   
   check_namespace("mongolite")
+  check_namespace("jsonlite")
   
   account <- private$connect(private$collections[1])
   on.exit(account$disconnect())
@@ -478,10 +502,11 @@ mongo_credsEdit_handler <- function(self, private, message) {
 mongo_resetPass_generation_handler <- function(self, private, message) {
   
   check_namespace("mongolite")
+  check_namespace("jsonlite")
   
   account <- private$connect(private$collections[1])
   on.exit(account$disconnect())
-
+  
   # firstly check login credentials
   user_data <- account$find(
     query = jsonlite::toJSON(list("username" = message$data$username),
@@ -552,8 +577,7 @@ mongo_resetPass_generation_handler <- function(self, private, message) {
 mongo_resetPass_confirmation_handler <- function(self, private, message) {
   
   check_namespace("mongolite")
-  
-  browser()
+  check_namespace("jsonlite")
   
   account <- private$connect(private$collections[1])
   on.exit(account$disconnect())
@@ -589,7 +613,7 @@ mongo_resetPass_confirmation_handler <- function(self, private, message) {
     
     # if not used reset code matches and isn't expired, update the database
     if (nrow(reset_code_data) > 0 && not_expired) {
-
+      
       # update user data
       account$update(
         query = jsonlite::toJSON(list(

@@ -40,14 +40,16 @@ RegLogDBIConnector = R6::R6Class(
     },
     # check the connection, and reconnect
     db_check_n_refresh = function() {
-      tryCatch({
-        res <- DBI::dbSendQuery(private$db_conn, "SELECT TRUE;")
-        DBI::dbClearResult(res)
-        },
-        error = function(e) {
-          private$db_connect()
-        }
-      )
+    #   tryCatch({
+    #     res <- DBI::dbSendQuery(private$db_conn, "SELECT TRUE;")
+    #     DBI::dbClearResult(res)
+    #     },
+    #     error = function(e) {
+    #       private$db_connect()
+    #     }
+    #   )
+      if (!isTRUE(DBI::dbIsValid(private$db_conn)))
+        private$db_connect()
     },
     # method to input log into database
     input_log = function(message, direction, session) {

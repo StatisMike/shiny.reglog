@@ -1,6 +1,6 @@
 # long-running test - skip on CRAN
 
-skip_on_cran()
+skip("WIP")
 
 ensurePackagePresent <- function(pkgName, quiet=TRUE) {
   tmp_lib <- tempfile("R_LIBS")

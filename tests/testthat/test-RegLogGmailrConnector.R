@@ -1,5 +1,4 @@
 # long-running test - skip on CRAN
-
 skip_on_cran()
 
 gmailr::gm_auth_configure(path = Sys.getenv("GMAILR_APP"))

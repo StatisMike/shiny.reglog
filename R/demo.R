@@ -165,6 +165,7 @@ RegLogDemo <- function(emayili_smtp = NULL,
 #' @param dbConnector unevaluated dbConnector
 #' @param mailConnector unevaluated mailConnector
 #' @param onStart unevaluated expression to run before initializing session
+#' @param use_modals value passed to `use_modals` argument of `RegLogServer`
 #' @param hide_account_id should account ID be hidden? Useful when document ID
 #' is randomized.
 #' @noRd
@@ -172,6 +173,7 @@ RegLogDemo <- function(emayili_smtp = NULL,
 RegLogTest <- function(dbConnector,
                        mailConnector,
                        onStart = NULL,
+                       use_modals = FALSE,
                        hide_account_id = FALSE) {
   
   # create an UI
@@ -180,10 +182,10 @@ RegLogTest <- function(dbConnector,
     shinyjs::useShinyjs(),
     column(width = 6,
            tabsetPanel(id = "reglogtabset",
-             tabPanel("Register", RegLog_register_UI()),
-             tabPanel("Login", RegLog_login_UI()),
-             tabPanel("Credentials edit", RegLog_credsEdit_UI()),
-             tabPanel("Password reset", RegLog_resetPass_UI()))),
+                       tabPanel("Register", RegLog_register_UI()),
+                       tabPanel("Login", RegLog_login_UI()),
+                       tabPanel("Credentials edit", RegLog_credsEdit_UI()),
+                       tabPanel("Password reset", RegLog_resetPass_UI()))),
     column(width = 6,
            h2("RegLogServer state"),
            tags$h2("Current user data"),
@@ -205,7 +207,7 @@ RegLogTest <- function(dbConnector,
     RegLog <- RegLogServer$new(
       dbConnector = dbConnector,
       mailConnector = mailConnector,
-      use_modals = F
+      use_modals = use_modals
     )
     
     output$user_data <- renderPrint(
@@ -225,7 +227,13 @@ RegLogTest <- function(dbConnector,
       message
     })
     
-    observeEvent(input$logs, RegLog$get_logs())
+    logs <- eventReactive(input$logs, RegLog$get_logs())
+    
+    shiny::exportTestValues(
+      RegLogMessage = RegLog$message(),
+      is_logged = RegLog$is_logged(),
+      logs = logs()
+    )
     
     observeEvent(input$logout, RegLog$logout())
     
@@ -249,20 +257,20 @@ login_server_test <- function(){
   
   ui <- fluidPage(
     column(6, 
-      tabsetPanel(id = "tabset",
-        tabPanel(title = "Register",
-                 register_UI()),
-        tabPanel(title = "Login",
-                 login_UI()),
-        tabPanel(title = "Password reset",
-                 password_reset_UI())),
-      logout_button()),
+           tabsetPanel(id = "tabset",
+                       tabPanel(title = "Register",
+                                register_UI()),
+                       tabPanel(title = "Login",
+                                login_UI()),
+                       tabPanel(title = "Password reset",
+                                password_reset_UI())),
+           logout_button()),
     column(6,
-      h2("User data"),
-      verbatimTextOutput("user_data")))
+           h2("User data"),
+           verbatimTextOutput("user_data")))
   
   server <- function(input, output, session) {
-     
+    
     old_reglog <- login_server(
       db_method = "sqlite",
       mail_method = "emayili",
@@ -280,12 +288,12 @@ login_server_test <- function(){
       list(
         is_logged = old_reglog$is_logged,
         user_id = if (isTRUE(old_reglog$is_logged)) old_reglog$user_id
-                else "Anonymous",
+        else "Anonymous",
         user_mail = old_reglog$user_mail
       )
     )
   }
-    
+  
   shinyApp(ui, server)
 }
 

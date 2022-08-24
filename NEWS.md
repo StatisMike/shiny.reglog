@@ -1,3 +1,11 @@
+# shiny.reglog 0.5.1
+
+- added experimental `RegLogMongoConnector` - connector to mongodb database
+- added `shinytest2`-based tests
+- fixed bugs:
+  - correct modal showing up with missing inputs on credentials change
+  - `RegLogGsheetConnector` able to save logs into googlesheet database
+
 # shiny.reglog 0.5.0
 
 With the release of v0.5.0 there are a lot of changes in the current implementation

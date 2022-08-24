@@ -35,7 +35,7 @@ RegLogGsheetConnector <- R6::R6Class(
         note = message$logcontent)
       
       googlesheets4::sheet_append(
-        ss =  gsheet_ss,
+        ss =  private$gsheet_ss,
         data = log_data,
         sheet = private$gsheet_sheetnames[3]
       )
@@ -43,20 +43,20 @@ RegLogGsheetConnector <- R6::R6Class(
     # method to get specified sheet of type 'user' or 'reset_code'
     get_sheet = function(type) {
       switch(type,
-        account = {
-          private$data_user <- googlesheets4::read_sheet(
-            ss = private$gsheet_ss,
-            sheet = private$gsheet_sheetnames[1],
-            col_types = "c"
-          )
-        },
-        reset_code = {
-          private$data_reset_code <- googlesheets4::read_sheet(
-            ss = private$gsheet_ss,
-            sheet = private$gsheet_sheetnames[2],
-            col_types = "icicc"
-          )
-        }
+             account = {
+               private$data_user <- googlesheets4::read_sheet(
+                 ss = private$gsheet_ss,
+                 sheet = private$gsheet_sheetnames[1],
+                 col_types = "c"
+               )
+             },
+             reset_code = {
+               private$data_reset_code <- googlesheets4::read_sheet(
+                 ss = private$gsheet_ss,
+                 sheet = private$gsheet_sheetnames[2],
+                 col_types = "icicc"
+               )
+             }
       )
     },
     # method to clear the sheets data from memory
@@ -85,9 +85,9 @@ RegLogGsheetConnector <- R6::R6Class(
     #' 
     
     initialize = function(
-      gsheet_ss,
-      gsheet_sheetnames = c("account", "reset_code", "logs"),
-      custom_handlers = NULL
+    gsheet_ss,
+    gsheet_sheetnames = c("account", "reset_code", "logs"),
+    custom_handlers = NULL
     ) {
       
       check_namespace("googlesheets4")
@@ -103,7 +103,7 @@ RegLogGsheetConnector <- R6::R6Class(
       # store the arguments internally
       private$gsheet_ss <- gsheet_ss
       private$gsheet_sheetnames <- gsheet_sheetnames
-
+      
     }
   )
 )
