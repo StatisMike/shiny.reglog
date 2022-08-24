@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, master]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, development]
   workflow_dispatch:
 
 name: test-coverage
@@ -37,7 +37,6 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           extra-packages: covr
-          needs: shinytesting
 
       - name: Test coverage
         run: covr::codecov()

@@ -482,4 +482,4 @@ test_that("Logs can be read from database", {
   
 })
 
-app$stop()
+# app$stop()
