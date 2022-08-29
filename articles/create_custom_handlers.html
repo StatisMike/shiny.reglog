@@ -8,8 +8,8 @@
 <meta name="description" content="shiny.reglog">
 <title>Creating custom RegLogConnector handlers • shiny.reglog</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Creating custom RegLogConnector handlers">
 <meta property="og:description" content="shiny.reglog">
@@ -22,11 +22,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">shiny.reglog</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
 
 
 <script src="create_custom_handlers_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Creating custom RegLogConnector handlers</h1>
             
       
@@ -111,33 +111,33 @@
 </ul>
 <p>You can create message freely using function of the same name:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">message</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
-    type <span class="op">=</span> <span class="st">"test"</span>,
-    dataframe <span class="op">=</span> <span class="va">mtcars</span>,
-    numbers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,
-    logcontent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"I contain data.frame and random numbers"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">message</span><span class="op">)</span>
-<span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:47.974"</span>
-<span class="co">#&gt;  $ type      : chr "test"</span>
-<span class="co">#&gt;  $ data      :List of 2</span>
-<span class="co">#&gt;   ..$ dataframe:'data.frame':    32 obs. of  11 variables:</span>
-<span class="co">#&gt;   .. ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...</span>
-<span class="co">#&gt;   .. ..$ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...</span>
-<span class="co">#&gt;   .. ..$ disp: num [1:32] 160 160 108 258 360 ...</span>
-<span class="co">#&gt;   .. ..$ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...</span>
-<span class="co">#&gt;   .. ..$ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...</span>
-<span class="co">#&gt;   .. ..$ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...</span>
-<span class="co">#&gt;   .. ..$ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...</span>
-<span class="co">#&gt;   .. ..$ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...</span>
-<span class="co">#&gt;   .. ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...</span>
-<span class="co">#&gt;   .. ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...</span>
-<span class="co">#&gt;   .. ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...</span>
-<span class="co">#&gt;   ..$ numbers  : num [1:10] 63.26 94.04 44.62 5.55 35.71 ...</span>
-<span class="co">#&gt;  $ logcontent: chr "I contain data.frame and random numbers"</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">message</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"test"</span>,</span>
+<span>    dataframe <span class="op">=</span> <span class="va">mtcars</span>,</span>
+<span>    numbers <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">100</span><span class="op">)</span>,</span>
+<span>    logcontent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"I contain data.frame and random numbers"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">message</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 4</span></span>
+<span><span class="co">#&gt;  $ time      : chr "2022-08-29 21:10:06.906"</span></span>
+<span><span class="co">#&gt;  $ type      : chr "test"</span></span>
+<span><span class="co">#&gt;  $ data      :List of 2</span></span>
+<span><span class="co">#&gt;   ..$ dataframe:'data.frame':    32 obs. of  11 variables:</span></span>
+<span><span class="co">#&gt;   .. ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ disp: num [1:32] 160 160 108 258 360 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...</span></span>
+<span><span class="co">#&gt;   .. ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...</span></span>
+<span><span class="co">#&gt;   ..$ numbers  : num [1:10] 20.42 69.19 5.05 61.95 56.41 ...</span></span>
+<span><span class="co">#&gt;  $ logcontent: chr "I contain data.frame and random numbers"</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -158,21 +158,21 @@
 </ul>
 <p>These functions are handling querying the database for the specified by the user of the ShinyApp user ID and password and check if there is a match. Message structure:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">login_message</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
-    type <span class="op">=</span> <span class="st">"login"</span>,
-    username <span class="op">=</span> <span class="st">"Whatever"</span>,
-    password <span class="op">=</span> <span class="st">"&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">login_message</span><span class="op">)</span>
-<span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.054"</span>
-<span class="co">#&gt;  $ type      : chr "login"</span>
-<span class="co">#&gt;  $ data      :List of 2</span>
-<span class="co">#&gt;   ..$ username: chr "Whatever"</span>
-<span class="co">#&gt;   ..$ password: chr "&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span>
-<span class="co">#&gt;  $ logcontent: NULL</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">login_message</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"login"</span>,</span>
+<span>    username <span class="op">=</span> <span class="st">"Whatever"</span>,</span>
+<span>    password <span class="op">=</span> <span class="st">"&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">login_message</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 4</span></span>
+<span><span class="co">#&gt;  $ time      : chr "2022-08-29 21:10:07.010"</span></span>
+<span><span class="co">#&gt;  $ type      : chr "login"</span></span>
+<span><span class="co">#&gt;  $ data      :List of 2</span></span>
+<span><span class="co">#&gt;   ..$ username: chr "Whatever"</span></span>
+<span><span class="co">#&gt;   ..$ password: chr "&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span></span>
+<span><span class="co">#&gt;  $ logcontent: NULL</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="handlers-for-register-type-message">Handlers for <em>register</em> type message<a class="anchor" aria-label="anchor" href="#handlers-for-register-type-message"></a>
@@ -187,23 +187,23 @@
 </ul>
 <p>These functions are handling querying the database and checking if the specified user ID and email for new user aren’t already existing in the database. If there is no conflicts, it will then hash provided password and input new row. Message structure:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">register_message</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
-    type <span class="op">=</span> <span class="st">"register"</span>,
-    username <span class="op">=</span> <span class="st">"IAmNewThere"</span>,
-    email <span class="op">=</span> <span class="st">"something@new.com"</span>,
-    password <span class="op">=</span> <span class="st">"veryHardP422w0rd!"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">register_message</span><span class="op">)</span>
-<span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.130"</span>
-<span class="co">#&gt;  $ type      : chr "register"</span>
-<span class="co">#&gt;  $ data      :List of 3</span>
-<span class="co">#&gt;   ..$ username: chr "IAmNewThere"</span>
-<span class="co">#&gt;   ..$ email   : chr "something@new.com"</span>
-<span class="co">#&gt;   ..$ password: chr "veryHardP422w0rd!"</span>
-<span class="co">#&gt;  $ logcontent: NULL</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">register_message</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"register"</span>,</span>
+<span>    username <span class="op">=</span> <span class="st">"IAmNewThere"</span>,</span>
+<span>    email <span class="op">=</span> <span class="st">"something@new.com"</span>,</span>
+<span>    password <span class="op">=</span> <span class="st">"veryHardP422w0rd!"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">register_message</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 4</span></span>
+<span><span class="co">#&gt;  $ time      : chr "2022-08-29 21:10:07.101"</span></span>
+<span><span class="co">#&gt;  $ type      : chr "register"</span></span>
+<span><span class="co">#&gt;  $ data      :List of 3</span></span>
+<span><span class="co">#&gt;   ..$ username: chr "IAmNewThere"</span></span>
+<span><span class="co">#&gt;   ..$ email   : chr "something@new.com"</span></span>
+<span><span class="co">#&gt;   ..$ password: chr "veryHardP422w0rd!"</span></span>
+<span><span class="co">#&gt;  $ logcontent: NULL</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="handlers-for-credsedit-type-message">Handlers for <em>credsEdit</em> type message<a class="anchor" aria-label="anchor" href="#handlers-for-credsedit-type-message"></a>
@@ -216,27 +216,29 @@
 <em>RegLogGsheetConnector</em>: <code>gsheet_credsEdit_handler</code>
 </li>
 </ul>
-<p>These functions are querying the database to search for the specified username and password. After confirming user identity, it can update the database row for this user with any or all of: new username, new email and new password. Message structure:</p>
+<p>These functions are querying the database to search for the specified account ID and verify password. After confirming user identity, it can update the database row for this user with any or all of: new username, new email and new password. Message structure:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">credsEdit_message</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
-    type <span class="op">=</span> <span class="st">"credsEdit"</span>,
-    password <span class="op">=</span> <span class="st">"&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span>,
-    new_username <span class="op">=</span> <span class="st">"Whenever"</span>,
-    new_email <span class="op">=</span> <span class="st">"edited@email.com"</span>,
-    new_password <span class="op">=</span> <span class="st">"veryHardP422w0rd!"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">credsEdit_message</span><span class="op">)</span>
-<span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.207"</span>
-<span class="co">#&gt;  $ type      : chr "credsEdit"</span>
-<span class="co">#&gt;  $ data      :List of 4</span>
-<span class="co">#&gt;   ..$ password    : chr "&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span>
-<span class="co">#&gt;   ..$ new_username: chr "Whenever"</span>
-<span class="co">#&gt;   ..$ new_email   : chr "edited@email.com"</span>
-<span class="co">#&gt;   ..$ new_password: chr "veryHardP422w0rd!"</span>
-<span class="co">#&gt;  $ logcontent: NULL</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">credsEdit_message</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"credsEdit"</span>,</span>
+<span>    account_id <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    password <span class="op">=</span> <span class="st">"&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span>,</span>
+<span>    new_username <span class="op">=</span> <span class="st">"Whenever"</span>,</span>
+<span>    new_email <span class="op">=</span> <span class="st">"edited@email.com"</span>,</span>
+<span>    new_password <span class="op">=</span> <span class="st">"veryHardP422w0rd!"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">credsEdit_message</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 4</span></span>
+<span><span class="co">#&gt;  $ time      : chr "2022-08-29 21:10:07.199"</span></span>
+<span><span class="co">#&gt;  $ type      : chr "credsEdit"</span></span>
+<span><span class="co">#&gt;  $ data      :List of 5</span></span>
+<span><span class="co">#&gt;   ..$ account_id  : num 1</span></span>
+<span><span class="co">#&gt;   ..$ password    : chr "&amp;f5*MSYj^niDt=V'3.[dyEX.C/"</span></span>
+<span><span class="co">#&gt;   ..$ new_username: chr "Whenever"</span></span>
+<span><span class="co">#&gt;   ..$ new_email   : chr "edited@email.com"</span></span>
+<span><span class="co">#&gt;   ..$ new_password: chr "veryHardP422w0rd!"</span></span>
+<span><span class="co">#&gt;  $ logcontent: NULL</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="handlers-for-resetcode_generate-type-message">Handlers for <em>resetCode_generate</em> type message<a class="anchor" aria-label="anchor" href="#handlers-for-resetcode_generate-type-message"></a>
@@ -251,19 +253,19 @@
 </ul>
 <p>These functions are querying the database to search for the specified username. After confirming that the specified username exists, it generates and inputs reset code that the user can use to generate new password. Message structure:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">resetPass_generate_message</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
-    type <span class="op">=</span> <span class="st">"resetPass_generate"</span>,
-    username <span class="op">=</span> <span class="st">"Whatever"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resetPass_generate_message</span><span class="op">)</span>
-<span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.283"</span>
-<span class="co">#&gt;  $ type      : chr "resetPass_generate"</span>
-<span class="co">#&gt;  $ data      :List of 1</span>
-<span class="co">#&gt;   ..$ username: chr "Whatever"</span>
-<span class="co">#&gt;  $ logcontent: NULL</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">resetPass_generate_message</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"resetPass_generate"</span>,</span>
+<span>    username <span class="op">=</span> <span class="st">"Whatever"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resetPass_generate_message</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 4</span></span>
+<span><span class="co">#&gt;  $ time      : chr "2022-08-29 21:10:07.291"</span></span>
+<span><span class="co">#&gt;  $ type      : chr "resetPass_generate"</span></span>
+<span><span class="co">#&gt;  $ data      :List of 1</span></span>
+<span><span class="co">#&gt;   ..$ username: chr "Whatever"</span></span>
+<span><span class="co">#&gt;  $ logcontent: NULL</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="handlers-for-resetcode_confirm-type-message">Handlers for <em>resetCode_confirm</em> type message<a class="anchor" aria-label="anchor" href="#handlers-for-resetcode_confirm-type-message"></a>
@@ -278,23 +280,23 @@
 </ul>
 <p>These functions are querying the database to search for the specified username and confirming that provided reset code is correct. After confirmation, it marks the reset code as used and updates password for the user. Message structure:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">resetPass_confirm_message</span> <span class="op">&lt;-</span>
-  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
-    type <span class="op">=</span> <span class="st">"resetPass_confirm"</span>,
-    username <span class="op">=</span> <span class="st">"Whatever"</span>,
-    reset_code <span class="op">=</span> <span class="st">"4265417643"</span>,
-    password <span class="op">=</span> <span class="st">"veryHardP422w0rd!"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resetPass_confirm_message</span><span class="op">)</span>
-<span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.350"</span>
-<span class="co">#&gt;  $ type      : chr "resetPass_confirm"</span>
-<span class="co">#&gt;  $ data      :List of 3</span>
-<span class="co">#&gt;   ..$ username  : chr "Whatever"</span>
-<span class="co">#&gt;   ..$ reset_code: chr "4265417643"</span>
-<span class="co">#&gt;   ..$ password  : chr "veryHardP422w0rd!"</span>
-<span class="co">#&gt;  $ logcontent: NULL</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">resetPass_confirm_message</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"resetPass_confirm"</span>,</span>
+<span>    username <span class="op">=</span> <span class="st">"Whatever"</span>,</span>
+<span>    reset_code <span class="op">=</span> <span class="st">"4265417643"</span>,</span>
+<span>    password <span class="op">=</span> <span class="st">"veryHardP422w0rd!"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resetPass_confirm_message</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 4</span></span>
+<span><span class="co">#&gt;  $ time      : chr "2022-08-29 21:10:07.382"</span></span>
+<span><span class="co">#&gt;  $ type      : chr "resetPass_confirm"</span></span>
+<span><span class="co">#&gt;  $ data      :List of 3</span></span>
+<span><span class="co">#&gt;   ..$ username  : chr "Whatever"</span></span>
+<span><span class="co">#&gt;   ..$ reset_code: chr "4265417643"</span></span>
+<span><span class="co">#&gt;   ..$ password  : chr "veryHardP422w0rd!"</span></span>
+<span><span class="co">#&gt;  $ logcontent: NULL</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -312,29 +314,29 @@
 <p>They send the email to the specified address using subject and html body of the email kept in the <code>mailConnector$mails[[message_type]]</code> list. They also replace all of occurences of <em>?username?</em>, <em>?email?</em>, <em>?app_name?</em>, <em>?app_address?</em> and <em>?reset_code?</em> with respective values received in the <em>RegLogConnectorMessage</em>.</p>
 <p>Mail creation is chosen from the <code>mailConnector$mails</code> public field on the basis of the <code>process</code> <em>RegLogConnectorMessage</em> value.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">resetPass_mail_message</span> <span class="op">&lt;-</span> 
-  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
-    type <span class="op">=</span> <span class="st">"reglog_mail"</span>,
-    process <span class="op">=</span> <span class="st">"resetPass"</span>,
-    username <span class="op">=</span> <span class="st">"Whatever"</span>,
-    email <span class="op">=</span> <span class="st">"edited@email.com"</span>,
-    app_name <span class="op">=</span> <span class="st">"RegLog Nice ShinyApp"</span>,
-    app_address <span class="op">=</span> <span class="st">"https://reglog.nice.com"</span>,
-    reset_code <span class="op">=</span> <span class="st">"4265417643"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resetPass_mail_message</span><span class="op">)</span>
-<span class="co">#&gt; List of 4</span>
-<span class="co">#&gt;  $ time      : chr "2022-04-02 12:23:48.424"</span>
-<span class="co">#&gt;  $ type      : chr "reglog_mail"</span>
-<span class="co">#&gt;  $ data      :List of 6</span>
-<span class="co">#&gt;   ..$ process    : chr "resetPass"</span>
-<span class="co">#&gt;   ..$ username   : chr "Whatever"</span>
-<span class="co">#&gt;   ..$ email      : chr "edited@email.com"</span>
-<span class="co">#&gt;   ..$ app_name   : chr "RegLog Nice ShinyApp"</span>
-<span class="co">#&gt;   ..$ app_address: chr "https://reglog.nice.com"</span>
-<span class="co">#&gt;   ..$ reset_code : chr "4265417643"</span>
-<span class="co">#&gt;  $ logcontent: NULL</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">resetPass_mail_message</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"reglog_mail"</span>,</span>
+<span>    process <span class="op">=</span> <span class="st">"resetPass"</span>,</span>
+<span>    username <span class="op">=</span> <span class="st">"Whatever"</span>,</span>
+<span>    email <span class="op">=</span> <span class="st">"edited@email.com"</span>,</span>
+<span>    app_name <span class="op">=</span> <span class="st">"RegLog Nice ShinyApp"</span>,</span>
+<span>    app_address <span class="op">=</span> <span class="st">"https://reglog.nice.com"</span>,</span>
+<span>    reset_code <span class="op">=</span> <span class="st">"4265417643"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resetPass_mail_message</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 4</span></span>
+<span><span class="co">#&gt;  $ time      : chr "2022-08-29 21:10:07.479"</span></span>
+<span><span class="co">#&gt;  $ type      : chr "reglog_mail"</span></span>
+<span><span class="co">#&gt;  $ data      :List of 6</span></span>
+<span><span class="co">#&gt;   ..$ process    : chr "resetPass"</span></span>
+<span><span class="co">#&gt;   ..$ username   : chr "Whatever"</span></span>
+<span><span class="co">#&gt;   ..$ email      : chr "edited@email.com"</span></span>
+<span><span class="co">#&gt;   ..$ app_name   : chr "RegLog Nice ShinyApp"</span></span>
+<span><span class="co">#&gt;   ..$ app_address: chr "https://reglog.nice.com"</span></span>
+<span><span class="co">#&gt;   ..$ reset_code : chr "4265417643"</span></span>
+<span><span class="co">#&gt;  $ logcontent: NULL</span></span>
+<span><span class="co">#&gt;  - attr(*, "class")= chr "RegLogConnectorMessage"</span></span></code></pre></div>
 <p>There are also provided handlers to send custom e-mails to the logged user.</p>
 <ul>
 <li>
@@ -346,17 +348,17 @@
 </ul>
 <p>They are sending email to the specified address parsing it from provided inside the message <em>subject</em> and <em>body</em>, providing also an option to send an <em>attachment</em>. No additional parsing is done there and <code>process</code> value there is only informative - it is saved into logs and presented in the <code>RegLogServer$mail_message()</code> field.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">message_to_send</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
-    type <span class="op">=</span> <span class="st">"custom_mail"</span>,
-    process <span class="op">=</span> <span class="st">"attachment_mail"</span>,
-    username <span class="op">=</span> <span class="st">"Whatever"</span>,
-    email <span class="op">=</span> <span class="st">"edited@email.com"</span>,
-    mail_subject <span class="op">=</span> <span class="st">"Custom message with attachement"</span>,
-    mail_body <span class="op">=</span> <span class="st">"&lt;p&gt;This is a custom message send from my App&lt;/p&gt;
-                 &lt;p&gt;It is completely optional, but that kind of message can also
-                    contain an attachment!&lt;/p&gt;"</span>,
-    mail_attachement <span class="op">=</span> <span class="st">"files/myplot.png"</span>
-  <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">message_to_send</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"custom_mail"</span>,</span>
+<span>    process <span class="op">=</span> <span class="st">"attachment_mail"</span>,</span>
+<span>    username <span class="op">=</span> <span class="st">"Whatever"</span>,</span>
+<span>    email <span class="op">=</span> <span class="st">"edited@email.com"</span>,</span>
+<span>    mail_subject <span class="op">=</span> <span class="st">"Custom message with attachement"</span>,</span>
+<span>    mail_body <span class="op">=</span> <span class="st">"&lt;p&gt;This is a custom message send from my App&lt;/p&gt;</span></span>
+<span><span class="st">                 &lt;p&gt;It is completely optional, but that kind of message can also</span></span>
+<span><span class="st">                    contain an attachment!&lt;/p&gt;"</span>,</span>
+<span>    mail_attachement <span class="op">=</span> <span class="st">"files/myplot.png"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="how-to-create-custom-handler-function">How to create custom <em>handler function</em><a class="anchor" aria-label="anchor" href="#how-to-create-custom-handler-function"></a>
@@ -368,71 +370,71 @@
 </h3>
 <p>Firstly, we need to create another sheet in the googlesheet that is used by the <em>RegLogGsheetConnector</em> to store our data. Besides the summed score we will also need timestamp and username to read the most recent row for the currently logged user.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># create new sheet to the googlesheet</span>
-<span class="fu">googlesheets4</span><span class="fu">::</span><span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/sheet_write.html" class="external-link">write_sheet</a></span><span class="op">(</span>
-  ss <span class="op">=</span> <span class="va">gsheet_ss</span>,
-  sheet <span class="op">=</span> <span class="st">"SES_results"</span>,
-  <span class="co"># append 0-row data.frame to create the "schema" for the sheet</span>
-  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>timestamp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span>,
-                    user_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span>,
-                    score <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>,<span class="op">]</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># create new sheet to the googlesheet</span></span>
+<span><span class="fu">googlesheets4</span><span class="fu">::</span><span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/sheet_write.html" class="external-link">write_sheet</a></span><span class="op">(</span></span>
+<span>  ss <span class="op">=</span> <span class="va">gsheet_ss</span>,</span>
+<span>  sheet <span class="op">=</span> <span class="st">"SES_results"</span>,</span>
+<span>  <span class="co"># append 0-row data.frame to create the "schema" for the sheet</span></span>
+<span>  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>timestamp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span>,</span>
+<span>                    user_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span>,</span>
+<span>                    score <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="cn">NA</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>,<span class="op">]</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="create-a-handler-for-writing-to-database">Create a handler for writing to database<a class="anchor" aria-label="anchor" href="#create-a-handler-for-writing-to-database"></a>
 </h3>
 <p>All handler functions need to take as arguments objects <code>self</code>, <code>private</code> and <code>message</code> and return <code>RegLogConnectorMessage</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">write_SES_handler</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">self</span>, <span class="va">private</span>, <span class="va">message</span><span class="op">)</span> <span class="op">{</span>
-  
-  <span class="fu">googlesheets4</span><span class="fu">::</span><span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/sheet_append.html" class="external-link">sheet_append</a></span><span class="op">(</span>
-    <span class="co"># ID of the connected googlesheet is stored inside private of the</span>
-    <span class="co"># RegLogGsheetConnector</span>
-    ss <span class="op">=</span> <span class="va">private</span><span class="op">$</span><span class="va">gsheet_ss</span>,
-    sheet <span class="op">=</span> <span class="st">"SES_results"</span>,
-    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-      <span class="co"># db_timestamp creates nicely formatted and interpretable by most</span>
-      <span class="co"># databases current time</span>
-      timestamp <span class="op">=</span> <span class="fu"><a href="../reference/db_timestamp.html">db_timestamp</a></span><span class="op">(</span><span class="op">)</span>,
-      <span class="co"># user ID and score should be received inside received message</span>
-      user_id <span class="op">=</span> <span class="va">message</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">user_id</span>,
-      score <span class="op">=</span> <span class="va">message</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">score</span>
-      <span class="op">)</span><span class="op">)</span>
-  
-  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"write_SES"</span>,
-                                success <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-  
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">write_SES_handler</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">self</span>, <span class="va">private</span>, <span class="va">message</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="fu">googlesheets4</span><span class="fu">::</span><span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/sheet_append.html" class="external-link">sheet_append</a></span><span class="op">(</span></span>
+<span>    <span class="co"># ID of the connected googlesheet is stored inside private of the</span></span>
+<span>    <span class="co"># RegLogGsheetConnector</span></span>
+<span>    ss <span class="op">=</span> <span class="va">private</span><span class="op">$</span><span class="va">gsheet_ss</span>,</span>
+<span>    sheet <span class="op">=</span> <span class="st">"SES_results"</span>,</span>
+<span>    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>      <span class="co"># db_timestamp creates nicely formatted and interpretable by most</span></span>
+<span>      <span class="co"># databases current time</span></span>
+<span>      timestamp <span class="op">=</span> <span class="fu"><a href="../reference/db_timestamp.html">db_timestamp</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      <span class="co"># user ID and score should be received inside received message</span></span>
+<span>      user_id <span class="op">=</span> <span class="va">message</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">user_id</span>,</span>
+<span>      score <span class="op">=</span> <span class="va">message</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">score</span></span>
+<span>      <span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"write_SES"</span>,</span>
+<span>                                success <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="create-a-handler-for-reading-from-database">Create a handler for reading from database<a class="anchor" aria-label="anchor" href="#create-a-handler-for-reading-from-database"></a>
 </h3>
 <p>As we have now the writing handler ready, we should create a handler to retrieve the data in another user session.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">read_SES_handler</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">self</span>, <span class="va">private</span>, <span class="va">message</span><span class="op">)</span> <span class="op">{</span>
-  
-  <span class="co"># read all results</span>
-  <span class="va">SES_results</span> <span class="op">&lt;-</span> <span class="fu">googlesheets4</span><span class="fu">::</span><span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/range_read.html" class="external-link">read_sheet</a></span><span class="op">(</span>
-    ss <span class="op">=</span> <span class="va">private</span><span class="op">$</span><span class="va">gsheet_ss</span>,
-    sheet <span class="op">=</span> <span class="st">"SES_results"</span>,
-    col_types <span class="op">=</span> <span class="st">"ccn"</span><span class="op">)</span>
-  
-  <span class="co"># get the lastest result for the current user</span>
-  <span class="va">SES_results</span> <span class="op">&lt;-</span> <span class="va">SES_results</span> |&gt;
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">user_id</span> <span class="op">==</span> <span class="va">message</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">user_id</span><span class="op">)</span> |&gt;
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">timestamp</span><span class="op">)</span><span class="op">)</span> |&gt;
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span><span class="op">)</span>
-  
-  <span class="co"># return the RegLogConnectorMessage with the score if available</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">SES_results</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"read_SES"</span>,
-                                  success <span class="op">=</span> <span class="cn">TRUE</span>,
-                                  score <span class="op">=</span> <span class="va">SES_results</span><span class="op">$</span><span class="va">score</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"read_SES"</span>,
-                                  success <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">}</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">read_SES_handler</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">self</span>, <span class="va">private</span>, <span class="va">message</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="co"># read all results</span></span>
+<span>  <span class="va">SES_results</span> <span class="op">&lt;-</span> <span class="fu">googlesheets4</span><span class="fu">::</span><span class="fu"><a href="https://googlesheets4.tidyverse.org/reference/range_read.html" class="external-link">read_sheet</a></span><span class="op">(</span></span>
+<span>    ss <span class="op">=</span> <span class="va">private</span><span class="op">$</span><span class="va">gsheet_ss</span>,</span>
+<span>    sheet <span class="op">=</span> <span class="st">"SES_results"</span>,</span>
+<span>    col_types <span class="op">=</span> <span class="st">"ccn"</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># get the lastest result for the current user</span></span>
+<span>  <span class="va">SES_results</span> <span class="op">&lt;-</span> <span class="va">SES_results</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">user_id</span> <span class="op">==</span> <span class="va">message</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">user_id</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">timestamp</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># return the RegLogConnectorMessage with the score if available</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">SES_results</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"read_SES"</span>,</span>
+<span>                                  success <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                  score <span class="op">=</span> <span class="va">SES_results</span><span class="op">$</span><span class="va">score</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"read_SES"</span>,</span>
+<span>                                  success <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="have-everything-in-motion">Have everything in motion<a class="anchor" aria-label="anchor" href="#have-everything-in-motion"></a>
@@ -513,7 +515,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>

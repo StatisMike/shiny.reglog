@@ -8,8 +8,8 @@
 <meta name="description" content="shiny.reglog">
 <title>RegLogServer object fields and methods • shiny.reglog</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="RegLogServer object fields and methods">
 <meta property="og:description" content="shiny.reglog">
@@ -22,11 +22,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">shiny.reglog</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
 
 
 <script src="RegLogServer_object_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>RegLogServer object fields and methods</h1>
             
       
@@ -103,9 +103,9 @@
 <p>If you want to get to know more about R6 system as a whole I advise you to check out <a href="https://r6.r-lib.org/articles/" class="external-link">articles created by R6 maintainers</a>. Below I will talk more thoroughly about <em>RegLogServer</em> class and its public fields and methods.</p>
 <p>There are multiple public elements to <em>RegLogServer</em>. To keep them in order, I will describe them on basis of their usage. In all code chunks I will refer to them as if they would be called from an object assigned as <em>RegLogServer</em>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="va">RegLogServer</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    dbConnector <span class="op">=</span> <span class="va">dbConnector</span>,
-    mailConnector <span class="op">=</span> <span class="va">mailConnector</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span>  <span class="va">RegLogServer</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>    dbConnector <span class="op">=</span> <span class="va">dbConnector</span>,</span>
+<span>    mailConnector <span class="op">=</span> <span class="va">mailConnector</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="state-of-user-in-current-shinyapp-session">State of user in current ShinyApp session<a class="anchor" aria-label="anchor" href="#state-of-user-in-current-shinyapp-session"></a>
@@ -116,35 +116,35 @@
 </h3>
 <p><code>is_logged</code> is a simple boolean value to check if the user in current session is logged in (<code>TRUE</code>) or not (<code>FALSE</code>)</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># observe the reactiveVal change</span>
-<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">RegLogServer</span><span class="op">$</span><span class="va">is_logged</span>, <span class="op">{</span>
-  
-  <span class="co"># if contains TRUE: user is currently logged-in</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">is_logged</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/showModal.html" class="external-link">showModal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/modalDialog.html" class="external-link">modalDialog</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"You are logged in!"</span><span class="op">)</span><span class="op">)</span>
-    <span class="co"># if contains FALSE: user isn't logged-in</span>
-  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/showModal.html" class="external-link">showModal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/modalDialog.html" class="external-link">modalDialog</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"You are not logged in!"</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">}</span>
-<span class="op">}</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># observe the reactiveVal change</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">RegLogServer</span><span class="op">$</span><span class="va">is_logged</span>, <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="co"># if contains TRUE: user is currently logged-in</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">is_logged</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/showModal.html" class="external-link">showModal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/modalDialog.html" class="external-link">modalDialog</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"You are logged in!"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="co"># if contains FALSE: user isn't logged-in</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/showModal.html" class="external-link">showModal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/modalDialog.html" class="external-link">modalDialog</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"You are not logged in!"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="current-id-of-the-user">Current ID of the user<a class="anchor" aria-label="anchor" href="#current-id-of-the-user"></a>
 </h3>
 <p><code>user_id</code> field (character string): unique user ID. When the user isn’t logged it contains generated at the start of the session (or after logout) <em>Universally Unique Identifier</em> (with the use of <code><a href="https://rdrr.io/pkg/uuid/man/UUIDgenerate.html" class="external-link">uuid::UUIDgenerate()</a></code>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">uuid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/uuid/man/UUIDgenerate.html" class="external-link">UUIDgenerate</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] "612397c9-964e-4610-9a59-8fbc5de8604e"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">uuid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/uuid/man/UUIDgenerate.html" class="external-link">UUIDgenerate</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "169215e6-89e5-40f9-a731-666f11f9ebc4"</span></span></code></pre></div>
 <p>After login it contains the username that the user have chosen during registration procedure.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">user_id</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">user_id</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="email-address-of-the-currently-logged-user">Email address of the currently logged user<a class="anchor" aria-label="anchor" href="#email-address-of-the-currently-logged-user"></a>
 </h3>
 <p><code>user_mail</code> field (character string): unique user email. When the user is logged in, it contains the email that is currently associated with their <em>user_id</em>. Otherwise, it contains empty character string (<code>""</code>).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">user_mail</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">user_mail</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="account-id-of-the-logged-user">Account ID of the logged user<a class="anchor" aria-label="anchor" href="#account-id-of-the-logged-user"></a>
@@ -157,7 +157,7 @@
 <strong>row number - 1</strong> (header) in the <em>account</em> spreadsheet for <strong>googlesheet database</strong>.</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">account_id</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">account_id</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -165,11 +165,11 @@
 </h2>
 <p>You can insert an event to logout user by calling public method.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># if you create an actionButton "logout_button" in your UI, you can observe</span>
-<span class="co"># its action and logout after press:</span>
-<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">logout_button</span>, <span class="op">{</span>
-  <span class="va">RegLogServer</span><span class="op">$</span><span class="fu">logout</span><span class="op">(</span><span class="op">)</span>
-<span class="op">}</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># if you create an actionButton "logout_button" in your UI, you can observe</span></span>
+<span><span class="co"># its action and logout after press:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">logout_button</span>, <span class="op">{</span></span>
+<span>  <span class="va">RegLogServer</span><span class="op">$</span><span class="fu">logout</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="ui-object-lists">UI object lists<a class="anchor" aria-label="anchor" href="#ui-object-lists"></a>
@@ -534,31 +534,31 @@
 <p>This type of message isn’t received during regular <em>RegLog</em> run. It is a response to message that you can use to send a custom e-mail. It contains the same responses as <strong>reglog_mail</strong> message.</p>
 <p>To send a custom email using <em>mailConnector</em>, pass to its <em>listener</em> a <em>RegLogConnectorMessage</em> of type <em>custom_mail</em>, as in example below:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># you can observe some kind of event to trigger the send</span>
-<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">send_custom_email</span>, <span class="op">{</span>
-  
-  <span class="co"># as the username and email will be acquired from RegLogServer,</span>
-  <span class="co"># it is best to make sure that the user is logged-in</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">is_logged</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-  
-  <span class="va">message_to_send</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span>
-    type <span class="op">=</span> <span class="st">"custom_mail"</span>,
-    <span class="co"># name your process in some unique way - it will be tracked by the app </span>
-    <span class="co"># and saved into logs</span>
-    process <span class="op">=</span> <span class="st">"attachement_mail!"</span>,
-    <span class="co"># username and email can be gotten from RegLogServer</span>
-    username <span class="op">=</span> <span class="va">RegLogServer</span><span class="op">$</span><span class="fu">user_id</span><span class="op">(</span><span class="op">)</span>,
-    email <span class="op">=</span> <span class="va">RegLogServer</span><span class="op">$</span><span class="fu">user_mail</span><span class="op">(</span><span class="op">)</span>,
-    <span class="co"># we can specify the subject and body of message ourselves</span>
-    mail_subject <span class="op">=</span> <span class="st">"Custom message with attachement"</span>,
-    <span class="co"># it's best for the body to contain html code</span>
-    mail_body <span class="op">=</span> <span class="st">"&lt;p&gt;This is a custom message send from my App&lt;/p&gt;
-                 &lt;p&gt;It is completely optional, but that kind of message can also
-                    contain an attachment!&lt;/p&gt;"</span>,
-    <span class="co"># optionally: attachment</span>
-    mail_attachement <span class="op">=</span> <span class="st">"files/myplot.png"</span>
-  <span class="op">)</span>
-<span class="op">}</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># you can observe some kind of event to trigger the send</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">send_custom_email</span>, <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="co"># as the username and email will be acquired from RegLogServer,</span></span>
+<span>  <span class="co"># it is best to make sure that the user is logged-in</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="va">RegLogServer</span><span class="op">$</span><span class="fu">is_logged</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">message_to_send</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/RegLogConnectorMessage.html">RegLogConnectorMessage</a></span><span class="op">(</span></span>
+<span>    type <span class="op">=</span> <span class="st">"custom_mail"</span>,</span>
+<span>    <span class="co"># name your process in some unique way - it will be tracked by the app </span></span>
+<span>    <span class="co"># and saved into logs</span></span>
+<span>    process <span class="op">=</span> <span class="st">"attachement_mail!"</span>,</span>
+<span>    <span class="co"># username and email can be gotten from RegLogServer</span></span>
+<span>    username <span class="op">=</span> <span class="va">RegLogServer</span><span class="op">$</span><span class="fu">user_id</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    email <span class="op">=</span> <span class="va">RegLogServer</span><span class="op">$</span><span class="fu">user_mail</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    <span class="co"># we can specify the subject and body of message ourselves</span></span>
+<span>    mail_subject <span class="op">=</span> <span class="st">"Custom message with attachement"</span>,</span>
+<span>    <span class="co"># it's best for the body to contain html code</span></span>
+<span>    mail_body <span class="op">=</span> <span class="st">"&lt;p&gt;This is a custom message send from my App&lt;/p&gt;</span></span>
+<span><span class="st">                 &lt;p&gt;It is completely optional, but that kind of message can also</span></span>
+<span><span class="st">                    contain an attachment!&lt;/p&gt;"</span>,</span>
+<span>    <span class="co"># optionally: attachment</span></span>
+<span>    mail_attachement <span class="op">=</span> <span class="st">"files/myplot.png"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -581,7 +581,7 @@
 </h3>
 <p>You can use public method to get whole content of the logs collected up to this point in time in the form of <em>data.frame</em>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">logs_df</span> <span class="op">&lt;-</span> <span class="va">RegLogServer</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">logs_df</span> <span class="op">&lt;-</span> <span class="va">RegLogServer</span><span class="op">$</span><span class="fu">get_logs</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -600,32 +600,32 @@
 <p><code>custom_txts</code> - defaults to NULL. Can be a named list of character vectors that should be used in place of defined text for language of your choosing (to check them out, use <code>RegLog_texts()</code> function).</p>
 <p>You can define custom texts during initialization of <em>RegLogServer</em>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R">    <span class="co"># initialize new RegLogServer object</span>
-<span class="va">RegLog</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  <span class="co"># assign created dbConnector and mailConnector</span>
-  dbConnector <span class="op">=</span> <span class="va">dbConnector</span>,
-  mailConnector <span class="op">=</span> <span class="va">mailConnector</span>,
-  <span class="co"># replace default title and body of `login_success` modalDialog</span>
-  custom_txts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
-    login_success_t <span class="op">=</span> <span class="st">"Welcome!"</span>,
-    login_success_b <span class="op">=</span> <span class="st">"Hi! It's nice to see you logged into our ShinyApp!"</span>
-  <span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span>    <span class="co"># initialize new RegLogServer object</span></span>
+<span><span class="va">RegLog</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  <span class="co"># assign created dbConnector and mailConnector</span></span>
+<span>  dbConnector <span class="op">=</span> <span class="va">dbConnector</span>,</span>
+<span>  mailConnector <span class="op">=</span> <span class="va">mailConnector</span>,</span>
+<span>  <span class="co"># replace default title and body of `login_success` modalDialog</span></span>
+<span>  custom_txts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    login_success_t <span class="op">=</span> <span class="st">"Welcome!"</span>,</span>
+<span>    login_success_b <span class="op">=</span> <span class="st">"Hi! It's nice to see you logged into our ShinyApp!"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </li>
 <li>
 <p><code>use_modals</code> - defaults to TRUE. If specified as <code>FALSE</code>, no default modals will be shown. You can also inhibit only specific modal dialogs by providing named list of FALSE values. Eg:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># initialize new RegLogServer object</span>
-<span class="va">RegLog</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  <span class="co"># assign created dbConnector and mailConnector</span>
-  dbConnector <span class="op">=</span> <span class="va">dbConnector</span>,
-  mailConnector <span class="op">=</span> <span class="va">mailConnector</span>,
-  <span class="co"># inhibit default 'login_success' and 'register_success' modals</span>
-  use_modals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
-    login_success <span class="op">=</span> <span class="cn">FALSE</span>,
-    register_success <span class="op">=</span> <span class="cn">FALSE</span>
-  <span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># initialize new RegLogServer object</span></span>
+<span><span class="va">RegLog</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  <span class="co"># assign created dbConnector and mailConnector</span></span>
+<span>  dbConnector <span class="op">=</span> <span class="va">dbConnector</span>,</span>
+<span>  mailConnector <span class="op">=</span> <span class="va">mailConnector</span>,</span>
+<span>  <span class="co"># inhibit default 'login_success' and 'register_success' modals</span></span>
+<span>  use_modals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    login_success <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    register_success <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </li>
 </ul>
 </div>
@@ -638,9 +638,9 @@
 </blockquote>
 <p>To define options just insert in the beginning of your script:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># examples with default values</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"RegLogServer.logs"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"RegLogServer.logs_to_database"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># examples with default values</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"RegLogServer.logs"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"RegLogServer.logs_to_database"</span> <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p>Possible values:</p>
 <ul>
 <li>0: no message is saved into logs/database</li>
@@ -662,10 +662,10 @@
 </ul>
 <p>To inhibit all e-mail sending (eg. if the app is under development, you are debugging it or only playing with the package currently), you can pass an <code>RegLogConnector</code> object to the <code>mailConnector</code> argument during initialization of the <em>RegLogServer</em>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">RegLog</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  dbConnector <span class="op">=</span> <span class="va">somedbConnector</span>,
-  mailConnector <span class="op">=</span> <span class="va"><a href="../reference/RegLogConnector.html">RegLogConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">RegLog</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  dbConnector <span class="op">=</span> <span class="va">somedbConnector</span>,</span>
+<span>  mailConnector <span class="op">=</span> <span class="va"><a href="../reference/RegLogConnector.html">RegLogConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -681,7 +681,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>

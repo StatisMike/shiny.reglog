@@ -18,8 +18,8 @@
    to read from and write to relational databases.">
 <title>Optional Login and Registration Module System for ShinyApps • shiny.reglog</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Optional Login and Registration Module System for ShinyApps">
 <meta property="og:description" content="RegLog system provides a set of shiny modules to handle register
@@ -42,11 +42,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
     
     <a class="navbar-brand me-2" href="index.html">shiny.reglog</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,6 @@
 <div class="page-header"><h1 id="shinyreglog">shiny.reglog<a class="anchor" aria-label="anchor" href="#shinyreglog"></a>
 </h1></div>
 <!-- badges: start -->
-
 <div class="section level2">
 <h2 id="1-introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#1-introduction"></a>
 </h2>
@@ -95,9 +94,7 @@
 <p>It is highly recommended to use one of the <code>DBI</code>-supported databases, though. It is much more optimized and secure, as the database is never loaded as a whole into the memory, but queried as needed. <em>googlesheets</em> database is much easier to set-up, but it shouldn’t be used when you are expecting big userbase.</p>
 <p>Registration, credentials edit and password reset procedures programmatically send email to the user of your ShinyApp - to welcome them, inform about change of their user ID and/or email and to give them a reset code to reset their password. <em>shiny.reglog</em> supports two methods of email sending: via <code>emayili</code> or <code>gmailr</code> packages. Both of them have their pros and cons, depending on your accesses: <code>emayili</code> allows for usage of many SMTP servers, while <code>gmailr</code> allowing using <em>gmail</em> messaging via Google REST API.</p>
 <p>The <code>emayili</code> is recommended for most applications. <code>gmailr</code> can be useful if you already have application registered and authorized with mail sending scope.</p>
-<blockquote>
-<p>Currently the package is after major change in its code - basically full rewrite to allow more security, usage of more databases and more customization. Past functions are still available in current version, but will generate deprecation warnings.</p>
-</blockquote>
+<blockquote><p>Currently the package is after major change in its code - basically full rewrite to allow more security, usage of more databases and more customization. Past functions are still available in current version, but will generate deprecation warnings.</p></blockquote>
 </div>
 <div class="section level2">
 <h2 id="2-additional-information">2. Additional information<a class="anchor" aria-label="anchor" href="#2-additional-information"></a>
@@ -128,12 +125,12 @@
 </h2>
 <p>You can install this version of shiny.reglog from GitHub with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install last stable release from CRAN</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"shiny.reglog"</span><span class="op">)</span>
-
-<span class="co">## or development version from GitHub</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install.github</span><span class="op">(</span><span class="st">"StatisMike/shiny.reglog"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install last stable release from CRAN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"shiny.reglog"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## or development version from GitHub</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install.github</span><span class="op">(</span><span class="st">"StatisMike/shiny.reglog"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="5-setting-up-dbconnector">5. Setting up <em>dbConnector</em>
@@ -144,94 +141,96 @@
 <div class="section level3">
 <h3 id="51-googlesheet-database-method-regloggsheetconnector">5.1 Googlesheet database method (<em>RegLogGsheetConnector</em>)<a class="anchor" aria-label="anchor" href="#51-googlesheet-database-method-regloggsheetconnector"></a>
 </h3>
-<ol style="list-style-type: decimal">
-<li>Create googlesheet file on your googledrive to support database. You can use <code><a href="reference/gsheet_tables_create.html">gsheet_tables_create()</a></code> function, which by default creates empty spreadsheets configured correctly.</li>
-</ol>
+<ol style="list-style-type: decimal"><li>Create googlesheet file on your googledrive to support database. You can use <code><a href="reference/gsheet_tables_create.html">gsheet_tables_create()</a></code> function, which by default creates empty spreadsheets configured correctly.</li></ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># create googlesheet and gather its id for later usage</span>
-<span class="co"># you can also specify optional 'name' argument for custom gsheet name</span>
-
-<span class="va">gsheet_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gsheet_tables_create.html">gsheet_tables_create</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># save you gsheet_id - you need to provide it later to your dbConnector</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># create googlesheet and gather its id for later usage</span></span>
+<span><span class="co"># you can also specify optional 'name' argument for custom gsheet name</span></span>
+<span></span>
+<span><span class="va">gsheet_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gsheet_tables_create.html">gsheet_tables_create</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># save you gsheet_id - you need to provide it later to your dbConnector</span></span></code></pre></div>
 <p>If you wish to import some existing credentials, you can do it by giving the <code>data.frame</code> object to the <code>user_data</code> argument:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># get some credentials</span>
-<span class="va">credentials</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-  username <span class="op">=</span> <span class="st">"ShinyReglogTest"</span>,
-  password <span class="op">=</span> <span class="st">"VeryHardPassword"</span>,
-  email <span class="op">=</span> <span class="st">"shinyreglog@test"</span>
-  <span class="op">)</span>
-
-<span class="co"># create gsheet database with some credentials</span>
-<span class="va">gsheet_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gsheet_tables_create.html">gsheet_tables_create</a></span><span class="op">(</span>
-  user_data <span class="op">=</span> <span class="va">credentials</span>,
-  <span class="co"># as the password was not hashed with `script` before, </span>
-  <span class="co"># it need to be hashed now</span>
-  hash_passwords <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># get some credentials</span></span>
+<span><span class="va">credentials</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  username <span class="op">=</span> <span class="st">"ShinyReglogTest"</span>,</span>
+<span>  password <span class="op">=</span> <span class="st">"VeryHardPassword"</span>,</span>
+<span>  email <span class="op">=</span> <span class="st">"shinyreglog@test"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create gsheet database with some credentials</span></span>
+<span><span class="va">gsheet_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/gsheet_tables_create.html">gsheet_tables_create</a></span><span class="op">(</span></span>
+<span>  user_data <span class="op">=</span> <span class="va">credentials</span>,</span>
+<span>  <span class="co"># as the password was not hashed with `script` before, </span></span>
+<span>  <span class="co"># it need to be hashed now</span></span>
+<span>  hash_passwords <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li><p>Configure googlesheets4 package to use out-of-band (non-interactive) auth. For more information about it visit <a href="https://googlesheets4.tidyverse.org/" class="external-link">googlesheets4 documentation</a>.</p></li>
 <li><p>In the <code>server</code> part of your ShinyApp define <code>RegLogGsheetConnector</code> to provide it afterwards to the <code>RegLogServer</code> object</p></li>
 </ol>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  
-  <span class="va">dbConnector</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogGsheetConnector.html">RegLogGsheetConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    gsheet_ss <span class="op">=</span> <span class="va">gsheet_id</span><span class="op">)</span>
-  
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">dbConnector</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogGsheetConnector.html">RegLogGsheetConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>    gsheet_ss <span class="op">=</span> <span class="va">gsheet_id</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="52-dbi-compatible-sql-database-reglogdbiconnector">5.2 <code>DBI</code> compatible SQL database (<em>RegLogDBIConnector</em>)<a class="anchor" aria-label="anchor" href="#52-dbi-compatible-sql-database-reglogdbiconnector"></a>
 </h3>
 <p><em>RegLog system</em> out of the box supports <em>SQLite</em>, <em>MySQL</em>, <em>MariaDB</em> and <em>PostgreSQL</em> databases. You can use <code>DBI_tables_create</code> function, which by default creates empty tables configured correctly.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># create a connection to the database. Remember to use user with CREATE TABLE</span>
-<span class="co"># scope enabled when useing MySQL, MariaDB or PostgreSQL connection</span>
-
-<span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbConnect.html" class="external-link">dbConnect</a></span><span class="op">(</span>
-  <span class="fu">RSQLite</span><span class="fu">::</span><span class="fu"><a href="https://rsqlite.r-dbi.org/reference/SQLite.html" class="external-link">SQLite</a></span><span class="op">(</span><span class="op">)</span>,
-  dbname <span class="op">=</span> <span class="st">"reglog_db.sqlite"</span>
-<span class="op">)</span>
-
-<span class="co"># using this connection create the tables.</span>
-<span class="fu"><a href="reference/DBI_tables_create.html">DBI_tables_create</a></span><span class="op">(</span>conn <span class="op">=</span> <span class="va">conn</span><span class="op">)</span>
-
-<span class="co"># disconnect from the database after creation</span>
-<span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># create a connection to the database. Remember to use user with CREATE TABLE</span></span>
+<span><span class="co"># scope enabled when useing MySQL, MariaDB or PostgreSQL connection</span></span>
+<span></span>
+<span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbConnect.html" class="external-link">dbConnect</a></span><span class="op">(</span></span>
+<span>  <span class="fu">RSQLite</span><span class="fu">::</span><span class="fu"><a href="https://rsqlite.r-dbi.org/reference/SQLite.html" class="external-link">SQLite</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  dbname <span class="op">=</span> <span class="st">"reglog_db.sqlite"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># using this connection create the tables.</span></span>
+<span><span class="fu"><a href="reference/DBI_tables_create.html">DBI_tables_create</a></span><span class="op">(</span>conn <span class="op">=</span> <span class="va">conn</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># disconnect from the database after creation</span></span>
+<span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></span></code></pre></div>
 <p>If you wish to import some credentials, you can do it by providing the <code>data.frame</code> object to the <code>user_data</code> argument:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># get some credentials</span>
-<span class="va">credentials</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
-  username <span class="op">=</span> <span class="st">"ShinyReglogTest"</span>,
-  password <span class="op">=</span> <span class="st">"VeryHardPassword"</span>,
-  email <span class="op">=</span> <span class="st">"shinyreglog@test"</span><span class="op">)</span>
-
-<span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbConnect.html" class="external-link">dbConnect</a></span><span class="op">(</span>
-  <span class="fu">RSQLite</span><span class="fu">::</span><span class="fu"><a href="https://rsqlite.r-dbi.org/reference/SQLite.html" class="external-link">SQLite</a></span><span class="op">(</span><span class="op">)</span>,
-  dbname <span class="op">=</span> <span class="st">"reglog_db.sqlite"</span>
-<span class="op">)</span>
-
-<span class="co"># create database using the connection</span>
-<span class="fu"><a href="reference/DBI_tables_create.html">DBI_tables_create</a></span><span class="op">(</span>
-  conn <span class="op">=</span> <span class="va">conn</span>,
-  user_data <span class="op">=</span> <span class="va">credentials</span>,
-  <span class="co"># as the password was not hashed with `script` before, </span>
-  <span class="co"># it need to be hashed now</span>
-  hash_passwords <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-
-<span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>In the <em>server</em> part of your ShinyApp define <code>RegLogDBIConnector</code> to provide it afterwards to the <code>RegLogServer</code> object.</li>
-</ol>
+<code class="sourceCode R"><span><span class="co"># get some credentials</span></span>
+<span><span class="va">credentials</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  username <span class="op">=</span> <span class="st">"ShinyReglogTest"</span>,</span>
+<span>  password <span class="op">=</span> <span class="st">"VeryHardPassword"</span>,</span>
+<span>  email <span class="op">=</span> <span class="st">"shinyreglog@test"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">conn</span> <span class="op">&lt;-</span> <span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbConnect.html" class="external-link">dbConnect</a></span><span class="op">(</span></span>
+<span>  <span class="fu">RSQLite</span><span class="fu">::</span><span class="fu"><a href="https://rsqlite.r-dbi.org/reference/SQLite.html" class="external-link">SQLite</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  dbname <span class="op">=</span> <span class="st">"reglog_db.sqlite"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create database using the connection</span></span>
+<span><span class="fu"><a href="reference/DBI_tables_create.html">DBI_tables_create</a></span><span class="op">(</span></span>
+<span>  conn <span class="op">=</span> <span class="va">conn</span>,</span>
+<span>  user_data <span class="op">=</span> <span class="va">credentials</span>,</span>
+<span>  <span class="co"># as the password was not hashed with `script` before, </span></span>
+<span>  <span class="co"># it need to be hashed now</span></span>
+<span>  hash_passwords <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">DBI</span><span class="fu">::</span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">conn</span><span class="op">)</span></span></code></pre></div>
+<ol start="2" style="list-style-type: decimal"><li>In the <em>server</em> part of your ShinyApp define <code>RegLogDBIConnector</code> to provide it afterwards to the <code>RegLogServer</code> object.</li></ol>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  
-  <span class="va">dbConnector</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogDBIConnector.html">RegLogDBIConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    driver <span class="op">=</span> <span class="fu">RSQLite</span><span class="fu">::</span><span class="fu"><a href="https://rsqlite.r-dbi.org/reference/SQLite.html" class="external-link">SQLite</a></span><span class="op">(</span><span class="op">)</span>,
-    dbname <span class="op">=</span> <span class="st">"reglog_db.sqlite"</span><span class="op">)</span>
-  
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">dbConnector</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogDBIConnector.html">RegLogDBIConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>    driver <span class="op">=</span> <span class="fu">RSQLite</span><span class="fu">::</span><span class="fu"><a href="https://rsqlite.r-dbi.org/reference/SQLite.html" class="external-link">SQLite</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    dbname <span class="op">=</span> <span class="st">"reglog_db.sqlite"</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="53-mongodb-based-connector-reglogmongoconnector">5.3. <code>MongoDB</code>-based connector (<em>RegLogMongoConnector</em>)<a class="anchor" aria-label="anchor" href="#53-mongodb-based-connector-reglogmongoconnector"></a>
+</h3>
+<p><em>MongoDB</em> is very popular NoSQL database with pretty low entry-point. Connector is still experimental.</p>
+<p>Setup is analogous to other database connectors. For more informations, refer to documentation: <code>?mongo_tables_create()</code>, <code><a href="reference/RegLogMongoConnector.html">?RegLogMongoConnector</a></code></p>
 </div>
 </div>
 <div class="section level2">
@@ -243,28 +242,28 @@
 </h3>
 <p>This backend is recommended to use. It supports many SMTP servers, mostly with username and password based identification.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  
-  <span class="va">mailConnector</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogEmayiliConnector.html">RegLogEmayiliConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    from <span class="op">=</span> <span class="st">"email@sending.com"</span>,
-    <span class="co"># to learn how to setup emayili smtp server read ?emayili::server</span>
-    smtp <span class="op">=</span> <span class="fu">emayili</span><span class="fu">::</span><span class="fu"><a href="https://datawookie.github.io/emayili/reference/server.html" class="external-link">server</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
-  <span class="op">)</span>
-  
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">mailConnector</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogEmayiliConnector.html">RegLogEmayiliConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>    from <span class="op">=</span> <span class="st">"email@sending.com"</span>,</span>
+<span>    <span class="co"># to learn how to setup emayili smtp server read ?emayili::server</span></span>
+<span>    smtp <span class="op">=</span> <span class="fu">emayili</span><span class="fu">::</span><span class="fu"><a href="https://datawookie.github.io/emayili/reference/server.html" class="external-link">server</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="62-using-gmailr-regloggmailrconnector">6.2. Using <code>gmailr</code> (<em>RegLogGmailrConnector</em>)<a class="anchor" aria-label="anchor" href="#62-using-gmailr-regloggmailrconnector"></a>
 </h3>
 <p>This backend is only viable if you have an app registered in Google Cloud Console. It authorizes and sends email via gmail REST API, needing Oauth authorization with high scopes.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  
-  <span class="va">mailConnector</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogGmailrConnector.html">RegLogGmailrConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    from <span class="op">=</span> <span class="st">"email@gmail.com"</span>
-  <span class="op">)</span>
-  
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">mailConnector</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogGmailrConnector.html">RegLogGmailrConnector</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>    from <span class="op">=</span> <span class="st">"email@gmail.com"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -274,14 +273,14 @@
 <p>All of <strong>RegLog system</strong> is generated and maintained by the object of class <code>RegLogSystem</code> in unison with <em>dbConnector</em> and <em>mailConnector</em> of your choosing.</p>
 <p>Its setup is pretty straightforward:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  
-  <span class="va">RegLog</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-    <span class="co"># both of these elements need to be defined firstly or in this call</span>
-    dbConnector <span class="op">=</span> <span class="va">dbConnector</span>,
-    mailConnector <span class="op">=</span> <span class="va">mailConnector</span>
-  <span class="op">)</span>
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">RegLog</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/RegLogServer.html">RegLogServer</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>    <span class="co"># both of these elements need to be defined firstly or in this call</span></span>
+<span>    dbConnector <span class="op">=</span> <span class="va">dbConnector</span>,</span>
+<span>    mailConnector <span class="op">=</span> <span class="va">mailConnector</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Besides these two mandatory arguments, there are also some additional arguments to be used for customization.</p>
 <ul>
 <li>
@@ -303,24 +302,22 @@
 </h3>
 <p>After setting up and assigning the object your application logic can observe status of user in current session by public fields containing <em>reactiveVal</em> objects.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">## if you assigned the RegLogServer to 'RegLog' object, as in examples above:</span>
-
-<span class="co"># boolean showing if the user is logged in:</span>
-<span class="va">RegLog</span><span class="op">$</span><span class="fu">is_logged</span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># character vector containing user ID: either specific to the user if logged</span>
-<span class="co"># in, or unique anonymous ID generated with 'uuid::UUIDgenerate()'</span>
-<span class="va">RegLog</span><span class="op">$</span><span class="fu">user_id</span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># character vector containing user email if logged in</span>
-<span class="va">RegLog</span><span class="op">$</span><span class="fu">user_mail</span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># integer of the account ID inside the database - for identifying the logged user</span>
-<span class="co"># across relative tables</span>
-<span class="va">RegLog</span><span class="op">$</span><span class="fu">account_id</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<blockquote>
-<p>There are much more to be learned about RegLogServer object - for more information read <strong>RegLogServer object fields and methods</strong>. Above information is enough for basic setup.</p>
-</blockquote>
+<code class="sourceCode R"><span><span class="co">## if you assigned the RegLogServer to 'RegLog' object, as in examples above:</span></span>
+<span></span>
+<span><span class="co"># boolean showing if the user is logged in:</span></span>
+<span><span class="va">RegLog</span><span class="op">$</span><span class="fu">is_logged</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># character vector containing user ID: either specific to the user if logged</span></span>
+<span><span class="co"># in, or unique anonymous ID generated with 'uuid::UUIDgenerate()'</span></span>
+<span><span class="va">RegLog</span><span class="op">$</span><span class="fu">user_id</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># character vector containing user email if logged in</span></span>
+<span><span class="va">RegLog</span><span class="op">$</span><span class="fu">user_mail</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># integer of the account ID inside the database - for identifying the logged user</span></span>
+<span><span class="co"># across relative tables</span></span>
+<span><span class="va">RegLog</span><span class="op">$</span><span class="fu">account_id</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<blockquote><p>There are much more to be learned about RegLogServer object - for more information read <strong>RegLogServer object fields and methods</strong>. Above information is enough for basic setup.</p></blockquote>
 </div>
 </div>
 <div class="section level2">
@@ -332,7 +329,7 @@
 </h3>
 <p>Providing GUI to allow logging in if user is already registered to your application.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/RegLog_login_UI.html">RegLog_login_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/RegLog_login_UI.html">RegLog_login_UI</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/login_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 </div>
 <div class="section level3">
@@ -342,8 +339,7 @@
 <ul>
 <li>Both user ID and e-mail needs to be unique within the databasa</li>
 <li>user ID need to consist of 8-30 alphanumeric characters</li>
-<li>user password need to consist of 8-30 characters. It needs to contain characters of at least 3 of 4 following groups:
-<ul>
+<li>user password need to consist of 8-30 characters. It needs to contain characters of at least 3 of 4 following groups:<ul>
 <li>small letter</li>
 <li>big letter</li>
 <li>number</li>
@@ -354,7 +350,7 @@
 </ul>
 <p>After account registration, user will receive confirmation email on their password.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/RegLog_register_UI.html">RegLog_register_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/RegLog_register_UI.html">RegLog_register_UI</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/register_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 </div>
 <div class="section level3">
@@ -364,8 +360,7 @@
 <ul>
 <li>user need to be logged in to change their data</li>
 <li>to confirm their identity, they need to provide their current password</li>
-<li>user can change either during one interaction:
-<ul>
+<li>user can change either during one interaction:<ul>
 <li>password</li>
 <li>user ID and/or e-mail</li>
 </ul>
@@ -374,7 +369,7 @@
 <li>after user ID and/or e-mail change user will receive confirmation e-mail</li>
 </ul>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/RegLog_credsEdit_UI.html">RegLog_credsEdit_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/RegLog_credsEdit_UI.html">RegLog_credsEdit_UI</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/credsEdit_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 </div>
 <div class="section level3">
@@ -388,7 +383,7 @@
 <li>same password check for new password is conducted as in register procedure</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/RegLog_resetPass_UI.html">RegLog_resetPass_UI</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/RegLog_resetPass_UI.html">RegLog_resetPass_UI</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/resetPass_UI.png" style="filter: drop-shadow(5px 5px 5px black); margin-bottom: 5px;"></p>
 </div>
 </div>
@@ -447,7 +442,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>

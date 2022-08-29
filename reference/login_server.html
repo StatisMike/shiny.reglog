@@ -3,7 +3,7 @@
 This function has become deprecated. New RegLog system is based on RegLogServer R6 class.
 Shiny server module for the optional login/registration system
 This function creates a server module to handle other modules of the system: login_UI(), password_reset_UI() and register_UI
-It uses database contained in 'googlesheet' file on your 'gdrive' or 'SQLite' database locally to read and write data of the users. You need to create a 'googlesheet' or 'SQLite' using create_gsheet_db() or create_sqlite_db() respectively."><title>Login server module — login_server • shiny.reglog</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Login server module — login_server"><meta property="og:description" content="
+It uses database contained in 'googlesheet' file on your 'gdrive' or 'SQLite' database locally to read and write data of the users. You need to create a 'googlesheet' or 'SQLite' using create_gsheet_db() or create_sqlite_db() respectively."><title>Login server module — login_server • shiny.reglog</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Login server module — login_server"><meta property="og:description" content="
 This function has become deprecated. New RegLog system is based on RegLogServer R6 class.
 Shiny server module for the optional login/registration system
 This function creates a server module to handle other modules of the system: login_UI(), password_reset_UI() and register_UI
@@ -14,11 +14,11 @@ It uses database contained in 'googlesheet' file on your 'gdrive' or 'SQLite' da
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
     
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary"><div class="container">
     
     <a class="navbar-brand me-2" href="../index.html">shiny.reglog</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,71 +64,110 @@ It uses database contained in 'googlesheet' file on your 'gdrive' or 'SQLite' da
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">login_server</span><span class="op">(</span>
-  id <span class="op">=</span> <span class="st">"login_system"</span>,
-  <span class="va">db_method</span>,
-  <span class="va">mail_method</span>,
-  <span class="va">appname</span>,
-  <span class="va">appaddress</span>,
-  lang <span class="op">=</span> <span class="st">"en"</span>,
-  <span class="va">gsheet_file</span>,
-  <span class="va">sqlite_db</span>,
-  <span class="va">gmailr_user</span>,
-  <span class="va">emayili_user</span>,
-  <span class="va">emayili_password</span>,
-  <span class="va">emayili_host</span>,
-  <span class="va">emayili_port</span>,
-  custom_txts <span class="op">=</span> <span class="cn">NULL</span>,
-  use_login_modals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>UserNotFound <span class="op">=</span> <span class="cn">T</span>, WrongPass <span class="op">=</span> <span class="cn">T</span>, Success <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">login_server</span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="st">"login_system"</span>,</span>
+<span>  <span class="va">db_method</span>,</span>
+<span>  <span class="va">mail_method</span>,</span>
+<span>  <span class="va">appname</span>,</span>
+<span>  <span class="va">appaddress</span>,</span>
+<span>  lang <span class="op">=</span> <span class="st">"en"</span>,</span>
+<span>  <span class="va">gsheet_file</span>,</span>
+<span>  <span class="va">sqlite_db</span>,</span>
+<span>  <span class="va">gmailr_user</span>,</span>
+<span>  <span class="va">emayili_user</span>,</span>
+<span>  <span class="va">emayili_password</span>,</span>
+<span>  <span class="va">emayili_host</span>,</span>
+<span>  <span class="va">emayili_port</span>,</span>
+<span>  custom_txts <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  use_login_modals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>UserNotFound <span class="op">=</span> <span class="cn">T</span>, WrongPass <span class="op">=</span> <span class="cn">T</span>, Success <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>id</dt>
 <dd><p>the id of the module. Defaults to "login_system" for all of the modules contained within the package. If you plan to use serveral login systems inside your app or for any other reason need to change it, remember to keep consistent id for all elements of module.</p></dd>
+
+
 <dt>db_method</dt>
 <dd><p>the character string containing chosen database container, either: <code>"gsheet"</code> (needing installation of 'googlesheets4' package) or <code>"sqlite"</code> (needing installation of 'DBI' and 'RSQLite' packages)</p></dd>
+
+
 <dt>mail_method</dt>
 <dd><p>the character string containing chosen method of sending emails, either: <code>"gmailr"</code> (needing installation of 'gmailr' package) <code>"emayili"</code> (needing installation of 'emayili' package)</p></dd>
+
+
 <dt>appname</dt>
 <dd><p>the character string containing the name of your application (used in automatic e-mails for information purposes)</p></dd>
+
+
 <dt>appaddress</dt>
 <dd><p>the character value containing the web address of your application (used in automatic e-mails for information purposes)</p></dd>
+
+
 <dt>lang</dt>
 <dd><p>specifies the app used language. Accepts "en" or "pl". Defaults to "en"</p></dd>
+
+
 <dt>gsheet_file</dt>
 <dd><p>the ID of your 'googlesheet' file holding the database. It is contained within URL address of your googlesheet (for: <code>db_method = "gsheet"</code>)</p></dd>
+
+
 <dt>sqlite_db</dt>
 <dd><p>the path to your 'SQLite' database (for: <code>db_method = "sqlite"</code>)</p></dd>
+
+
 <dt>gmailr_user</dt>
 <dd><p>your gmail address (for: <code>db_method = "gmailr"</code>)</p></dd>
+
+
 <dt>emayili_user</dt>
 <dd><p>your email address, also used as login to your email account (for: <code>db_method = "emayili"</code>)</p></dd>
+
+
 <dt>emayili_password</dt>
 <dd><p>password to your email account (for: <code>db_method = "emayili"</code>)</p></dd>
+
+
 <dt>emayili_host</dt>
 <dd><p>host of your email box (for: <code>db_method = "emayili"</code>)</p></dd>
+
+
 <dt>emayili_port</dt>
 <dd><p>port of your email box (for: <code>db_method = "emayili"</code>)</p></dd>
+
+
 <dt>custom_txts</dt>
 <dd><p>named list containing customized texts. For more details,
 see documentation for 'reglog_txt'. Provided list can contain only elements
 used by this function, but it is recommended to provide the same list for
 every 'shiny.reglog' function</p></dd>
+
+
 <dt>use_login_modals</dt>
 <dd><p>list of logicals indicating if the modalDialog after log-in should be shown. Defaults to named list of logicals:</p><ul><li><p>UserNotFound = T</p></li>
 <li><p>WrongPass = T</p></li>
 <li><p>Success = T</p></li>
 </ul></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>reactiveValues() object with three elements:
-<code>is_logged</code>, containing boolean describing authorization status
-<code>user_id</code>, containing the logged user identification name. When not logged, it contains the timestamp of session start
-<code>user_mail</code>, containing the logged user mail. When not logged, it is empty character string of nchar() value 0: ("")
-<code>last_state_change</code>, containing string describing last change of login system state. Currently only supports state changes during login procedure</p>
+    
+
+<p>reactiveValues() object with three elements:</p>
+
+
+<p><code>is_logged</code>, containing boolean describing authorization status</p>
+
+
+<p><code>user_id</code>, containing the logged user identification name. When not logged, it contains the timestamp of session start</p>
+
+
+<p><code>user_mail</code>, containing the logged user mail. When not logged, it is empty character string of nchar() value 0: ("")</p>
+
+
+<p><code>last_state_change</code>, containing string describing last change of login system state. Currently only supports state changes during login procedure</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -159,87 +198,87 @@ every 'shiny.reglog' function</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Only run this example in interactive R sessions</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span class="r-in">  </span>
-<span class="r-in">  <span class="co">#### example of db_method = "sqlite" and mail_method = "emayili"</span></span>
-<span class="r-in">  </span>
-<span class="r-in">  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span class="r-in">  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://statismike.github.io/shiny.reglog/">shiny.reglog</a></span><span class="op">)</span></span>
-<span class="r-in">  </span>
-<span class="r-in">  <span class="co"># initializing sqlite</span></span>
-<span class="r-in">  </span>
-<span class="r-in">  <span class="va">sqlite.path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">"sqlite"</span><span class="op">)</span></span>
-<span class="r-in">  <span class="fu"><a href="create_sqlite_db.html">create_sqlite_db</a></span><span class="op">(</span><span class="va">sqlite.path</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">database</span> <span class="op">&lt;-</span> <span class="fu"><a href="sqlite_get_db.html">sqlite_get_db</a></span><span class="op">(</span><span class="va">sqlite.path</span><span class="op">)</span></span>
-<span class="r-in">  </span>
-<span class="r-in">  <span class="co"># Define UI containing shiny.reglog modules</span></span>
-<span class="r-in">  <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
-<span class="r-in">    </span>
-<span class="r-in">    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/headerPanel.html" class="external-link">headerPanel</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"shiny.reglog test"</span><span class="op">)</span>,</span>
-<span class="r-in">    </span>
-<span class="r-in">    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabsetPanel.html" class="external-link">tabsetPanel</a></span><span class="op">(</span></span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Values"</span>, </span>
-<span class="r-in">               <span class="co"># table of returned data for active user</span></span>
-<span class="r-in">               <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">dataTableOutput</a></span><span class="op">(</span><span class="st">"active_user_values"</span><span class="op">)</span>,</span>
-<span class="r-in">               <span class="co"># table of session$userData$reactive_db$user_db loaded at the start of session</span></span>
-<span class="r-in">               <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">dataTableOutput</a></span><span class="op">(</span><span class="st">"user_db"</span><span class="op">)</span>,</span>
-<span class="r-in">               <span class="co"># table of session$userData$reactive_db$reset_db loaded at the start of session</span></span>
-<span class="r-in">               <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">dataTableOutput</a></span><span class="op">(</span><span class="st">"reset_db"</span><span class="op">)</span></span>
-<span class="r-in">      <span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Login"</span>, <span class="fu"><a href="login_UI.html">login_UI</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Register"</span>, <span class="fu"><a href="register_UI.html">register_UI</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Reset Password"</span>, <span class="fu"><a href="password_reset_UI.html">password_reset_UI</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Logout"</span>, <span class="fu"><a href="logout_button.html">logout_button</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">      </span>
-<span class="r-in">    <span class="op">)</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in">  </span>
-<span class="r-in">  <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in">    </span>
-<span class="r-in">    <span class="co"># login server with specified methods for database and mailing</span></span>
-<span class="r-in">    <span class="co"># to run it you need to replace placeholders with your details and </span></span>
-<span class="r-in">    <span class="co"># cofigure it for your needs</span></span>
-<span class="r-in">    </span>
-<span class="r-in">    <span class="va">auth</span> <span class="op">&lt;-</span> <span class="fu">login_server</span><span class="op">(</span></span>
-<span class="r-in">      db_method <span class="op">=</span> <span class="st">"sqlite"</span>,</span>
-<span class="r-in">      mail_method <span class="op">=</span> <span class="st">"emayili"</span>,</span>
-<span class="r-in">      appname <span class="op">=</span> <span class="st">"shiny.reglog example"</span>,</span>
-<span class="r-in">      appaddress <span class="op">=</span> <span class="st">"not-on-net.com"</span>,</span>
-<span class="r-in">      sqlite_db <span class="op">=</span> <span class="va">sqlite.path</span>,</span>
-<span class="r-in">      <span class="co"># arguments below need configuration for your mailing account</span></span>
-<span class="r-in">      emayili_user <span class="op">=</span> <span class="st">"your_email_address"</span>,</span>
-<span class="r-in">      emayili_password <span class="op">=</span> <span class="st">"your_email_password"</span>,</span>
-<span class="r-in">      emayili_port <span class="op">=</span> <span class="st">"your_email_box_port"</span>,</span>
-<span class="r-in">      emayili_host <span class="op">=</span> <span class="st">"your_email_box_host"</span></span>
-<span class="r-in">    <span class="op">)</span></span>
-<span class="r-in">    </span>
-<span class="r-in">    <span class="co"># table of values returned by login_server</span></span>
-<span class="r-in">    </span>
-<span class="r-in">    <span class="va">output</span><span class="op">$</span><span class="va">active_user_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">renderDataTable</a></span><span class="op">(</span><span class="op">{</span></span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>is_logged <span class="op">=</span> <span class="va">auth</span><span class="op">$</span><span class="va">is_logged</span>,</span>
-<span class="r-in">                 user_id <span class="op">=</span> <span class="va">auth</span><span class="op">$</span><span class="va">user_id</span>,</span>
-<span class="r-in">                 user_mail <span class="op">=</span> <span class="va">auth</span><span class="op">$</span><span class="va">user_mail</span></span>
-<span class="r-in">      <span class="op">)</span></span>
-<span class="r-in">    <span class="op">}</span><span class="op">)</span></span>
-<span class="r-in">    </span>
-<span class="r-in">    <span class="co"># tibbles contained within session$userData$reactive_db</span></span>
-<span class="r-in">   </span>
-<span class="r-in">    <span class="va">output</span><span class="op">$</span><span class="va">user_db</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">renderDataTable</a></span><span class="op">(</span></span>
-<span class="r-in">      <span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">$</span><span class="va">reactive_db</span><span class="op">$</span><span class="va">user_db</span></span>
-<span class="r-in">    <span class="op">)</span></span>
-<span class="r-in">    </span>
-<span class="r-in">    <span class="va">output</span><span class="op">$</span><span class="va">reset_db</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">renderDataTable</a></span><span class="op">(</span></span>
-<span class="r-in">      <span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">$</span><span class="va">reactive_db</span><span class="op">$</span><span class="va">reset_db</span></span>
-<span class="r-in">    <span class="op">)</span></span>
-<span class="r-in">  <span class="op">}</span></span>
-<span class="r-in">  </span>
-<span class="r-in">  <span class="co"># Run the application </span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span>
-<span class="r-in">  </span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Only run this example in interactive R sessions</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span>  <span class="co">#### example of db_method = "sqlite" and mail_method = "emayili"</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://statismike.github.io/shiny.reglog/">shiny.reglog</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span>  <span class="co"># initializing sqlite</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span>  <span class="va">sqlite.path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">"sqlite"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="create_sqlite_db.html">create_sqlite_db</a></span><span class="op">(</span><span class="va">sqlite.path</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">database</span> <span class="op">&lt;-</span> <span class="fu"><a href="sqlite_get_db.html">sqlite_get_db</a></span><span class="op">(</span><span class="va">sqlite.path</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span>  <span class="co"># Define UI containing shiny.reglog modules</span></span></span>
+<span class="r-in"><span>  <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/headerPanel.html" class="external-link">headerPanel</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"shiny.reglog test"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabsetPanel.html" class="external-link">tabsetPanel</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Values"</span>, </span></span>
+<span class="r-in"><span>               <span class="co"># table of returned data for active user</span></span></span>
+<span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">dataTableOutput</a></span><span class="op">(</span><span class="st">"active_user_values"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>               <span class="co"># table of session$userData$reactive_db$user_db loaded at the start of session</span></span></span>
+<span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">dataTableOutput</a></span><span class="op">(</span><span class="st">"user_db"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>               <span class="co"># table of session$userData$reactive_db$reset_db loaded at the start of session</span></span></span>
+<span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">dataTableOutput</a></span><span class="op">(</span><span class="st">"reset_db"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>      <span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Login"</span>, <span class="fu"><a href="login_UI.html">login_UI</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Register"</span>, <span class="fu"><a href="register_UI.html">register_UI</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Reset Password"</span>, <span class="fu"><a href="password_reset_UI.html">password_reset_UI</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html" class="external-link">tabPanel</a></span><span class="op">(</span><span class="st">"Logout"</span>, <span class="fu"><a href="logout_button.html">logout_button</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>      </span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span>  <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="co"># login server with specified methods for database and mailing</span></span></span>
+<span class="r-in"><span>    <span class="co"># to run it you need to replace placeholders with your details and </span></span></span>
+<span class="r-in"><span>    <span class="co"># cofigure it for your needs</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">auth</span> <span class="op">&lt;-</span> <span class="fu">login_server</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      db_method <span class="op">=</span> <span class="st">"sqlite"</span>,</span></span>
+<span class="r-in"><span>      mail_method <span class="op">=</span> <span class="st">"emayili"</span>,</span></span>
+<span class="r-in"><span>      appname <span class="op">=</span> <span class="st">"shiny.reglog example"</span>,</span></span>
+<span class="r-in"><span>      appaddress <span class="op">=</span> <span class="st">"not-on-net.com"</span>,</span></span>
+<span class="r-in"><span>      sqlite_db <span class="op">=</span> <span class="va">sqlite.path</span>,</span></span>
+<span class="r-in"><span>      <span class="co"># arguments below need configuration for your mailing account</span></span></span>
+<span class="r-in"><span>      emayili_user <span class="op">=</span> <span class="st">"your_email_address"</span>,</span></span>
+<span class="r-in"><span>      emayili_password <span class="op">=</span> <span class="st">"your_email_password"</span>,</span></span>
+<span class="r-in"><span>      emayili_port <span class="op">=</span> <span class="st">"your_email_box_port"</span>,</span></span>
+<span class="r-in"><span>      emayili_host <span class="op">=</span> <span class="st">"your_email_box_host"</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="co"># table of values returned by login_server</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">output</span><span class="op">$</span><span class="va">active_user_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">renderDataTable</a></span><span class="op">(</span><span class="op">{</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>is_logged <span class="op">=</span> <span class="va">auth</span><span class="op">$</span><span class="va">is_logged</span>,</span></span>
+<span class="r-in"><span>                 user_id <span class="op">=</span> <span class="va">auth</span><span class="op">$</span><span class="va">user_id</span>,</span></span>
+<span class="r-in"><span>                 user_mail <span class="op">=</span> <span class="va">auth</span><span class="op">$</span><span class="va">user_mail</span></span></span>
+<span class="r-in"><span>      <span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">}</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="co"># tibbles contained within session$userData$reactive_db</span></span></span>
+<span class="r-in"><span>   </span></span>
+<span class="r-in"><span>    <span class="va">output</span><span class="op">$</span><span class="va">user_db</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">renderDataTable</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">$</span><span class="va">reactive_db</span><span class="op">$</span><span class="va">user_db</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>    </span></span>
+<span class="r-in"><span>    <span class="va">output</span><span class="op">$</span><span class="va">reset_db</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">renderDataTable</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="va">session</span><span class="op">$</span><span class="va">userData</span><span class="op">$</span><span class="va">reactive_db</span><span class="op">$</span><span class="va">reset_db</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span>  <span class="co"># Run the application </span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -251,7 +290,7 @@ every 'shiny.reglog' function</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer></div>

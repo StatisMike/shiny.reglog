@@ -67,6 +67,9 @@
     <loc>https://statismike.github.io/shiny.reglog/reference/RegLogGsheetConnector.html</loc>
   </url>
   <url>
+    <loc>https://statismike.github.io/shiny.reglog/reference/RegLogMongoConnector.html</loc>
+  </url>
+  <url>
     <loc>https://statismike.github.io/shiny.reglog/reference/RegLogServer.html</loc>
   </url>
   <url>
@@ -143,6 +146,24 @@
   </url>
   <url>
     <loc>https://statismike.github.io/shiny.reglog/reference/mailMessageAttachment.html</loc>
+  </url>
+  <url>
+    <loc>https://statismike.github.io/shiny.reglog/reference/mongo_credsEdit_handler.html</loc>
+  </url>
+  <url>
+    <loc>https://statismike.github.io/shiny.reglog/reference/mongo_login_handler.html</loc>
+  </url>
+  <url>
+    <loc>https://statismike.github.io/shiny.reglog/reference/mongo_register_handler.html</loc>
+  </url>
+  <url>
+    <loc>https://statismike.github.io/shiny.reglog/reference/mongo_resetPass_confirmation_handler.html</loc>
+  </url>
+  <url>
+    <loc>https://statismike.github.io/shiny.reglog/reference/mongo_resetPass_generation_handler.html</loc>
+  </url>
+  <url>
+    <loc>https://statismike.github.io/shiny.reglog/reference/mongo_tables_create.html</loc>
   </url>
   <url>
     <loc>https://statismike.github.io/shiny.reglog/reference/password_reset_UI.html</loc>
