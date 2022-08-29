@@ -66,3 +66,58 @@ test_that("Custom mail body and body is attached", {
                custom_emails$register$subject)
   
 })
+
+testServer(server, {
+  
+  mailConnector$listener(
+    RegLogConnectorMessage(
+      type = "reglog_mail",
+      process = "register",
+      username = "statismike",
+      email = "statismike@gmail.com",
+      app_name = "Test App",
+      app_address = "http://test_reglog.app"
+    )
+  )
+  
+  session$elapse(5000)
+  
+  recovered_message <<- mailConnector$message()
+  recovered_mails <<- mailConnector$mails
+  
+})
+
+test_that("Register mail have been tried to sent", {
+  
+  expect_equal(recovered_message$type, "reglog_mail")
+  expect_equal(recovered_message$data$process, "register")
+  
+})
+
+testServer(server, {
+  
+  mailConnector$listener(
+    RegLogConnectorMessage(
+      type = "reglog_mail",
+      process = "resetPass",
+      username = "statismike",
+      email = "statismike@gmail.com",
+      app_name = "Test App",
+      app_address = "http://test_reglog.app",
+      reset_code = "123423"
+    )
+  )
+  
+  session$elapse(5000)
+  
+  recovered_message <<- mailConnector$message()
+  recovered_mails <<- mailConnector$mails
+  
+})
+
+test_that("Reset code mail have been tried to sent", {
+  
+  expect_equal(recovered_message$type, "reglog_mail")
+  expect_equal(recovered_message$data$process, "resetPass")
+  
+})

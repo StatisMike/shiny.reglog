@@ -223,6 +223,14 @@ server <- function(input, output, session) {
 }
 ```
 
+### 5.3. `MongoDB`-based connector (*RegLogMongoConnector*)
+
+*MongoDB* is very popular NoSQL database with pretty low entry-point. Connector
+is still experimental.
+
+Setup is analogous to other database connectors. For more informations, refer
+to documentation: `?mongo_tables_create()`, `?RegLogMongoConnector`
+
 ## 6. Setting up mail connectors
 
 You need to create *mailConnector* object to be used by the *RegLogServer* to 

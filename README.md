@@ -27,9 +27,10 @@ into relational database.
 On the other hand, it may be handy for your App to allow access of
 unregistered users. If you need to secure your ShinyApp, there are
 better alternatives
-(<a href="https://github.com/datastorm-open/shinymanager" target="_blank">shinymanager</a>
-or
-<a href="https://github.com/PaulC91/shinyauthr" target="_blank">shinyauthr</a>)
+(<a href="https://github.com/datastorm-open/shinymanager"
+target="_blank">shinymanager</a> or
+<a href="https://github.com/PaulC91/shinyauthr"
+target="_blank">shinyauthr</a>)
 
 This package contains modules to use in your Shiny application allowing
 you to automatically insert boxes for login, register, credentials edit
@@ -69,7 +70,8 @@ Basic information about *shiny.reglog* is contained within this
 document. There are some more resources to learn about its usage:
 
 -   You can access demonstration shinyApp with showcase mode on
-    <a href="https://statismik.shinyapps.io/shinyreglog_demo/" target="_blank">shinyapps.io</a>
+    <a href="https://statismik.shinyapps.io/shinyreglog_demo/"
+    target="_blank">shinyapps.io</a>
 -   You can run interactive demo in your own RStudio by using
     `RegLogDemo()` function. It will use mocked *mailConnector* by
     default or *RegLogEmayiliConnector* if you provide it arguments
@@ -224,6 +226,15 @@ server <- function(input, output, session) {
   
 }
 ```
+
+### 5.3. `MongoDB`-based connector (*RegLogMongoConnector*)
+
+*MongoDB* is very popular NoSQL database with pretty low entry-point.
+Connector is still experimental.
+
+Setup is analogous to other database connectors. For more informations,
+refer to documentation: `?mongo_tables_create()`,
+`?RegLogMongoConnector`
 
 ## 6. Setting up mail connectors
 

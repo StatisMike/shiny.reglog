@@ -252,8 +252,8 @@ RegLog_txts$pl = list(
   crededit_mail_1 = "Zmieniono dane u\u017Cytkownika identyfikowanego nazw\u0105:",
   # logout bttn
   logout_bttn = "Wyloguj",
-  logout_mod_t = "Wylogowano",
-  logout_mod_b = "Pomy\u015Blnie wylogowano!",
+  # logout_mod_t = "Wylogowano",
+  # logout_mod_b = "Pomy\u015Blnie wylogowano!",
   # creds_edit
   cred_edit_ui_h1 = "Zmie\u0144 swoje dane",
   cred_eidt_ui_p = "Tutaj mo\u017Cesz zmieni\u0107 swoje dane. Po pomy\u015Blnej zmianie nast\u0105pi przelogowanie z wykorzystaniem zaktualizowanych danych.",

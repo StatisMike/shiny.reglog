@@ -1,6 +1,7 @@
 url: https://statismike.github.io/shiny.reglog/
 template:
   bootstrap: 5
+  bootswatch: flatly
 navbar:
   components:
     articles:
@@ -61,5 +62,5 @@ reference:
 - contents:
   - has_concept("gsheet_handler", internal = TRUE)
   - has_concept("DBI_handler", internal = TRUE)
-  - has_conecpt("mongo_handler", internal = TRUE)  
+  - has_concept("mongo_handler", internal = TRUE)  
   - has_concept("mail_handler", internal = TRUE)
