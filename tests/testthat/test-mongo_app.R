@@ -482,6 +482,11 @@ test_that("Logs can be read from database", {
 })
 
 # cleanup
+
+app_wait(app)
+
+app$stop()
+
 account <- mongolite::mongo(
   url = "mongodb://localhost",
   db = "reglog", 

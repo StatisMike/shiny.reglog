@@ -1,5 +1,3 @@
-library(shinytest2)
-
 ## Invalid inputs
 non_valid_username <- c(
   "reg",
@@ -1015,3 +1013,7 @@ test_that("Logs can be read from database", {
                c("received", "sent"))
   
 })
+
+app_wait(app)
+
+app$stop()
