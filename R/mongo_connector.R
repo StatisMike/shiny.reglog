@@ -49,7 +49,7 @@
 #'   - type: character
 #'   - note: character
 #' 
-# @example examples/mongo_tables_create.R
+# @example man/examples/mongo_tables_create.R
 #' @export
 #' @family RegLog databases
 

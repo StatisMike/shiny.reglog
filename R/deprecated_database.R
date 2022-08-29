@@ -29,7 +29,7 @@
 #' 
 #' @export
 #' 
-#' @example examples/create_sqlite_db.R
+#' @example man/examples/create_sqlite_db.R
 #' 
 
 create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_hashed){
@@ -109,7 +109,7 @@ create_sqlite_db <- function(output_file, credentials = NULL, credentials_pass_h
 #' @export
 #' @keywords internal
 #' 
-#' @example examples/create_gsheet_db.R
+#' @example man/examples/create_gsheet_db.R
 
 create_gsheet_db <- function(name = NULL, credentials = NULL, credentials_pass_hashed){
   

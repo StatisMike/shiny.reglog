@@ -72,7 +72,7 @@ check_user_data <- function(user_data) {
 #'   - note: varchar(255)
 #' 
 #' @return List with results of the creation
-#' @example examples/DBI_tables_create.R
+#' @example man/examples/DBI_tables_create.R
 #' @export
 #' @family RegLog databases
 
@@ -277,7 +277,7 @@ DBI_tables_create <- function(
 #'   - note: character
 #' 
 #' @return ID of the googlesheet
-#' @example examples/gsheet_tables_create.R
+#' @example man/examples/gsheet_tables_create.R
 #' @export
 #' @family RegLog databases
 

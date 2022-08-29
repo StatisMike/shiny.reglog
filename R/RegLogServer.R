@@ -196,5 +196,5 @@ RegLogServer <- R6::R6Class(
 
 #' @name RegLogServer
 #' @rdname RegLogServer
-#' @example examples/RegLogServer.R
+#' @example man/examples/RegLogServer.R
 NULL
