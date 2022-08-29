@@ -26,10 +26,10 @@ RegLogConnector = R6::R6Class(
     #' types of `RegLogConnectorMessage`. Name of the element corresponds to 
     #' the 'type' that is should handle.
     #' @details You can specify custom handler functions as a named list passed
-    #' to `custom_handlers` arguments during object initialization. Custom handler
-    #' should take arguments: `self` and `private` - relating to the R6 object
-    #' and `message` of class `RegLogConnectorMessage`. It should return
-    #' return `RegLogConnectorMessage` object
+    #' to `custom_handlers` arguments during object initialization. Every custom
+    #' handler should take arguments: `self` and `private` - relating to the R6 
+    #' object and `message` of class `RegLogConnectorMessage`. It should return 
+    #' `RegLogConnectorMessage` object.
     
     handlers = list(
       ping = function(self, private, message) {
@@ -64,9 +64,9 @@ RegLogConnector = R6::R6Class(
     
     #' @description Initialization of the object. Sets up listener reactiveVal
     #' and initializes listening server module
-    #' @param custom_handlers named list of custom handler functions. Custom handler
-    #' should take arguments: `self` and `private` - relating to the R6 object
-    #' and `message` of class `RegLogConnectorMessage`. It should return
+    #' @param custom_handlers named list of custom handler functions. Every 
+    #' custom handler should take arguments: `self` and `private` - relating to 
+    #' the R6 object and `message` of class `RegLogConnectorMessage`. It should 
     #' return `RegLogConnectorMessage` object.
     #' 
     #' @return object of `RegLogConnector` class
@@ -81,11 +81,11 @@ RegLogConnector = R6::R6Class(
       if (!is.null(custom_handlers)) {
         ## checks if the custom_handlers are correct
             ## custom handlers should be a list
-        if (class(custom_handlers) == "list" &&
+        if (is.list(custom_handlers) &&
             ## all elements of it needs to be named
             all(sapply(names(custom_handlers), \(x) nchar(x) > 0)) &&
             ## all elements need to be of class 'function'
-            all(sapply(custom_handlers, \(x) "function" %in% class(x)))
+            all(sapply(custom_handlers, is.function))
             ) {
           
           for (handler_n in seq_along(custom_handlers)) {
@@ -140,7 +140,7 @@ RegLogConnector = R6::R6Class(
                        # receive the message
                        received_message <- self$listener()
                        # reacts only on certain objects passed to its listener
-                       req(class(received_message) == "RegLogConnectorMessage" &&
+                       req(is.RegLogConnectorMessage(received_message) &&
                              received_message$type %in% names(self$handlers))
                        isolate({
                          # save received message to the logs
@@ -211,3 +211,8 @@ RegLogConnectorMessage <- function(
   return(x)
   
 }
+
+#' @rdname RegLogConnectorMessage
+#' @param x Any R object
+is.RegLogConnectorMessage <- function(x)
+  inherits(x, "RegLogConnectorMessage")

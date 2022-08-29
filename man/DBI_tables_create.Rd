@@ -58,16 +58,16 @@ Created tables should have following structure:
 \item account (default name)
 \itemize{
 \item id: integer, primary key, auto-increment
-\item username: varchar(255), NOT NULL, unique
+\item username: varchar(255), NOT NULL, unique key
 \item password: varchar(255), NOT NULL
-\item email: varchar(255), NOT NULL, unique
+\item email: varchar(255), NOT NULL, unique key
 \item create_time: datetime, NOT NULL
 \item update_time: datetime, NOT NULL
 }
 \item reset_code (default name)
 \itemize{
 \item id: integer, primary key, auto-increment
-\item user_id: integer, NOT NULL
+\item user_id: integer, NOT NULL, key
 \item reset_code: varchar(10), NOT NULL
 \item used: tinyint, NOT NULL
 \item create_time: datetime, NOT NULL
@@ -118,6 +118,7 @@ DBI::dbDisconnect(conn = conn)
 }
 \seealso{
 Other RegLog databases: 
-\code{\link{gsheet_tables_create}()}
+\code{\link{gsheet_tables_create}()},
+\code{\link{mongo_tables_create}()}
 }
 \concept{RegLog databases}

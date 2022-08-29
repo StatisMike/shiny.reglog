@@ -2,9 +2,12 @@
 % Please edit documentation in R/RegLogConnector.R
 \name{RegLogConnectorMessage}
 \alias{RegLogConnectorMessage}
+\alias{is.RegLogConnectorMessage}
 \title{create RegLogConnectorMessage object}
 \usage{
 RegLogConnectorMessage(type, ..., logcontent = NULL)
+
+is.RegLogConnectorMessage(x)
 }
 \arguments{
 \item{type}{character string declaring the type of message}
@@ -12,6 +15,8 @@ RegLogConnectorMessage(type, ..., logcontent = NULL)
 \item{...}{named arguments that will be passed as data}
 
 \item{logcontent}{character string. Optional description to save into logs.}
+
+\item{x}{Any R object}
 }
 \value{
 object of \code{RegLogConnector} class, containing fields:

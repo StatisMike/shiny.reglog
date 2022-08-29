@@ -1,6 +1,7 @@
 url: https://statismike.github.io/shiny.reglog/
 template:
   bootstrap: 5
+  bootswatch: flatly
 navbar:
   components:
     articles:
@@ -19,6 +20,7 @@ reference:
   - RegLogServer
   - RegLogDBIConnector
   - RegLogGsheetConnector
+  - RegLogMongoConnector
   - RegLogEmayiliConnector
   - RegLogGmailrConnector
 - title: UI components of RegLogSystem
@@ -32,6 +34,7 @@ reference:
 - contents:
   - DBI_tables_create
   - gsheet_tables_create
+  - mongo_tables_create
 - title: Advanced functions and objects 
 - subtitle: Customizing texts
   desc: >- 
@@ -59,4 +62,5 @@ reference:
 - contents:
   - has_concept("gsheet_handler", internal = TRUE)
   - has_concept("DBI_handler", internal = TRUE)
+  - has_concept("mongo_handler", internal = TRUE)  
   - has_concept("mail_handler", internal = TRUE)

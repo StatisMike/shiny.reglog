@@ -113,6 +113,7 @@ if (googlesheets4::gs4_has_token()) {
 }
 \seealso{
 Other RegLog databases: 
-\code{\link{DBI_tables_create}()}
+\code{\link{DBI_tables_create}()},
+\code{\link{mongo_tables_create}()}
 }
 \concept{RegLog databases}

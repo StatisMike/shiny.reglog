@@ -8,6 +8,8 @@
 Object of this class handles all connections for the RegLogServer
 object to the database. It is created to handle googlesheet database.
 Provides methods than will be used by RegLogServer to get and send data.
+
+Requires \code{googlesheets4} package to be installed.
 }
 \seealso{
 Other dbConnectors: 
@@ -20,22 +22,22 @@ Other dbConnectors:
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{RegLogGsheetConnector$new()}}
-\item \href{#method-clone}{\code{RegLogGsheetConnector$clone()}}
+\item \href{#method-RegLogGsheetConnector-new}{\code{RegLogGsheetConnector$new()}}
+\item \href{#method-RegLogGsheetConnector-clone}{\code{RegLogGsheetConnector$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="get_logs">}\href{../../shiny.reglog/html/RegLogConnector.html#method-get_logs}{\code{shiny.reglog::RegLogConnector$get_logs()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="resume">}\href{../../shiny.reglog/html/RegLogConnector.html#method-resume}{\code{shiny.reglog::RegLogConnector$resume()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="suspend">}\href{../../shiny.reglog/html/RegLogConnector.html#method-suspend}{\code{shiny.reglog::RegLogConnector$suspend()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="get_logs"><a href='../../shiny.reglog/html/RegLogConnector.html#method-RegLogConnector-get_logs'><code>shiny.reglog::RegLogConnector$get_logs()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="resume"><a href='../../shiny.reglog/html/RegLogConnector.html#method-RegLogConnector-resume'><code>shiny.reglog::RegLogConnector$resume()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="suspend"><a href='../../shiny.reglog/html/RegLogConnector.html#method-RegLogConnector-suspend'><code>shiny.reglog::RegLogConnector$suspend()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-RegLogGsheetConnector-new"></a>}}
+\if{latex}{\out{\hypertarget{method-RegLogGsheetConnector-new}{}}}
 \subsection{Method \code{new()}}{
 Initialization of the object. Creates initial connection
 to the database.
@@ -57,10 +59,10 @@ googlesheet: first containing user data, second - reset codes information,
 third (optional) - logs from the object. For more info check documentation
 of \code{gsheet_database_create}.}
 
-\item{\code{custom_handlers}}{named list of custom handler functions. Custom handler
-should take arguments: \code{self} and \code{private} - relating to the R6 object
-and \code{message} of class \code{RegLogConnectorMessage}. It should return
-\code{RegLogConnectorMessage} object.}
+\item{\code{custom_handlers}}{named list of custom handler functions. Every
+custom handler should take arguments: \code{self} and \code{private} - relating
+to the R6 object and \code{message} of class \code{RegLogConnectorMessage}. It
+should return \code{RegLogConnectorMessage} object.}
 }
 \if{html}{\out{</div>}}
 }
@@ -69,8 +71,8 @@ object of \code{RegLogDBIConnector} class
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-RegLogGsheetConnector-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-RegLogGsheetConnector-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

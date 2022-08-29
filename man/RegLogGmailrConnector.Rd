@@ -27,22 +27,22 @@ mail handlers for register and password reset}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{RegLogGmailrConnector$new()}}
-\item \href{#method-clone}{\code{RegLogGmailrConnector$clone()}}
+\item \href{#method-RegLogGmailrConnector-new}{\code{RegLogGmailrConnector$new()}}
+\item \href{#method-RegLogGmailrConnector-clone}{\code{RegLogGmailrConnector$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="get_logs">}\href{../../shiny.reglog/html/RegLogConnector.html#method-get_logs}{\code{shiny.reglog::RegLogConnector$get_logs()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="resume">}\href{../../shiny.reglog/html/RegLogConnector.html#method-resume}{\code{shiny.reglog::RegLogConnector$resume()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="suspend">}\href{../../shiny.reglog/html/RegLogConnector.html#method-suspend}{\code{shiny.reglog::RegLogConnector$suspend()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="get_logs"><a href='../../shiny.reglog/html/RegLogConnector.html#method-RegLogConnector-get_logs'><code>shiny.reglog::RegLogConnector$get_logs()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="resume"><a href='../../shiny.reglog/html/RegLogConnector.html#method-RegLogConnector-resume'><code>shiny.reglog::RegLogConnector$resume()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="shiny.reglog" data-topic="RegLogConnector" data-id="suspend"><a href='../../shiny.reglog/html/RegLogConnector.html#method-RegLogConnector-suspend'><code>shiny.reglog::RegLogConnector$suspend()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-RegLogGmailrConnector-new"></a>}}
+\if{latex}{\out{\hypertarget{method-RegLogGmailrConnector-new}{}}}
 \subsection{Method \code{new()}}{
 Initialization of the object. Creates smtp server for email
 sending.
@@ -107,8 +107,8 @@ They are stored (and should be passed accordingly) in a list of structure:
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-RegLogGmailrConnector-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-RegLogGmailrConnector-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

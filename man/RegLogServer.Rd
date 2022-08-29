@@ -117,15 +117,15 @@ edit UI.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{RegLogServer$new()}}
-\item \href{#method-logout}{\code{RegLogServer$logout()}}
-\item \href{#method-get_logs}{\code{RegLogServer$get_logs()}}
-\item \href{#method-clone}{\code{RegLogServer$clone()}}
+\item \href{#method-RegLogServer-new}{\code{RegLogServer$new()}}
+\item \href{#method-RegLogServer-logout}{\code{RegLogServer$logout()}}
+\item \href{#method-RegLogServer-get_logs}{\code{RegLogServer$get_logs()}}
+\item \href{#method-RegLogServer-clone}{\code{RegLogServer$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-RegLogServer-new"></a>}}
+\if{latex}{\out{\hypertarget{method-RegLogServer-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize 'ReglogServer' moduleServer
 \subsection{Usage}{
@@ -180,8 +180,8 @@ Recommended to keep it that way, unless it would cause any namespace issues.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-logout"></a>}}
-\if{latex}{\out{\hypertarget{method-logout}{}}}
+\if{html}{\out{<a id="method-RegLogServer-logout"></a>}}
+\if{latex}{\out{\hypertarget{method-RegLogServer-logout}{}}}
 \subsection{Method \code{logout()}}{
 Method logging out logged user
 \subsection{Usage}{
@@ -190,8 +190,8 @@ Method logging out logged user
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_logs"></a>}}
-\if{latex}{\out{\hypertarget{method-get_logs}{}}}
+\if{html}{\out{<a id="method-RegLogServer-get_logs"></a>}}
+\if{latex}{\out{\hypertarget{method-RegLogServer-get_logs}{}}}
 \subsection{Method \code{get_logs()}}{
 Method to receive all saved logs from the object in the form
 of single data.frame
@@ -204,8 +204,8 @@ data.frame
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-RegLogServer-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-RegLogServer-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

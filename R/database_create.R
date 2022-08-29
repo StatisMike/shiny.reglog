@@ -9,11 +9,11 @@ supported_db_connections <- c("SQLiteConnection", "MySQLConnection",
 
 check_user_data <- function(user_data) {
   
-  if (class(user_data) != "data.frame") {
+  if (!is.data.frame(user_data)) {
     stop(call. = F, "User data need to be in form of 'data.frame' object.")
   }
-  if (!all(c("username", "password", "email") %in% names(user_data))) {
-    stop(call. = F, "Data.frame containing user data needs to contain columns: 'username', 'password' and 'email'.")
+  if (!all(names(user_data) %in% c("username", "password", "email", "create_time"))) {
+    stop(call. = F, "Data.frame containing user data needs to contain columns: 'username', 'password', 'email' and (optionally) 'create_time'.")
   }
   if (sum(is.na(user_data$username), is.na(user_data$password), is.na(user_data$email)) > 0) {
     stop(call. = F, "Provided user data can't contain any NA values.")
@@ -51,14 +51,14 @@ check_user_data <- function(user_data) {
 #' 
 #' - account (default name)
 #'   - id: integer, primary key, auto-increment
-#'   - username: varchar(255), NOT NULL, unique
+#'   - username: varchar(255), NOT NULL, unique key
 #'   - password: varchar(255), NOT NULL
-#'   - email: varchar(255), NOT NULL, unique
+#'   - email: varchar(255), NOT NULL, unique key
 #'   - create_time: datetime, NOT NULL
 #'   - update_time: datetime, NOT NULL
 #' - reset_code (default name)
 #'   - id: integer, primary key, auto-increment
-#'   - user_id: integer, NOT NULL
+#'   - user_id: integer, NOT NULL, key
 #'   - reset_code: varchar(10), NOT NULL
 #'   - used: tinyint, NOT NULL
 #'   - create_time: datetime, NOT NULL
@@ -72,7 +72,7 @@ check_user_data <- function(user_data) {
 #'   - note: varchar(255)
 #' 
 #' @return List with results of the creation
-#' @example examples/DBI_tables_create.R
+#' @example man/examples/DBI_tables_create.R
 #' @export
 #' @family RegLog databases
 
@@ -95,9 +95,9 @@ DBI_tables_create <- function(
   }
   
   # get the class of the SQL connection
-  class <- class(conn)[1]
-  
-  if (!class %in% supported_db_connections) {
+  if (!any(vapply(supported_db_connections,
+                  \(x) inherits(conn, x),
+                  logical(1)))) {
     stop(paste0("This function currently supports only database connections: ", 
                paste(collapse = ", ", supported_db_connections)), ".")
   }
@@ -111,15 +111,18 @@ DBI_tables_create <- function(
     DBI::dbCreateTable(
       conn,
       account_name,
-      c("id" = if (class == "SQLiteConnection") "INTEGER PRIMARY KEY"
-        else if (class %in% c("MySQLConnection", "MariaDBConnection")) "INT PRIMARY KEY AUTO_INCREMENT"
-        else if (class == "PostgreSQLConnection") "SERIAL PRIMARY KEY",
+      c("id" = if (inherits(conn, "SQLiteConnection")) 
+                  "INTEGER PRIMARY KEY"
+        else if (inherits(conn, "MySQLConnection") || inherits(conn, "MariaDBConnection")) 
+                  "INT PRIMARY KEY AUTO_INCREMENT"
+        else if (inherits(conn, "PostgreSQLConnection")) 
+                  "SERIAL PRIMARY KEY",
         "username" = "VARCHAR(255) NOT NULL UNIQUE",
         "password" = "VARCHAR(255) NOT NULL",
         "email" = "VARCHAR(255) NOT NULL UNIQUE",
-        "create_time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+        "create_time" = if (inherits(conn, "PostgreSQLConnection"))  "TIMESTAMP NOT NULL" 
                       else "DATETIME NOT NULL",
-        "update_time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+        "update_time" = if (inherits(conn, "PostgreSQLConnection"))  "TIMESTAMP NOT NULL" 
                       else "DATETIME NOT NULL"
     )),
     error = function(e) e,
@@ -137,22 +140,27 @@ DBI_tables_create <- function(
     DBI::dbCreateTable(
       conn,
       reset_code_name,
-      c("id" = if (class == "SQLiteConnection") "INTEGER PRIMARY KEY"
-        else if (class %in% c("MySQLConnection", "MariaDBConnection")) "INT PRIMARY KEY AUTO_INCREMENT"
-        else if (class == "PostgreSQLConnection") "SERIAL PRIMARY KEY",
+      c("id" = if (inherits(conn, "SQLiteConnection")) 
+                  "INTEGER PRIMARY KEY"
+        else if (inherits(conn, "MySQLConnection") || inherits(conn, "MariaDBConnection")) 
+                  "INT PRIMARY KEY AUTO_INCREMENT"
+        else if (inherits(conn, "PostgreSQLConnection")) 
+                  "SERIAL PRIMARY KEY",
         "user_id" = "INT NOT NULL",
         "reset_code" = "VARCHAR(10) NOT NULL",
-        "used" = if (class == "PostgreSQLConnection") "SMALLINT NOT NULL" 
+        "used" = if (inherits(conn, "PostgreSQLConnection")) "SMALLINT NOT NULL" 
                else "TINYINT NOT NULL",
-        "create_time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+        "create_time" = if (inherits(conn, "PostgreSQLConnection")) "TIMESTAMP NOT NULL" 
                         else "DATETIME NOT NULL",
-        "update_time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+        "update_time" = if (inherits(conn, "PostgreSQLConnection")) "TIMESTAMP NOT NULL" 
                         else "DATETIME NOT NULL"
         )
       ),
     error = function(e) e,
     warning = function(w) w
   )
+  
+  DBI::dbExecute(conn, paste0("CREATE INDEX user_id_reset_code ON ", reset_code_name, " (user_id);"))
   
   if (isTRUE(verbose)) {
     writeLines(paste0(output$reset_code$table_name, " creation result: ", output$reset_code$result))
@@ -167,10 +175,12 @@ DBI_tables_create <- function(
       DBI::dbCreateTable(
         conn,
         log_name,
-        c("id" = if (class == "SQLiteConnection") "INTEGER PRIMARY KEY"
-          else if (class %in% c("MySQLConnection", "MariaDBConnection")) "INT PRIMARY KEY AUTO_INCREMENT"
-          else if (class == "PostgreSQLConnection") "SERIAL PRIMARY KEY",
-          "time" = if (class == "PostgreSQLConnection") "TIMESTAMP NOT NULL" 
+        c("id" = if (inherits(conn, "SQLiteConnection")) "INTEGER PRIMARY KEY"
+          else if (inherits(conn, "MySQLConnection") || inherits(conn, "MariaDBConnection")) 
+                  "INT PRIMARY KEY AUTO_INCREMENT"
+          else if (inherits(conn, "PostgreSQLConnection"))
+                  "SERIAL PRIMARY KEY",
+          "time" = if (inherits(conn, "PostgreSQLConnection")) "TIMESTAMP NOT NULL" 
                    else "DATETIME NOT NULL",
           "session" = "VARCHAR(255) NOT NULL",
           "direction" = "VARCHAR(255) NOT NULL",
@@ -275,7 +285,7 @@ DBI_tables_create <- function(
 #'   - note: character
 #' 
 #' @return ID of the googlesheet
-#' @example examples/gsheet_tables_create.R
+#' @example man/examples/gsheet_tables_create.R
 #' @export
 #' @family RegLog databases
 

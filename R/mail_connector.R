@@ -278,12 +278,12 @@ handle_custom_mails <- function(self, custom_mails)
   if (!is.null(custom_mails)) {
     ## checks if the custom_mails are correct
     ## custom mails should be a list
-    if (class(custom_mails) == "list" &&
+    if (is.list(custom_mails) &&
         ## all elements of it needs to be named
         all(sapply(names(custom_mails), \(x) nchar(x) > 0)) &&
         ## all elements need to be of class 'list'
         all(sapply(custom_mails, \(x) {
-          ("list" %in% class(x)) && 
+          is.list(x) && 
             ## all elements inside every list need to be named either 'subject' or 'body'
             all(names(x) %in% c("subject", "body"))
         }))
